@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ItemController extends Controller
@@ -70,5 +71,103 @@ class ItemController extends Controller
             'message' => 'Item created successfully',
             'data' => $item
         ], 201);
+    }
+
+    public function show($id){
+        $item = Item::find($id);
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item found',
+            'data' => $item
+        ], 200);
+    }
+
+    public function update(Request $request, $id){
+        $item = Item::find($id);
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+                'data' => null
+            ], 404);
+        }
+
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'description' => 'required|string|max:255',
+            'image' => 'nullable|image|max:2048',
+            'status' => 'required|in:pending,approved,rejected',
+            'locations_id' => 'required|exists:locations,id',
+            'categories_id' => 'required|exists:categories,id',
+            'users_id' => 'required|exists:users,id',
+            'storages_id' => 'required|exists:storages,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        // handle image update
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image->store('items', 'public');
+
+            // hapus gambar lama jika ada
+            if ($item->image) {
+                Storage::disk('public')->delete('items/' . $item->image);
+            }
+
+            // simpan nama file baru
+            $item['image'] = $image->hashName();
+        }
+
+        // update data lain
+        $item->name = $request->name;
+        $item->date = $request->date;
+        $item->description = $request->description;
+        $item->status = $request->status;
+        $item->locations_id = $request->locations_id;
+        $item->categories_id = $request->categories_id;
+        $item->users_id = $request->users_id;
+        $item->storages_id = $request->storages_id;
+        $item->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item updated successfully',
+            'data' => $item
+        ], 200);
+    }
+    public function destroy($id){
+        $item = Item::find($id);
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+                'data' => null
+            ], 404);
+        }
+
+        $item->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item deleted successfully',
+            'data' => null
+        ], 200);
     }
 }

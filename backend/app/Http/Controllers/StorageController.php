@@ -56,4 +56,82 @@ class StorageController extends Controller
             'data' => $storage
         ], 201);
     }
+
+    public function show($id){
+        $storage = Storage::find($id);
+        if (!$storage) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Storage not found',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Storage found',
+            'data' => $storage
+        ], 200);
+    }
+
+    public function update(Request $request, $id){
+        $storage = Storage::find($id);
+        if (!$storage) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Storage not found',
+                'data' => null
+            ], 404);
+        }
+
+        // validate the request
+        $validator = FacadesValidator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'contact' => 'required|string|max:255',
+            'users_id' => 'required|exists:users,id',
+        ]);
+
+        // cek validasi
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        // update data
+        $storage->update([
+            'name' => $request->name,
+            'contact' => $request->contact,
+            'users_id' => $request->users_id,
+        ]);
+
+        // response
+        return response()->json([
+            'success' => true,
+            'message' => 'Storage updated successfully',
+            'data' => $storage
+        ], 200);
+    }
+    public function destroy($id){
+        $storage = Storage::find($id);
+        if (!$storage) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Storage not found',
+                'data' => null
+            ], 404);
+        }
+
+        // delete data
+        $storage->delete();
+
+        // response
+        return response()->json([
+            'success' => true,
+            'message' => 'Storage deleted successfully',
+            'data' => null
+        ], 200);
+    }
 }
