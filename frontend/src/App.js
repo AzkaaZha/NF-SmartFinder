@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import logo from './logo.svg';
 import './App.css';
 
@@ -19,6 +20,20 @@ function App() {
         </a>
       </header>
     </div>
+=======
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Home from './pages/Home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
+>>>>>>> 144cc3c (Upload Login and Register)
   );
 }
 

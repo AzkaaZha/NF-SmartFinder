@@ -8,6 +8,10 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
+<<<<<<< HEAD
+=======
+        "laravel/sanctum": "^4.0",
+>>>>>>> 144cc3c (Upload Login and Register)
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
