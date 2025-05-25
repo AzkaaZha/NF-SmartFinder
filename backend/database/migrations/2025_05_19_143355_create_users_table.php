@@ -15,8 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name', 500);
             $table->string('email', 100)->unique();
+<<<<<<< HEAD
             $table->string('password', 50);
             $table->enum('role', ['admin', 'user']);
+=======
+            $table->string('password', 225);
+            $table->enum('role', ['admin', 'satpam', 'user']);
+>>>>>>> 144cc3c (Upload Login and Register)
             $table->timestamps();
         });
     }
