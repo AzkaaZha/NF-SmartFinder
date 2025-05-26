@@ -851,47 +851,6 @@ section,
   font-size: 1.25rem;
 }
 
-.about .profile .profile-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.about .profile .profile-name {
-  font-size: 1.125rem;
-  margin: 0;
-}
-
-.about .profile .profile-position {
-  color: var(--accent-color);
-  margin: 0;
-  font-size: 0.875rem;
-}
-
-.about .contact-info {
-  padding: 1rem 1.5rem;
-  background-color: var(--surface-color);
-  border-radius: 0.5rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.06);
-}
-
-.about .contact-info i {
-  color: var(--accent-color);
-  font-size: 1.5rem;
-}
-
-.about .contact-info .contact-label {
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-.about .contact-info .contact-number {
-  font-weight: 600;
-  margin: 0;
-}
-
 .about .image-wrapper {
   position: relative;
 }
@@ -993,6 +952,10 @@ section,
 /*--------------------------------------------------------------
 # Features Section
 --------------------------------------------------------------*/
+.features {
+  background-color: #f7f9fc;
+}
+
 .features .nav-tabs {
   border: 0;
   background-color: color-mix(in srgb, var(--default-color), transparent 96%);
@@ -1106,127 +1069,79 @@ section,
 }
 
 /*--------------------------------------------------------------
-# Features Cards Section
+# Lost Items Section
 --------------------------------------------------------------*/
-.features-cards {
-  --default-color: #555;
-  --heading-color: #333;
+
+.lost-items-section {
+  background-color: #ffffff;
+  padding: 60px 20px;
+  text-align: center;
 }
 
-.features-cards .feature-box {
-  height: 100%;
-  padding: 40px 30px;
-  border-radius: 10px;
-}
-
-.features-cards .feature-box i {
-  font-size: 44px;
-  display: inline-block;
-  line-height: 0;
-  color: var(--accent-color);
-  margin-bottom: 20px;
-}
-
-.features-cards .feature-box h4 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 10px 0;
-}
-
-.features-cards .feature-box p {
-  font-size: 15px;
-  margin-bottom: 0;
-}
-
-.features-cards .feature-box.orange {
-  background-color: #fff3e2;
-}
-
-.features-cards .feature-box.orange i {
-  color: #edb86e;
-}
-
-.features-cards .feature-box.blue {
-  background-color: #deedfd;
-}
-
-.features-cards .feature-box.blue i {
-  color: #20a5f8;
-}
-
-.features-cards .feature-box.green {
-  background-color: #d5f1e4;
-}
-
-.features-cards .feature-box.green i {
-  color: #48c88a;
-}
-
-.features-cards .feature-box.red {
-  background-color: #fdeded;
-}
-
-.features-cards .feature-box.red i {
-  color: #f28484;
-}
-
-/*--------------------------------------------------------------
-# Features 2 Section
---------------------------------------------------------------*/
-.features-2 .feature-item .feature-icon {
-  width: 60px;
-  height: 60px;
+.lost-items-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  flex-wrap: wrap;
+  gap: 20px;  
+  justify-content: center;    
 }
 
-.features-2 .feature-item .feature-icon i {
-  font-size: 24px;
-  color: var(--accent-color);
+.lost-card {
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 280px;
+  transition: box-shadow 0.3s ease;
 }
 
-.features-2 .feature-item .feature-content h3 {
-  font-size: 20px;
+.lost-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.lost-card img {
+  width: 100%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 15px;
+  text-align: left;
+}
+
+.card-content h3 {
+  font-size: 18px;
+  color: #2d3c6c;
+  margin-bottom: 8px;
+}
+
+.card-content p {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.card-content .location {
+  color: #777;
+  font-size: 13px;
+}
+
+.see-more-wrapper {
+  margin-top: 30px;
+}
+
+.see-more-link {
+  color: #2d3c6c;
   font-weight: 600;
-  margin-bottom: 10px;
+  text-decoration: none;
+  font-size: 16px;
 }
 
-.features-2 .feature-item .feature-content p {
-  color: color-mix(in srgb, var(--default-color), transparent 25%);
-  font-size: 15px;
-  margin-bottom: 0;
+.see-more-link:hover {
+  text-decoration: underline;
 }
 
-.features-2 .phone-mockup {
-  position: relative;
-  padding: 30px 0;
-}
-
-.features-2 .phone-mockup img {
-  max-width: 300px;
-  height: auto;
-  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
-}
-
-@media (max-width: 991.98px) {
-  .features-2 .feature-item {
-    text-align: center !important;
-    margin-bottom: 2rem;
-  }
-
-  .features-2 .feature-item .d-flex {
-    flex-direction: column;
-    text-align: center;
-    justify-content: center !important;
-  }
-
-  .features-2 .phone-mockup {
-    margin: 3rem 0;
-  }
-}
 
 /*--------------------------------------------------------------
 # Call To Action Section
@@ -1427,417 +1342,6 @@ section,
 }
 
 /*--------------------------------------------------------------
-# Testimonials Section
---------------------------------------------------------------*/
-.testimonials .testimonial-item {
-  background-color: var(--surface-color);
-  box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.08);
-  padding: 30px;
-  position: relative;
-  height: 100%;
-}
-
-.testimonials .testimonial-item .testimonial-img {
-  width: 90px;
-  border-radius: 50px;
-  border: 6px solid var(--background-color);
-  float: left;
-  margin: 0 10px 0 0;
-}
-
-.testimonials .testimonial-item h3 {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 10px 0 5px 0;
-}
-
-.testimonials .testimonial-item h4 {
-  font-size: 14px;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
-  margin: 0;
-}
-
-.testimonials .testimonial-item .stars {
-  margin: 10px 0;
-}
-
-.testimonials .testimonial-item .stars i {
-  color: #ffc107;
-  margin: 0 1px;
-}
-
-.testimonials .testimonial-item .quote-icon-left,
-.testimonials .testimonial-item .quote-icon-right {
-  color: color-mix(in srgb, var(--accent-color), transparent 50%);
-  font-size: 26px;
-  line-height: 0;
-}
-
-.testimonials .testimonial-item .quote-icon-left {
-  display: inline-block;
-  left: -5px;
-  position: relative;
-}
-
-.testimonials .testimonial-item .quote-icon-right {
-  display: inline-block;
-  right: -5px;
-  position: relative;
-  top: 10px;
-  transform: scale(-1, -1);
-}
-
-.testimonials .testimonial-item p {
-  font-style: italic;
-  margin: 15px 0 0 0;
-  padding: 0;
-}
-
-/*--------------------------------------------------------------
-# Stats Section
---------------------------------------------------------------*/
-.stats .stats-item {
-  padding: 30px;
-  width: 100%;
-}
-
-.stats .stats-item span {
-  color: var(--heading-color);
-  font-size: 48px;
-  display: block;
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  position: relative;
-}
-
-.stats .stats-item span:after {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 25px;
-  height: 3px;
-  background: var(--accent-color);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-}
-
-.stats .stats-item p {
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
-  padding: 0;
-  margin: 0;
-  font-family: var(--heading-font);
-  font-weight: 500;
-}
-
-/*--------------------------------------------------------------
-# Services Section
---------------------------------------------------------------*/
-.services .service-card {
-  height: 100%;
-  padding: 30px;
-  background: var(--surface-color);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.services .service-card:hover {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
-}
-
-.services .service-card:hover .icon {
-  background: var(--accent-color);
-  color: var(--contrast-color);
-}
-
-.services .service-card:hover .read-more {
-  color: color-mix(in srgb, var(--accent-color), transparent 25%);
-}
-
-.services .service-card .icon {
-  width: 60px;
-  height: 60px;
-  margin-right: 30px;
-  background: color-mix(in srgb, var(--accent-color), transparent 90%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  color: var(--accent-color);
-  font-size: 28px;
-  transition: all 0.3s ease;
-  line-height: 1;
-}
-
-.services .service-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.services .service-card p {
-  margin-bottom: 25px;
-  color: color-mix(in srgb, var(--default-color), transparent 25%);
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.services .service-card .read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--accent-color);
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.services .service-card .read-more i {
-  font-size: 14px;
-  transition: transform 0.3s ease;
-}
-
-.services .service-card .read-more:hover i {
-  transform: translateX(5px);
-}
-
-/*--------------------------------------------------------------
-# Pricing Section
---------------------------------------------------------------*/
-.pricing .pricing-card {
-  height: 100%;
-  padding: 2rem;
-  background: var(--surface-color);
-  border-radius: 1rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.pricing .pricing-card:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.pricing .pricing-card.popular {
-  background: var(--accent-color);
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card.popular h3,
-.pricing .pricing-card.popular h4 {
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card.popular .price .currency,
-.pricing .pricing-card.popular .price .amount,
-.pricing .pricing-card.popular .price .period {
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card.popular .features-list li {
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card.popular .features-list li i {
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card.popular .btn-light {
-  background: var(--contrast-color);
-  color: var(--accent-color);
-}
-
-.pricing .pricing-card.popular .btn-light:hover {
-  background: color-mix(in srgb, var(--contrast-color), transparent 10%);
-}
-
-.pricing .pricing-card .popular-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--contrast-color);
-  color: var(--accent-color);
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.pricing .pricing-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.pricing .pricing-card .price {
-  margin-bottom: 1.5rem;
-}
-
-.pricing .pricing-card .price .currency {
-  font-size: 1.5rem;
-  font-weight: 600;
-  vertical-align: top;
-  line-height: 1;
-}
-
-.pricing .pricing-card .price .amount {
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.pricing .pricing-card .price .period {
-  font-size: 1rem;
-  color: color-mix(in srgb, var(--default-color), transparent 40%);
-}
-
-.pricing .pricing-card .description {
-  margin-bottom: 2rem;
-  font-size: 0.975rem;
-}
-
-.pricing .pricing-card h4 {
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
-}
-
-.pricing .pricing-card .features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-}
-
-.pricing .pricing-card .features-list li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.pricing .pricing-card .features-list li i {
-  color: var(--accent-color);
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
-}
-
-.pricing .pricing-card .btn {
-  width: 100%;
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  border-radius: 50px;
-}
-
-.pricing .pricing-card .btn.btn-primary {
-  background: var(--accent-color);
-  border: none;
-  color: var(--contrast-color);
-}
-
-.pricing .pricing-card .btn.btn-primary:hover {
-  background: color-mix(in srgb, var(--accent-color), transparent 15%);
-}
-
-/*--------------------------------------------------------------
-# Faq Section
---------------------------------------------------------------*/
-.faq .faq-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--heading-color);
-}
-
-.faq .faq-description {
-  font-size: 1rem;
-  color: var(--default-color);
-  margin-bottom: 2rem;
-}
-
-.faq .faq-arrow {
-  color: var(--accent-color);
-}
-
-.faq .faq-container .faq-item {
-  background-color: var(--surface-color);
-  position: relative;
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.faq .faq-container .faq-item:last-child {
-  margin-bottom: 0;
-}
-
-.faq .faq-container .faq-item h3 {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  margin: 0 30px 0 0;
-  transition: 0.3s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.faq .faq-container .faq-item h3 .num {
-  color: var(--accent-color);
-  padding-right: 5px;
-}
-
-.faq .faq-container .faq-item h3:hover {
-  color: var(--accent-color);
-}
-
-.faq .faq-container .faq-item .faq-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: 0.3s ease-in-out;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.faq .faq-container .faq-item .faq-content p {
-  margin-bottom: 0;
-  overflow: hidden;
-}
-
-.faq .faq-container .faq-item .faq-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 16px;
-  line-height: 0;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.faq .faq-container .faq-item .faq-toggle:hover {
-  color: var(--accent-color);
-}
-
-.faq .faq-container .faq-active h3 {
-  color: var(--accent-color);
-}
-
-.faq .faq-container .faq-active .faq-content {
-  grid-template-rows: 1fr;
-  visibility: visible;
-  opacity: 1;
-  padding-top: 10px;
-}
-
-.faq .faq-container .faq-active .faq-toggle {
-  transform: rotate(90deg);
-  color: var(--accent-color);
-}
-
-/*--------------------------------------------------------------
 # Call To Action 2 Section
 --------------------------------------------------------------*/
 .call-to-action-2 {
@@ -1881,7 +1385,7 @@ section,
 # Contact Section
 --------------------------------------------------------------*/
 .contact .info-box {
-  background-color: var(--accent-color);
+  background-color: #27227d;
   color: var(--contrast-color);
   padding: 3rem;
   border-radius: 1rem;
@@ -2163,11 +1667,4 @@ section,
   font-size: 20px;
   margin-right: 8px;
   color: var(--accent-color);
-}
-
-/*--------------------------------------------------------------
-# Starter Section Section
---------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
 }
