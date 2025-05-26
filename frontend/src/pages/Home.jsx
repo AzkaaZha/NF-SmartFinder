@@ -1,13 +1,28 @@
-import header from "../layout/header";
-import hero from "../layout/hero";
-import footer from "../layout/footer";
+import Header from "../layout/header";
+import Hero from "../layout/hero";
+import Footer from "../layout/footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 function Home() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/items")
+      .then(response => {
+        setItems(response.data);
+      })
+      .catch(error => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
+
   return (
     <div>
-      <header>{header()}</header>
+      <header>{Header()}</header>
 
       <main className="main">
-        {hero()}
+        {Hero()}
 
         {/* About Section */}
         <section id="about" className="about section">
@@ -137,9 +152,34 @@ function Home() {
         </section>
         {/* End Features Section */}
 
+        {/* Lost Items Section */}
+        <section class="lost-items-section">
+          <div className="container section-title">
+            <h2>Informasi Barang Hilang</h2>
+            <p>Mencari barang anda yang hilang</p>
+          </div>
+          <div class="lost-items-container">
+            {items.map(item => (
+            <div class="lost-card">
+              <img src="/assets/img/features-illustration-1.webp" alt="Kunci Mobil" />
+              <div class="card-content">
+                <h3>{item.name} </h3>
+                <p>{item.description}</p>
+                <p class="location">📍 {item.locations_id}</p>
+              </div>
+            </div>
+            ))}
+          </div>
+          <div class="see-more-wrapper">
+            <a href="/barang-hilang" class="see-more-link">Lihat Semua...</a>
+          </div>
+        </section>
+
+        {/* End Lost Items Section */}
+
       </main>
 
-      <footer>{footer()}</footer>
+      <footer>{Footer()}</footer>
     </div>
   );
 }
