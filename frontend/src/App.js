@@ -1,15 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import ItemList from './pages/LandingPage/ItemList';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LostItems from './pages/LandingPage/LostItem';
 
 function App() {
   return (
+    <>
     <Router>
       <Routes>
-      <Route path='/' element={<ItemList></ItemList>}/>
+        <Route path="/" element={<LostItems />} />
       </Routes>
     </Router>
+    </>
   );
 }
 
