@@ -1,13 +1,29 @@
-import header from "../layout/header";
-import hero from "../layout/hero";
-import footer from "../layout/footer";
+import Header from "../layout/header";
+import Hero from "../layout/hero";
+import Footer from "../layout/footer";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
 function Home() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/items")
+      .then((response) => {
+        setItems(Array.isArray(response.data.data) ? response.data.data : []);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
+
   return (
     <div>
-      <header>{header()}</header>
+      <header>{Header()}</header>
 
       <main className="main">
-        {hero()}
+        {Hero()}
 
         {/* About Section */}
         <section id="about" className="about section">
@@ -137,9 +153,105 @@ function Home() {
         </section>
         {/* End Features Section */}
 
+        {/* Lost Items Section */}
+        <section className="lost-items-section py-5">
+          <div className="container">
+            <div className="section-title text-center mb-4">
+              <h2>Informasi Barang</h2>
+              <p>Mencari barang dengan mudah untuk ditemukan.</p>
+            </div>
+
+            <div className="row g-4">
+              {items.slice(0, 4).map((item) => (
+                <div key={item.id} className="col-12 col-md-6">
+                  <div className="card h-100 d-flex flex-row shadow-sm">
+                    {/* Gambar */}
+                    <div
+                      className="d-flex align-items-center justify-content-center"
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        overflow: "hidden",
+                        flexShrink: 0,
+                        borderTopLeftRadius: "0.5rem",
+                        borderBottomLeftRadius: "0.5rem",
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    >
+                      <img
+                        src={item.image || "/assets/img/placeholder.jpg"}
+                        alt={item.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/assets/img/placeholder.jpg";
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+
+                    {/* Konten */}
+                    <div className="card-body d-flex flex-column justify-content-between">
+                      <div>
+                        <h5 className="card-title mb-2 fw-semibold" style={{ color: "#27227d" }}>
+                          {item.name}
+                        </h5>
+                        <p className="mb-1">
+                          <strong>Deskripsi:</strong>{" "}
+                          <span
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {item.description}
+                          </span>
+                        </p>
+                        <p className="mb-1">
+                          <strong>Lokasi:</strong> {item.locationName || "Tidak diketahui"}
+                        </p>
+                        <p className="mb-0">
+                          <strong>Tanggal:</strong>{" "}
+                          {item.date ? new Date(item.date).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }) : "-"}
+                        </p>
+                      </div>
+                      <div className="text-end mt-3">
+                        <a
+                          href={`/barang-hilang#item-${item.id}`}
+                          className="btn btn-sm"
+                          style={{ backgroundColor: "#f59e0b", color: "#27227d" }}
+                        >
+                          Detail
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-4">
+              <Link to="/lostitems" className="btn btn-outline-primary">
+                Lihat Semua...
+              </Link>
+            </div>
+          </div>
+        </section>
+        {/* End Lost Items Section */}
+
+
       </main>
 
-      <footer>{footer()}</footer>
+      <footer>{Footer()}</footer>
     </div>
   );
 }

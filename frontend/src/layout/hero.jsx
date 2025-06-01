@@ -1,4 +1,4 @@
-function hero(){
+function Hero(){
     return(
         <section id="hero" className="hero section">
             <div className="container">
@@ -33,4 +33,4 @@ function hero(){
     )
 }
 
-export default hero
+export default Hero

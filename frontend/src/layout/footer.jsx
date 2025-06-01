@@ -1,4 +1,4 @@
-function footer() {
+function Footer() {
   return (
     <footer id="footer" className="footer bg-light text-dark pt-5 pb-4">
       <div className="container footer-top">
@@ -52,4 +52,4 @@ function footer() {
   );
 }
 
-export default footer;
+export default Footer;
