@@ -9,10 +9,14 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
+    "bootstrap-icons": "^1.13.1",
+    "json-server": "^0.17.3",
     "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.0",
-    "react-scripts": "^5.0.1",
+    "react-router-dom": "^7.6.1",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.18",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -39,5 +43,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
