@@ -5,7 +5,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -18,7 +17,7 @@ class AuthController extends Controller
         ]));
 
         if ($validator->fails()) {
-            return response()->json($request->errors(), 422);
+            return response()->json($validator->errors(), 422);
         }
 
         $user = User::create([
@@ -43,7 +42,7 @@ class AuthController extends Controller
         ]));           
 
         if ($validator->fails()) {
-            return response()->json($request->errors(), 422);
+            return response()->json($validator->errors(), 422);
         }
 
         $credentials = $request->only('email', 'password');
