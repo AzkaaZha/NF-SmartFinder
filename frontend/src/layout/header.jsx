@@ -3,11 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const location = useLocation(); 
   const isActive = (path) => location.pathname === path;
-
+  
   return (
     <header id="header" className="header d-flex align-items-center fixed-top" style={{backgroundColor: "#fff"}}>
       <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
         {/* Ganti href index.html ke "/" agar react-router gak reload page */}
         <Link to="/" className="logo d-flex align-items-center me-auto me-xl-0">
           {/* Ganti src ke placeholder supaya image pasti muncul */}
