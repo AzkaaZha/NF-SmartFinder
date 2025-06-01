@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import 'frontend\public\assets\lost-item-form.css';
+import Header from '../layout/header';
+import Footer from '../layout/footer';
 
 export default function LostItemForm({ locations, categories, storages, userId }) {
     const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ export default function LostItemForm({ locations, categories, storages, userId }
         locations_id: '',
         categories_id: '',
         storages_id: '',
-        users_id: userId,
+        users_id: userId,   
     });
 
     const [loading, setLoading] = useState(false);
@@ -51,66 +52,72 @@ export default function LostItemForm({ locations, categories, storages, userId }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="lost-item-form">
-            <h2>Form Kehilangan Barang</h2>
+        <div>
+            <Header />
+            <div className="form-wrapper">
+                <form onSubmit={handleSubmit} className="lost-item-form">
+                    <h2>Form Kehilangan Barang</h2>
 
-            <div className="form-group">
-                <label>Nama Barang</label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                    <div className="form-group">
+                        <label>Nama Barang</label>
+                        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Tanggal Hilang</label>
+                        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Deskripsi</label>
+                        <textarea name="description" value={formData.description} onChange={handleChange} rows="4" required />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Upload Gambar (Opsional)</label>
+                        <input type="file" name="image" onChange={handleChange} accept="image/*" />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Lokasi</label>
+                        <select name="locations_id" value={formData.locations_id} onChange={handleChange} required>
+                            <option value="">-- Pilih Lokasi --</option>
+                            {Array.isArray(locations) && locations.map(loc =>  (
+                                <option key={loc.id} value={loc.id}>{loc.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Kategori</label>
+                        <select name="categories_id" value={formData.categories_id} onChange={handleChange} required>
+                            <option value="">-- Pilih Kategori --</option>
+                            {Array.isArray(categories) && categories.map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Penyimpanan</label>
+                        <select name="storages_id" value={formData.storages_id} onChange={handleChange} required>
+                            <option value="">-- Pilih Penyimpanan --</option>
+                            {Array.isArray(storages) && storages.map(stor => (
+                                <option key={stor.id} value={stor.id}>{stor.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="users_id" value={formData.users_id} />
+
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Mengirim...' : 'Kirim Laporan'}
+                    </button>
+
+                    {message && <p className="message">{message}</p>}
+                </form>
             </div>
-
-            <div className="form-group">
-                <label>Tanggal Hilang</label>
-                <input type="date" name="date" value={formData.date} onChange={handleChange} required />
-            </div>
-
-            <div className="form-group">
-                <label>Deskripsi</label>
-                <textarea name="description" value={formData.description} onChange={handleChange} rows="4" required />
-            </div>
-
-            <div className="form-group">
-                <label>Upload Gambar (Opsional)</label>
-                <input type="file" name="image" onChange={handleChange} accept="image/*" />
-            </div>
-
-            <div className="form-group">
-                <label>Lokasi</label>
-                <select name="locations_id" value={formData.locations_id} onChange={handleChange} required>
-                    <option value="">-- Pilih Lokasi --</option>
-                    {locations.map(loc => (
-                        <option key={loc.id} value={loc.id}>{loc.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label>Kategori</label>
-                <select name="categories_id" value={formData.categories_id} onChange={handleChange} required>
-                    <option value="">-- Pilih Kategori --</option>
-                    {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label>Penyimpanan</label>
-                <select name="storages_id" value={formData.storages_id} onChange={handleChange} required>
-                    <option value="">-- Pilih Penyimpanan --</option>
-                    {storages.map(stor => (
-                        <option key={stor.id} value={stor.id}>{stor.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <input type="hidden" name="users_id" value={formData.users_id} />
-
-            <button type="submit" disabled={loading}>
-                {loading ? 'Mengirim...' : 'Kirim Laporan'}
-            </button>
-
-            {message && <p className="message">{message}</p>}
-        </form>
+            <Footer />
+        </div>
     );
 }

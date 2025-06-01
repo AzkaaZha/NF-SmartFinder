@@ -29,8 +29,8 @@ function Header() {
               </a>
               <ul>
                 {/* Ganti Link to="" yang kosong ke "#" dulu */}
-                <li><Link to="#">Lapor Barang Temuan</Link></li>
-                <li><Link to="#">Lapor Barang Hilang</Link></li>
+                <li><Link to="/form">Lapor Barang Temuan</Link></li>
+                <li><Link to="/form">Lapor Barang Hilang</Link></li>
                 <li><Link to="/lostitems" className={isActive("/lostitems") ? "active" : ""}>Cari Barang Hilang</Link></li>
               </ul>
             </li>

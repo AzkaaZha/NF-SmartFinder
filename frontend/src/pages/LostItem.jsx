@@ -247,7 +247,7 @@ function LostItems() {
             </Modal.Body>
             <Modal.Footer>
               <Link
-                to={`/claim/${selectedItem.id}`}
+                to={`/klaim/${selectedItem.id}`}
                 className="btn"
                 style={{ backgroundColor: "#f59e0b", color: "#27227d" }}
               >

@@ -193,7 +193,6 @@ function Home() {
                       />
                     </div>
 
-                    {/* Konten */}
                     <div className="card-body d-flex flex-column justify-content-between">
                       <div>
                         <h5 className="card-title mb-2 fw-semibold" style={{ color: "#27227d" }}>
