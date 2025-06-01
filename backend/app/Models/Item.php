@@ -18,4 +18,9 @@ class Item extends Model
         'users_id',
         'storages_id',
     ];
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'locations_id');
+    }
 }

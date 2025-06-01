@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Header from "../../layout/header";
-import Footer from "../../layout/footer";
+import Header from "../layout/header";
+import Footer from "../layout/footer";
 
 const statusBadgeStyle = (status) => {
   switch (status) {
     case "pending":
-      return { backgroundColor: "#facc15", color: "#000", padding: "4px 8px", borderRadius: "4px", fontWeight: "600" }; // kuning
+      return { backgroundColor: "#facc15", color: "#000", padding: "4px 8px", borderRadius: "4px",
+        fontWeight: "600", };
     case "approved":
-      return { backgroundColor: "#22c55e", color: "#fff", padding: "4px 8px", borderRadius: "4px", fontWeight: "600" }; // hijau
+      return { backgroundColor: "#22c55e", color: "#fff", padding: "4px 8px", borderRadius: "4px",
+        fontWeight: "600", };
     case "rejected":
-      return { backgroundColor: "#ef4444", color: "#fff", padding: "4px 8px", borderRadius: "4px", fontWeight: "600" }; // merah
+      return { backgroundColor: "#ef4444", color: "#fff", padding: "4px 8px", borderRadius: "4px",
+        fontWeight: "600", };
     default:
       return {};
   }
@@ -30,24 +33,24 @@ function LostItems() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch items, categories, locations secara paralel
     const fetchAll = async () => {
       try {
         const [itemsRes, categoriesRes, locationsRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/items"),
-          axios.get("http://localhost:5000/api/categories"),
-          axios.get("http://localhost:5000/api/locations"),
+          axios.get("http://127.0.0.1:8000/api/items"),
+          axios.get("http://127.0.0.1:8000/api/categories"),
+          axios.get("http://127.0.0.1:8000/api/locations"),
         ]);
-        const categoriesData = categoriesRes.data;
-        const locationsData = locationsRes.data;
+        
+        const categoriesData = categoriesRes.data.data;
+        const locationsData = locationsRes.data.data;
 
         setCategories(categoriesData);
         setLocations(locationsData);
 
-        // Mapping items supaya ada categoryName dan locationName
-        const itemsMapped = itemsRes.data.map((item) => {
-          const category = categoriesData.find(c => c.id === item.categories_id);
-          const location = locationsData.find(l => l.id === item.locations_id);
+        // Mapping items agar punya nama kategori dan lokasi
+        const itemsMapped = itemsRes.data.data.map((item) => {
+          const category = categoriesData.find((c) => c.id === item.categories_id);
+          const location = locationsData.find((l) => l.id === item.locations_id);
           return {
             ...item,
             categoryName: category ? category.name : "Unknown",
@@ -67,10 +70,12 @@ function LostItems() {
     fetchAll();
   }, []);
 
+  // Filter berdasarkan pencarian dan kategori
   useEffect(() => {
-    const filtered = items.filter(item =>
-      (filterCategory === "Semua" || item.categoryName === filterCategory) &&
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = items.filter(
+      (item) =>
+        (filterCategory === "Semua" || item.categoryName === filterCategory) &&
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredItems(filtered);
   }, [searchQuery, filterCategory, items]);
@@ -84,8 +89,11 @@ function LostItems() {
     if (!dateString) return "-";
     const date = new Date(dateString);
     if (isNaN(date)) return "-";
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("id-ID", options);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -107,7 +115,7 @@ function LostItems() {
             onChange={(e) => setFilterCategory(e.target.value)}
           >
             <option value="Semua">Semua Kategori</option>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <option key={cat.id} value={cat.name}>
                 {cat.name}
               </option>
@@ -115,7 +123,7 @@ function LostItems() {
           </Form.Select>
         </div>
 
-        {/* Loading */}
+        {/* Loading Spinner */}
         {loading ? (
           <div className="text-center mt-5">
             <Spinner animation="border" variant="primary" />
@@ -127,7 +135,7 @@ function LostItems() {
               filteredItems.map((item) => (
                 <div className="col-12 col-md-6" key={item.id}>
                   <div className="card h-100 d-flex flex-row shadow-sm">
-                    {/* Gambar kiri */}
+                    {/* Gambar */}
                     <div
                       className="d-flex align-items-center justify-content-center"
                       style={{
@@ -137,7 +145,7 @@ function LostItems() {
                         flexShrink: 0,
                         borderTopLeftRadius: "0.5rem",
                         borderBottomLeftRadius: "0.5rem",
-                        backgroundColor: "#f8f9fa"
+                        backgroundColor: "#f8f9fa",
                       }}
                     >
                       <img
@@ -155,37 +163,32 @@ function LostItems() {
                       />
                     </div>
 
-                    {/* Konten kanan */}
-                    <div
-                      className="card-body d-flex flex-column justify-content-between"
-                      style={{ minWidth: 0 }}
-                    >
+                    {/* Konten */}
+                    <div className="card-body d-flex flex-column justify-content-between">
                       <div>
                         <h5 className="card-title mb-2 fw-semibold" style={{ color: "#27227d" }}>
                           {item.name}
                         </h5>
-
-                        <p
-                          className="mb-1"
-                          style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden"
-                          }}
-                        >
-                          <strong>Deskripsi:</strong> {item.description}
+                        <p className="mb-1">
+                          <strong>Deskripsi:</strong>{" "}
+                          <span
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {item.description}
+                          </span>
                         </p>
-
                         <p className="mb-1">
                           <strong>Ditemukan di:</strong> {item.locationName}
                         </p>
-
                         <p className="mb-0">
                           <strong>Tanggal Ditemukan:</strong> {formatDate(item.date)}
                         </p>
                       </div>
-
                       <div className="text-end mt-3">
                         <Button
                           variant="primary"
@@ -193,7 +196,11 @@ function LostItems() {
                             setSelectedItem(item);
                             setShowModal(true);
                           }}
-                          style={{ color: "#27227d", backgroundColor: "#f59e0b", borderColor: "#f59e0b" }}
+                          style={{
+                            color: "#27227d",
+                            backgroundColor: "#f59e0b",
+                            borderColor: "#f59e0b",
+                          }}
                         >
                           Detail
                         </Button>
@@ -216,31 +223,34 @@ function LostItems() {
             <Modal.Header closeButton>
               <Modal.Title>{selectedItem.name}</Modal.Title>
             </Modal.Header>
-<Modal.Body>
-  <img
-    src={selectedItem.image || "/assets/img/placeholder.jpg"}
-    alt={selectedItem.name}
-    className="img-fluid mb-3"
-    style={{ objectFit: "cover", maxHeight: "300px", width: "100%" }}
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = "/assets/img/placeholder.jpg";
-    }}
-  />
-  <p>
-  <strong>Status: </strong>
-  <span style={statusBadgeStyle(selectedItem.status)}>
-    {selectedItem.status.charAt(0).toUpperCase() + selectedItem.status.slice(1)}
-  </span>
-</p>
-
-  <p><strong>Kategori:</strong> {selectedItem.categoryName}</p>
-  <p><strong>Deskripsi:</strong> {selectedItem.description}</p>
-  <p><strong>Lokasi Ditemukan:</strong> {selectedItem.locationName}</p>
-  <p><strong>Tanggal Ditemukan:</strong> {formatDate(selectedItem.date)}</p>
-</Modal.Body>
+            <Modal.Body>
+              <img
+                src={selectedItem.image || "/assets/img/placeholder.jpg"}
+                alt={selectedItem.name}
+                className="img-fluid mb-3"
+                style={{ objectFit: "cover", maxHeight: "300px", width: "100%" }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/assets/img/placeholder.jpg";
+                }}
+              />
+              <p>
+                <strong>Status: </strong>
+                <span style={statusBadgeStyle(selectedItem.status)}>
+                  {selectedItem.status.charAt(0).toUpperCase() + selectedItem.status.slice(1)}
+                </span>
+              </p>
+              <p><strong>Kategori:</strong> {selectedItem.categoryName}</p>
+              <p><strong>Deskripsi:</strong> {selectedItem.description}</p>
+              <p><strong>Lokasi Ditemukan:</strong> {selectedItem.locationName}</p>
+              <p><strong>Tanggal Ditemukan:</strong> {formatDate(selectedItem.date)}</p>
+            </Modal.Body>
             <Modal.Footer>
-              <Link to={`/claim/${selectedItem.id}`} className="btn" style={{ backgroundColor: "#f59e0b", color: "#27227d" }}>
+              <Link
+                to={`/claim/${selectedItem.id}`}
+                className="btn"
+                style={{ backgroundColor: "#f59e0b", color: "#27227d" }}
+              >
                 Klaim Barang
               </Link>
               <Button variant="secondary" onClick={handleCloseModal}>
@@ -256,4 +266,3 @@ function LostItems() {
 }
 
 export default LostItems;
-// Note: Pastikan untuk menyesuaikan URL API sesuai dengan backend yang digunakan.

@@ -1073,74 +1073,108 @@ section,
 --------------------------------------------------------------*/
 
 .lost-items-section {
-  background-color: #ffffff;
-  padding: 60px 20px;
-  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
 }
 
-.lost-items-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;  
-  justify-content: center;    
+.container {
+  max-width: 1200px;
+  margin: 0 auto; 
+  padding: 0 20px; 
+}
+
+.section-title-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section-title-container h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.section-title-container p {
+  color: #666;
+}
+
+.lost-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 10px;
 }
 
 .lost-card {
-  background-color: #f7f9fc;
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  width: 280px;
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
 .lost-card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
 }
 
-.lost-card img {
+.lost-image {
   width: 100%;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
   height: 180px;
   object-fit: cover;
 }
 
 .card-content {
-  padding: 15px;
-  text-align: left;
+  padding: 16px;
 }
 
 .card-content h3 {
-  font-size: 18px;
-  color: #2d3c6c;
+  font-size: 20px;
   margin-bottom: 8px;
+  color: #222;
 }
 
 .card-content p {
-  font-size: 14px;
-  color: #444;
   margin-bottom: 6px;
+  color: #555;
 }
 
-.card-content .location {
-  color: #777;
-  font-size: 13px;
+.location {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.claim-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.claim-button:hover {
+  background-color: #0056b3;
 }
 
 .see-more-wrapper {
+  text-align: center;
   margin-top: 30px;
 }
 
 .see-more-link {
-  color: #2d3c6c;
-  font-weight: 600;
+  color: #007bff;
   text-decoration: none;
-  font-size: 16px;
+  font-weight: bold;
 }
 
 .see-more-link:hover {
   text-decoration: underline;
 }
+
 
 
 /*--------------------------------------------------------------
