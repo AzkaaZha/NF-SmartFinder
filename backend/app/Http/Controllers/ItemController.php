@@ -11,7 +11,8 @@ class ItemController extends Controller
 {
     public function index(){
         $items = Item::all();
-        if ($items->isEmpty()){
+        $items = Item::with('location')->get();
+        if ($items->isEmpty()){ 
             return response()->json([
                 'success' => false,
                 'message' => 'No data found',
