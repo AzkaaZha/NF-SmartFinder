@@ -1,8 +1,25 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";  
 
 function Header() {
-  const location = useLocation(); 
+  const location = useLocation();
   const isActive = (path) => location.pathname === path;
+
+  const [userName, setUserName] = useState(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      setUserName(user.name);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload(); // atau navigate("/") kalau pakai useNavigate
+  };
   
   return (
     <header id="header" className="header d-flex align-items-center fixed-top" style={{backgroundColor: "#fff"}}>
@@ -38,13 +55,64 @@ function Header() {
                 Contact
               </Link>
             </li>
+            {!userName ? (
             <li>
-              <Link to="/login" className="btn-getstarted">
-                Login/Daftar
-              </Link>
+              <Link to="/login" className="btn-getstarted">Login/Daftar</Link>
             </li>
+            ) : (
+            <li className="dropdown" style={{ position: "relative", listStyle: "none" }}>
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  color: "#333",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                  cursor: "pointer"
+                }}
+              >
+                <i className="bi bi-person-circle" style={{ fontSize: "1.2rem" }}></i>
+                {userName}
+                <i className="bi bi-chevron-down" style={{ fontSize: "0.9rem" }}></i>
+              </a>
+
+              <ul
+                style={{
+                  position: "absolute",
+                  top: "120%",
+                  right: 0,
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  borderRadius: "6px",
+                  padding: "8px 0",
+                  minWidth: "140px",
+                  zIndex: 1000,
+                }}
+              >
+                <li style={{ padding: "0 16px" }}>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      backgroundColor: "transparent",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </li>
+            )}
           </ul>
-          <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
       </div>
     </header>

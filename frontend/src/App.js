@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/LoginSignup/Login';  
 import Contact from './pages/Contact';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './components/privateRoute';
 import FormKlaimBarang from './pages/FormKlaimBarang';
 import LostItemForm from './pages/LostItemForm';
 import LostItems from './pages/LostItem';
@@ -13,10 +14,24 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login onLogin={(user) => console.log(user)} />} />
+        <Route path="/login" element={<Login /> } />
+        <Route
+          path="/klaim"
+          element={
+            <PrivateRoute>
+              <FormKlaimBarang />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/form"
+          element={
+            <PrivateRoute>
+              <LostItemForm />
+            </PrivateRoute>
+          }
+        />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/klaim" element={<FormKlaimBarang />} />
-        <Route path="/form" element={<LostItemForm/>} />
         <Route path="/lostitems" element={<LostItems />} />
       </Routes>
     </Router>

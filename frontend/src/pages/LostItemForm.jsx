@@ -56,7 +56,7 @@ export default function LostItemForm({ locations, categories, storages, userId }
             <Header />
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit} className="lost-item-form">
-                    <h2>Form Kehilangan Barang</h2>
+                    <h2>Form Pelaporan Barang</h2>
 
                     <div className="form-group">
                         <label>Nama Barang</label>
@@ -64,7 +64,7 @@ export default function LostItemForm({ locations, categories, storages, userId }
                     </div>
 
                     <div className="form-group">
-                        <label>Tanggal Hilang</label>
+                        <label>Tanggal Penemuan</label>
                         <input type="date" name="date" value={formData.date} onChange={handleChange} required />
                     </div>
 
