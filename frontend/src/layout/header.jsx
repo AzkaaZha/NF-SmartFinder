@@ -18,7 +18,7 @@ function header() {
                         </ul>
                     </li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a className="btn-getstarted" href="index.html#about" >Login/Daftar</a></li>
+                    <li><a className="btn-getstarted" href="/login" >Login/Register</a></li>
                 </ul>
                 <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
