@@ -19,8 +19,6 @@ function Home() {
 
   return (
     <div>
-      <header>{Header()}</header>
-
       <main className="main">
         {Hero()}
 
@@ -178,8 +176,6 @@ function Home() {
         {/* End Lost Items Section */}
 
       </main>
-
-      <footer>{Footer()}</footer>
     </div>
   );
 }
