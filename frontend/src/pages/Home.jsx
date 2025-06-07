@@ -179,12 +179,8 @@ function Home() {
                       }}
                     >
                       <img
-                        src={item.image || "/assets/img/placeholder.jpg"}
+                        src={item.img_url}
                         alt={item.name}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "/assets/img/placeholder.jpg";
-                        }}
                         style={{
                           width: "100%",
                           height: "100%",

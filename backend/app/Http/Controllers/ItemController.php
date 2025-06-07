@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Validator;
 class ItemController extends Controller
 {
     public function index(){
-        $items = Item::all();
         $items = Item::with('location')->get();
+
         if ($items->isEmpty()){ 
             return response()->json([
                 'success' => false,
@@ -19,6 +19,12 @@ class ItemController extends Controller
                 'data' => null
             ], 404);
         }
+
+        // Tambahkan img_url manual
+        $items = $items->map(function ($item) {
+            $item->img_url = asset('storage/images/' . $item->image);
+            return $item;
+        });
 
         return response()->json([
             'success' => true,

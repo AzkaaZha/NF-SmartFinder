@@ -46,7 +46,7 @@ class ItemSeeder extends Seeder
             'name' => 'Charger Laptop',
             'date' => '2024-05-22',
             'description' => 'merek acer',
-            'image' => 'asus.jpg',
+            'image' => 'charger.jpg',
             'status' => 'pending',
             'locations_id' => 1,
             'categories_id' => 1,
