@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../layout/header';
 import Footer from '../layout/footer';
 
-export default function LostItemForm({ locations, categories, storages, userId }) {
+export default function LostItemForm({ userId, userName }) {
     const [formData, setFormData] = useState({
         name: '',
         date: '',
@@ -12,11 +12,35 @@ export default function LostItemForm({ locations, categories, storages, userId }
         locations_id: '',
         categories_id: '',
         storages_id: '',
-        users_id: userId,   
+        users_id: userId,
     });
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [locations, setLocations] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [storages, setStorages] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [locRes, catRes, storRes] = await Promise.all([
+                    axios.get('http://localhost:8000/api/locations'),
+                    axios.get('http://localhost:8000/api/categories'),
+                    axios.get('http://localhost:8000/api/storages'),
+                ]);
+
+                setLocations(locRes.data.data);
+                setCategories(catRes.data.data);
+                setStorages(storRes.data.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setMessage('Gagal memuat data dropdown.');
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -39,13 +63,25 @@ export default function LostItemForm({ locations, categories, storages, userId }
         });
 
         try {
-            const res = await axios.post('http://localhost:8000/api/items', data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            await axios.post('http://localhost:8000/api/items', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             });
             setMessage('Laporan berhasil dikirim.');
-            setFormData({ ...formData, name: '', date: '', description: '', image: null });
+            setFormData({
+                name: '',
+                date: '',
+                description: '',
+                image: null,
+                locations_id: '',
+                categories_id: '',
+                storages_id: '',
+                users_id: userId,
+            });
         } catch (err) {
-            setMessage('Gagal mengirim laporan.');
+            console.error('Error response:', err.response);
+            setMessage('Gagal mengirim laporan. Pastikan semua data sudah benar.');
         } finally {
             setLoading(false);
         }
@@ -57,6 +93,9 @@ export default function LostItemForm({ locations, categories, storages, userId }
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit} className="lost-item-form">
                     <h2>Form Pelaporan Barang</h2>
+
+                    {/* Tampilkan info user sebagai teks */}
+                    {/* <p><strong>Pelapor:</strong> {userName}</p> */}
 
                     <div className="form-group">
                         <label>Nama Barang</label>
@@ -82,7 +121,7 @@ export default function LostItemForm({ locations, categories, storages, userId }
                         <label>Lokasi</label>
                         <select name="locations_id" value={formData.locations_id} onChange={handleChange} required>
                             <option value="">-- Pilih Lokasi --</option>
-                            {Array.isArray(locations) && locations.map(loc =>  (
+                            {locations.map(loc => (
                                 <option key={loc.id} value={loc.id}>{loc.name}</option>
                             ))}
                         </select>
@@ -92,7 +131,7 @@ export default function LostItemForm({ locations, categories, storages, userId }
                         <label>Kategori</label>
                         <select name="categories_id" value={formData.categories_id} onChange={handleChange} required>
                             <option value="">-- Pilih Kategori --</option>
-                            {Array.isArray(categories) && categories.map(cat => (
+                            {categories.map(cat => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </select>
@@ -102,13 +141,14 @@ export default function LostItemForm({ locations, categories, storages, userId }
                         <label>Penyimpanan</label>
                         <select name="storages_id" value={formData.storages_id} onChange={handleChange} required>
                             <option value="">-- Pilih Penyimpanan --</option>
-                            {Array.isArray(storages) && storages.map(stor => (
+                            {storages.map(stor => (
                                 <option key={stor.id} value={stor.id}>{stor.name}</option>
                             ))}
                         </select>
                     </div>
 
-                    <input type="hidden" name="users_id" value={formData.users_id} />
+                    {/* Hidden input untuk users_id */}
+                    <input type="hidden" name="users_id" value={userId} />
 
                     <button type="submit" disabled={loading}>
                         {loading ? 'Mengirim...' : 'Kirim Laporan'}

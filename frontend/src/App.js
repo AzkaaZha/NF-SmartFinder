@@ -10,11 +10,14 @@ import LostItemForm from './pages/LostItemForm';
 import LostItems from './pages/LostItem';
 
 function App() {
+  // Ambil data user login dari localStorage
+  const currentUser = JSON.parse(localStorage.getItem('user'));
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login /> } />
+        <Route path="/login" element={<Login />} />
         <Route
           path="/klaim"
           element={
@@ -23,11 +26,16 @@ function App() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/form"
           element={
             <PrivateRoute>
-              <LostItemForm />
+              {/* Pastikan currentUser tersedia sebelum dipakai */}
+              {currentUser ? (
+                <LostItemForm userId={currentUser.id} userName={currentUser.name} />
+              ) : (
+                <p>Loading user data...</p>
+              )}
             </PrivateRoute>
           }
         />
@@ -37,4 +45,5 @@ function App() {
     </Router>
   );
 }
+
 export default App;
