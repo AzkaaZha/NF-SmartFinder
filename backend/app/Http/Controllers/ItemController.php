@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,7 @@ class ItemController extends Controller
 {
     public function index(){
         $items = Item::all();
-        $items = Item::with('location')->get();
+        $items = Item::with(['location', 'category', 'storage', 'user'])->get();
         if ($items->isEmpty()){ 
             return response()->json([
                 'success' => false,
