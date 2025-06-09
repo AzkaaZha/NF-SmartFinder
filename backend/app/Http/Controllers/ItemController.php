@@ -58,7 +58,7 @@ class ItemController extends Controller
 
         // upload image
         $image = $request->file('image');
-        $image->store('items', 'public');
+        $image->store('images', 'public');
 
         // buat data
         $item = Item::create([

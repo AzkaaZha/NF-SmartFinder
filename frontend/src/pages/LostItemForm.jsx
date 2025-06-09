@@ -44,10 +44,24 @@ export default function LostItemForm({ userId, userName }) {
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: files ? files[0] : value,
-        });
+        if (name === 'image' && files && files[0]) {
+        const file = files[0];
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+            if (img.width > 2000 || img.height > 2000) {
+                alert('Gambar terlalu besar. Maksimal dimensi 2000x2000 px.');
+                return;
+            } else {
+                setFormData(prev => ({ ...prev, image: file }));
+            }
+        };
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
     };
 
     const handleSubmit = async (e) => {

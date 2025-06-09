@@ -222,7 +222,7 @@ function LostItems() {
             </Modal.Header>
             <Modal.Body>
               <img
-                src={selectedItem.image || "/assets/img/placeholder.jpg"}
+                src={selectedItem.img_url || "/assets/img/placeholder.jpg"}
                 alt={selectedItem.name}
                 className="img-fluid mb-3"
                 style={{ objectFit: "cover", maxHeight: "300px", width: "100%" }}
