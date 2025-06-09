@@ -14,17 +14,14 @@
   --contrast-color: #ffffff; 
 }
 
-/* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #212529;  /* The default color of the main navmenu links */
-  --nav-hover-color: #0d83fd; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #0d83fd; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-color: #212529;  
+  --nav-hover-color: #0d83fd; 
+  --nav-mobile-background-color: #ffffff; 
+  --nav-dropdown-background-color: #ffffff; 
+  --nav-dropdown-color: #212529;
+  --nav-dropdown-hover-color: #0d83fd; 
 }
-
-/* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
   --background-color: #f3f9ff;
@@ -39,7 +36,6 @@
   --contrast-color: #ffffff;
 }
 
-/* Smooth scroll */
 :root {
   scroll-behavior: smooth;
 }
@@ -828,29 +824,6 @@ section,
   color: color-mix(in srgb, var(--default-color), transparent 20%);
 }
 
-.about .feature-list-wrapper {
-  margin-bottom: 2rem;
-}
-
-.about .feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.about .feature-list li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-}
-
-.about .feature-list li i {
-  color: var(--accent-color);
-  font-size: 1.25rem;
-}
-
 .about .image-wrapper {
   position: relative;
 }
@@ -873,85 +846,7 @@ section,
   }
 }
 
-@media (max-width: 992px) {
-  .about .image-wrapper .main-image {
-    margin-left: 0;
-  }
-}
-
-.about .image-wrapper .small-image {
-  position: absolute;
-  top: 20%;
-  left: -10%;
-  width: 45%;
-  border: 8px solid var(--surface-color);
-}
-
-@media (max-width: 992px) {
-  .about .image-wrapper .small-image {
-    position: static;
-    width: 100%;
-    margin: 0 auto;
-    border: 0;
-  }
-}
-
-.about .image-wrapper .experience-badge {
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  background-color: var(--accent-color);
-  color: var(--contrast-color);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  text-align: center;
-  min-width: 200px;
-  animation: experience-float 3s ease-in-out infinite;
-}
-
-@media (max-width: 992px) {
-  .about .image-wrapper .experience-badge {
-    position: static;
-    width: fit-content;
-    margin: 0 auto;
-  }
-}
-
-.about .image-wrapper .experience-badge h3 {
-  color: var(--contrast-color);
-  font-size: 2.5rem;
-  margin: 0;
-  line-height: 0.5;
-}
-
-.about .image-wrapper .experience-badge h3 span {
-  font-size: 1rem;
-  display: inline-block;
-  margin-left: 0.25rem;
-}
-
-.about .image-wrapper .experience-badge p {
-  margin: 0.5rem 0 0;
-  font-size: 0.875rem;
-}
-
-@keyframes experience-float {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-/*--------------------------------------------------------------
-# Features Section
---------------------------------------------------------------*/
+/* Features Section */
 .features {
   background-color: #f7f9fc;
 }
@@ -1066,80 +961,6 @@ section,
 
 .features .tab-pane p:last-child {
   margin-bottom: 0;
-}
-
-/*--------------------------------------------------------------
-# Lost Items Section
---------------------------------------------------------------*/
-
-.lost-items-section {
-  background-color: #ffffff;
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.lost-items-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;  
-  justify-content: center;    
-}
-
-.lost-card {
-  background-color: #f7f9fc;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  width: 280px;
-  transition: box-shadow 0.3s ease;
-}
-
-.lost-card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-.lost-card img {
-  width: 100%;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  height: 180px;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 15px;
-  text-align: left;
-}
-
-.card-content h3 {
-  font-size: 18px;
-  color: #2d3c6c;
-  margin-bottom: 8px;
-}
-
-.card-content p {
-  font-size: 14px;
-  color: #444;
-  margin-bottom: 6px;
-}
-
-.card-content .location {
-  color: #777;
-  font-size: 13px;
-}
-
-.see-more-wrapper {
-  margin-top: 30px;
-}
-
-.see-more-link {
-  color: #2d3c6c;
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.see-more-link:hover {
-  text-decoration: underline;
 }
 
 /*--------------------------------------------------------------
@@ -1295,3 +1116,4 @@ section,
 .contact .contact-form .btn:hover {
   background-color: color-mix(in srgb, var(--accent-color), var(--contrast-color) 20%);
 }
+

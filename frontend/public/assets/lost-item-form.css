@@ -1,0 +1,66 @@
+/* src/styles/lost-item-form.css */
+
+.lost-item-form {
+  max-width: 40rem; /* max-w-xl */
+  margin: 6rem auto;
+  padding: 2rem; /* p-6 */
+  background-color: #ffffff;
+  border-radius: 1rem; /* rounded-xl */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* shadow */
+}
+
+.lost-item-form h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700;  /* font-bold */
+  margin-bottom: 1rem;
+}
+
+.lost-item-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.lost-item-form label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.lost-item-form input[type="text"],
+.lost-item-form input[type="date"],
+.lost-item-form input[type="file"],
+.lost-item-form textarea,
+.lost-item-form select {
+  width: 100%;
+  padding: 0.5rem; /* p-2 */
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem; /* rounded */
+  margin-top: 0.25rem; /* mt-1 */
+  font-size: 1rem;
+}
+
+.lost-item-form button {
+  background-color: #2563eb; /* bg-blue-600 */
+  color: #ffffff;
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.lost-item-form button:hover {
+  background-color: #1e40af; /* hover:bg-blue-700 */
+}
+
+.lost-item-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lost-item-form .message {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  color: #16a34a; /* text-green-600 */
+}

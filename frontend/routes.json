@@ -1,0 +1,16 @@
+{
+  "/api/items": "/items",
+  "/api/items/:id": "/items/:id",
+
+  "/api/locations": "/locations",
+  "/api/locations/:id": "/locations/:id",
+
+  "/api/categories": "/categories",
+  "/api/categories/:id": "/categories/:id",
+
+  "/api/users": "/users",
+  "/api/users/:id": "/users/:id",
+
+  "/api/storages": "/storages",
+  "/api/storages/:id": "/storages/:id"
+}
