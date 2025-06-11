@@ -5,13 +5,13 @@ import Login from './pages/LoginSignup/Login';
 import Contact from './pages/Contact';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './components/privateRoute';
-import FormKlaimBarang from './pages/FormKlaimBarang';
+import KlaimItem from './pages/KlaimItem'; // Importing KlaimItem
 import LostItemForm from './pages/LostItemForm';
 import LostItems from './pages/LostItem';
 
 function App() {
   // Ambil data user login dari localStorage
-  const currentUser = JSON.parse(localStorage.getItem('user'));
+  const currentUser  = JSON.parse(localStorage.getItem('user'));
 
   return (
     <Router>
@@ -22,7 +22,7 @@ function App() {
           path="/klaim"
           element={
             <PrivateRoute>
-              <FormKlaimBarang />
+              <KlaimItem userId={currentUser  ? currentUser.id : null} token={currentUser  ? currentUser.token : null} />
             </PrivateRoute>
           }
         />
@@ -30,8 +30,7 @@ function App() {
           path="/form"
           element={
             <PrivateRoute>
-              {/* Pastikan currentUser tersedia sebelum dipakai */}
-              {currentUser ? (
+              {currentUser  ? (
                 <LostItemForm userId={currentUser.id} userName={currentUser.name} />
               ) : (
                 <p>Loading user data...</p>
@@ -41,6 +40,7 @@ function App() {
         />
         <Route path="/contact" element={<Contact />} />
         <Route path="/lostitems" element={<LostItems />} />
+        <Route path="/klaim/:id" element={<KlaimItem />} /> {/* Add this line for dynamic route */}
       </Routes>
     </Router>
   );
