@@ -149,12 +149,9 @@ function LostItems() {
                       }}
                     >
                       <img
-                        src={item.image || "/assets/img/placeholder.jpg"}
+                        src={item.img_url}
                         alt={item.name}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "/assets/img/placeholder.jpg";
-                        }}
+                  
                         style={{
                           width: "100%",
                           height: "100%",
@@ -225,7 +222,7 @@ function LostItems() {
             </Modal.Header>
             <Modal.Body>
               <img
-                src={selectedItem.image || "/assets/img/placeholder.jpg"}
+                src={selectedItem.img_url || "/assets/img/placeholder.jpg"}
                 alt={selectedItem.name}
                 className="img-fluid mb-3"
                 style={{ objectFit: "cover", maxHeight: "300px", width: "100%" }}

@@ -22,7 +22,7 @@ function Header() {
   };
   
   return (
-    <header id="header" className="header d-flex align-items-center fixed-top" style={{backgroundColor: "#fff"}}>
+    <header id="header" className="header d-flex align-items-center fixed-top">
       <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
         {/* Ganti href index.html ke "/" agar react-router gak reload page */}
         <Link to="/" className="logo d-flex align-items-center me-auto me-xl-0">
@@ -46,8 +46,7 @@ function Header() {
               <ul>
                 {/* Ganti Link to="" yang kosong ke "#" dulu */}
                 <li><Link to="/form">Lapor Barang Temuan</Link></li>
-                <li><Link to="/form">Lapor Barang Hilang</Link></li>
-                <li><Link to="/lostitems" className={isActive("/lostitems") ? "active" : ""}>Cari Barang Hilang</Link></li>
+                <li><Link to="/lostitems" className={isActive("/lostitems") ? "active" : ""}>Daftar Barang Hilang</Link></li>
               </ul>
             </li>
             <li>

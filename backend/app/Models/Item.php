@@ -23,4 +23,21 @@ class Item extends Model
     {
         return $this->belongsTo(Location::class, 'locations_id');
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Categorie::class, 'categories_id');
+    }
+
+
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storages_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
+
 }
