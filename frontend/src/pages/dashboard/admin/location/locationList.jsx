@@ -26,7 +26,7 @@ export default function LocationList() {
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Lokasi
         <Link
-          to="/dashboard/location/create"
+          to="/dashboard/createloc"
           className="btn btn-primary btn-sm"
         >
           <i className="fas fa-plus mr-1"></i> Tambah Data

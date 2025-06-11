@@ -61,8 +61,8 @@ function App() {
           <Route path="verification" element={<ItemVerification />}/>
 
           {/* location */}
-          <Route path="create" element={<CreateLocation />} />
-          <Route path="update" element={<UpdateLocation />} />
+          <Route path="createloc" element={<CreateLocation />} />
+          <Route path="updateloc" element={<UpdateLocation />} />
 
           
         </Route>
