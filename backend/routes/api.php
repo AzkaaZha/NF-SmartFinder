@@ -32,22 +32,22 @@ Route::middleware('auth:api')->group(function () {
 
     // Route Satpam 
     Route::middleware('role:satpam')->group(function () {
-        Route::apiResource('users', UserController::class)->only('index', 'show');
-        Route::apiResource('locations', LocationController::class)->only('index', 'show', 'store', 'update');
+        Route::apiResource('users', UserController::class)->only('index', 'show', 'store', 'update');
+        Route::apiResource('locations', LocationController::class)->only('index');
         Route::apiResource('storages', StorageController::class)->only('index', 'show', 'store', 'update');
         Route::apiResource('categories', CategorieController::class)->only('index', 'show', 'store', 'update');
         Route::apiResource('items', ItemController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('verifications', VerificationController::class);
+        Route::apiResource('verifications', VerificationController::class)->only('index', 'show', 'store', 'update');
     });
 
     // Route User
     Route::middleware('role:user')->group(function () {
-        Route::apiResource('users', UserController::class)->only('show');
-        Route::apiResource('locations', LocationController::class)->only('index', 'show');
-        Route::apiResource('storages', StorageController::class)->only('index', 'show');
-        Route::apiResource('categories', CategorieController::class)->only('index', 'show');
+        Route::apiResource('users', UserController::class)->only('index', 'show', 'store', 'update');
+        Route::apiResource('locations', LocationController::class)->only('index');
+        Route::apiResource('storages', StorageController::class)->only('index', 'show', 'store', 'update');
+        Route::apiResource('categories', CategorieController::class)->only('index', 'show', 'store', 'update');
         Route::apiResource('items', ItemController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('verifications', VerificationController::class)->only('index', 'store');
+        Route::apiResource('verifications', VerificationController::class)->only('index', 'show', 'store', 'update');
     });
 });
 
