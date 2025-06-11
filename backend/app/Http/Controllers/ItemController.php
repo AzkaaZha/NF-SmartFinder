@@ -21,6 +21,12 @@ class ItemController extends Controller
             ], 404);
         }
 
+        // Tambahkan img_url manual
+        $items = $items->map(function ($item) {
+            $item->img_url = asset('storage/images/' . $item->image);
+            return $item;
+        });
+
         return response()->json([
             'success' => true,
             'message' => 'daftar barang',
@@ -52,7 +58,7 @@ class ItemController extends Controller
 
         // upload image
         $image = $request->file('image');
-        $image->store('items', 'public');
+        $image->store('images', 'public');
 
         // buat data
         $item = Item::create([
