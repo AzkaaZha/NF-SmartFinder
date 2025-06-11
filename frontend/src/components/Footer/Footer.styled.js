@@ -1,66 +1,66 @@
+// Footer.styled.js
 import styled from "styled-components";
 
-const FooterWrapper = styled.footer`
-  background-color: var(--background-color);
+export const FooterWrapper = styled.footer`
+  background-color: #f7f9fc;
   color: var(--default-color);
   font-size: 14px;
-  position: relative;
   padding-top: 50px;
+  padding-bottom: 25px;
+  position: relative;
+`;
 
-  img {
-    object-fit: contain;
+export const FooterTop = styled.div`
+  padding-bottom: 20px;
+`;
+
+export const FooterRow = styled.div``;
+
+export const FooterCol = styled.div`
+  p {
+    font-size: 14px;
+    margin-top: 10px;
   }
+`;
 
-  .footer-top {
-    padding-top: 50px;
-  }
+export const Logo = styled.img`
+  max-width: 180px;
+  height: auto;
+  margin-bottom: 15px;
+`;
 
-  .footer-links {
-    margin-bottom: 30px;
+export const Description = styled.p`
+  font-family: var(--heading-font);
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+`;
 
-    h4 {
-      font-size: 16px;
-      font-weight: bold;
-      position: relative;
-      padding-bottom: 12px;
-    }
+export const SectionTitle = styled.h4`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+`;
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+export const LinkList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
 
-      li {
-        padding: 10px 0;
-        display: flex;
-        align-items: center;
+  li {
+    margin: 8px 0;
+    a {
+      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      text-decoration: none;
+      transition: color 0.3s;
 
-        &:first-child {
-          padding-top: 0;
-        }
-
-        a {
-          color: color-mix(in srgb, var(--default-color), transparent 30%);
-          display: inline-block;
-          line-height: 1;
-          text-decoration: none;
-
-          &:hover {
-            color: var(--accent-color);
-          }
-        }
+      &:hover {
+        color: var(--accent-color);
       }
-    }
-  }
-
-  .copyright {
-    padding: 25px 0;
-    border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
-
-    p {
-      margin-bottom: 0;
     }
   }
 `;
 
-export default FooterWrapper;
+export const Copyright = styled.div`
+  padding-top: 25px;
+  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  font-size: 13px;
+`;

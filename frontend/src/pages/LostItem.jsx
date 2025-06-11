@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Header from "../layout/header";
-import Footer from "../layout/footer";
 
 const statusBadgeStyle = (status) => {
   switch (status) {
@@ -98,7 +96,6 @@ function LostItems() {
 
   return (
     <div>
-      <Header />
       <div className="container py-5" style={{ marginTop: "100px" }}>
         {/* Search & Filter */}
         <div className="d-flex gap-2 mb-4" style={{ flexWrap: "nowrap" }}>
@@ -257,7 +254,6 @@ function LostItems() {
           </Modal>
         )}
       </div>
-      <Footer />
     </div>
   );
 }

@@ -1,60 +1,71 @@
-import FooterWrapper from "./Footer.styled";
+import React from "react";
+import {
+  FooterWrapper,  
+  FooterRow,
+  FooterCol,
+  Logo,
+  Description,
+  SectionTitle,
+  LinkList,
+  Copyright,
+} from "./Footer.styled";
+import { Link } from "react-router-dom";
+import Container from "../ui/Container";
 
 function Footer() {
   return (
-    <FooterWrapper id="footer">
-      <div className="container footer-top">
-        <div className="row gy-4">
-          <div className="col-lg-4">
-            <img
-              src="/assets/img/logo.png"
-              alt="NF SmartFinder Logo"
-              style={{ maxWidth: "180px", height: "auto", marginBottom: "15px" }}
-            />
-            <p>
-              NF SmartFinder adalah aplikasi yang membantu pengguna menemukan kembali
-              barang yang hilang dengan mudah dan cepat. Kami berkomitmen untuk
-              menyediakan layanan yang aman, efisien, dan mudah digunakan.
-            </p>
-          </div>
+    <FooterWrapper>
+      <Container >
+        <FooterRow className="row gy-4">
+          <FooterCol className="col-lg-6">
+            <Logo src="/assets/img/logo.png" alt="NF SmartFinder Logo" />
+            <Description>
+              NF SmartFinder adalah aplikasi yang membantu pengguna menemukan
+              kembali barang yang hilang dengan mudah dan cepat. Kami berkomitmen
+              untuk menyediakan layanan yang aman, efisien, dan mudah digunakan. <br />
 
-          <div className="col-lg-2 col-md-3 footer-links">
-            <h4>Menu</h4>
-            <ul>
-              <li><a href="#">Beranda</a></li>
-              <li><a href="#">Tentang Kami</a></li>
-              <li><a href="#">Fitur</a></li>
-              <li><a href="#">Kontak</a></li>
-            </ul>
-          </div>
+              Contact Us : +628123456789 <br />
+              Jl. Raya Lenteng Agung No.20, Jakarta Selatan
+            </Description>
+          </FooterCol>
 
-          <div className="col-lg-2 col-md-3 footer-links">
-            <h4>Fitur</h4>
-            <ul>
-              <li><a href="#">Laporkan Barang</a></li>
-              <li><a href="#">Cari Barang Hilang</a></li>
-              <li><a href="#">Notifikasi Temuan</a></li>
-            </ul>
-          </div>
+          <FooterCol className="col-lg-2 col-md-4">
+            <SectionTitle>Menu</SectionTitle>
+            <LinkList>
+              <li><Link to="#">Beranda</Link></li>
+              <li><Link to="#">Tentang Kami</Link></li>
+              <li><Link to="#">Fitur</Link></li>
+              <li><Link to="#">Kontak</Link></li>
+            </LinkList>
+          </FooterCol>
 
-          <div className="col-lg-2 col-md-3 footer-links">
-            <h4>Bantuan</h4>
-            <ul>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Syarat & Ketentuan</a></li>
-              <li><a href="#">Kebijakan Privasi</a></li>
-              <li><a href="#">Dukungan</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+          <FooterCol className="col-lg-2 col-md-3">
+            <SectionTitle>Fitur</SectionTitle>
+            <LinkList>
+              <li><Link to="#">Laporkan Barang</Link></li>
+              <li><Link to="#">Cari Barang Hilang</Link></li>
+              <li><Link to="#">Notifikasi Temuan</Link></li>
+            </LinkList>
+          </FooterCol>
 
-      <div className="container text-center mt-4 copyright">
+          <FooterCol className="col-lg-2 col-md-3">
+            <SectionTitle>Bantuan</SectionTitle>
+            <LinkList>
+              <li><Link to="#">FAQ</Link></li>
+              <li><Link to="#">Syarat & Ketentuan</Link></li>
+              <li><Link to="#">Kebijakan Privasi</Link></li>
+              <li><Link to="#">Dukungan</Link></li>
+            </LinkList>
+          </FooterCol>
+        </FooterRow>
+      </Container>
+
+      <Copyright className="container text-center mt-4">
         <p>
           © <span>2025</span> <strong className="px-1 sitename">NF SmartFinder</strong> |
           All Rights Reserved
         </p>
-      </div>
+      </Copyright>
     </FooterWrapper>
   );
 }

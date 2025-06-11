@@ -1,151 +1,256 @@
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
-
-export const Header = styled.header`
-  background-color: rgba(255, 255, 255, 0);
-  transition: all 0.5s;
-  z-index: 997;
-  padding: 20px 0;
-  align-items: center;
-  display: flex;
+export const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
-  right: 0;
   left: 0;
-  color:rgba(0, 0, 0, 0);
+  right: 0;
+  width: 100%;
+  z-index: 997;
+  background-color: rgba(255, 255, 255, 0);
+  transition: all 0.5s;
+  color: ${({ theme }) => theme.colors.default}; 
+  padding: 20px 0;
 
   @media (max-width: 1200px) {
-    padding: 10px 0;
+    padding-top: 10px;
   }
 `;
 
-// Container di dalam header
 export const HeaderContainer = styled.div`
-  background: #ffffff;
-  width: 100%;
-  padding: 5 25px;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
+  padding: 5px 25px;
+  background-color: ${({ theme }) => theme.colors.surface};
   border-radius: 50px;
-  position: relative;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-  height: 80px;
+  position: relative;
 
-  @media (max-width: 1200px) {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 10px 5px 10px 15px;
+  .mobile-nav-toggle {
+    display: none;
+
+    @media (max-width: 1199px) {
+      display: block;
+      position: absolute;
+      right: 20px;
+    }
   }
 `;
 
-// Logo (dulu class="logo d-flex align-items-center me-auto me-xl-0")
-export const Logo = styled.a`
+export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
   padding-left: 5px;
-  line-height: 1;
-  img {
-    max-height: 70px;
-    margin-right: 8px;
-  }
+  flex-shrink: 0;
 
   @media (max-width: 1200px) {
     order: 1;
   }
 `;
 
-// Menu navigasi
+export const LogoImg = styled.img`
+  max-height: 70px;
+  margin-right: 8px;
+`;
+
 export const NavMenu = styled.nav`
-  ul {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      position: relative;
-      white-space: nowrap;
-      padding: 10px 0 10px 28px;
-
-      a {
-        display: flex;
-        align-items: center;
-        color: #212529;;
-        transition: 0.3s;
-        font-size: 15px;
-        font-weight: 500;
-        position: relative;
-        text-decoration: none;
-
-        &.active,
-        &:hover {
-          color: #ffc107;
-        }
-      }
-
-      &.dropdown {
-        ul {
-          display: none;
-          position: absolute;
-          top: 100%;
-          left: 28px;
-          background: #fff;
-          padding: 10px 0;
-          border-radius: 4px;
-          box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
-          z-index: 99;
-          min-width: 200px;
-
-          li {
-            padding: 10px 20px;
-
-            a {
-              color: #212529;
-
-              &:hover {
-                color: #ffc107;
-              }
-            }
-          }
-        }
-
-        &:hover ul {
-          display: block;
-        }
-      }
-    }
-  }
-`;
-
-// Tombol login/daftar
-export const GetStartedButton = styled.a`
-  background: #27227d ;
-  padding: 10px 10px;
-  margin-left: 30px;
-  border-radius: 50px;
-  color: #;
-  font-weight: 500;
-  transition: 0.3s;
-  text-decoration: none;
-
-  &:hover {
-    background: #e0a800;
-    color: #212529;
-  }
-`;
-
-// Toggle menu mobile
-export const MobileNavToggle = styled.i`
-  font-size: 24px;
-  cursor: pointer;
-  color: #fff;
-  display: none;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
 
   @media (max-width: 1200px) {
+    order: 3;
+  }
+`;
+
+export const NavList = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 1199px) {
+    flex-direction: column;
+    align-items: flex-start;
+    background: ${({ theme }) => theme.colors.surface};
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 100;
+    width: 100%;
+    display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+    padding: 15px 25px;
+  }
+`;
+
+export const NavItem = styled.li`
+  position: relative;
+  list-style: none;
+
+  &:last-child a {
+    padding-right: 0;
+  }
+
+  @media (max-width: 1199px) {
+    /* Mobile styling jika mau aktifkan menu toggle */
+  }
+`;
+
+export const NavLink = styled(Link)`
+  color: ${({ theme, $active }) =>
+    $active ? "#f59e0b" : theme.colors.default};
+  font-size: 16px;
+  font-weight: 400;
+  font-family: ${({ theme }) => theme.fonts.nav};
+  padding: 18px 15px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: color 0.3s;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => theme.colors.accent};
+  }
+`;
+
+export const Dropdown = styled.li`
+  position: relative;
+  list-style: none;
+
+  &:hover > ul {
+    opacity: 1;
+    top: 100%;
+    visibility: visible;
+  }
+
+  @media (max-width: 1199px) {
+    width: 100%;
+
+    /* bisa aktifkan toggle dropdown mobile disini */
+  }
+`;
+
+export const DropdownToggle = styled.a`
+  color: ${({ theme }) => theme.colors.default};
+  font-size: 16px;
+  font-weight: 400;
+  font-family: ${({ theme }) => theme.fonts.nav};
+  padding: 18px 15px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+
+  i {
+    font-size: ${({ $user }) => ($user ? "0.9rem" : "12px")};
+    line-height: 0;
+    transition: 0.3s;
+    margin-left: ${({ $user }) => ($user ? "4px" : "5px")};
+  }
+
+  ${({ $user }) =>
+    $user &&
+    `
+    font-weight: bold;
+    color: #333;
+    gap: 8px;
+
+    i.bi-person-circle {
+      font-size: 1.2rem;
+    }
+  `}
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => theme.colors.accent};
+  }
+
+`;
+
+export const DropdownMenu = styled.ul`
+  position: absolute;
+  left: 14px;
+  top: 130%;
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  margin: 0;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 99;
+
+  ${({ $user }) =>
+    $user &&
+    `
+    right: 0;
+    left: auto;
+    top: 120%;
+    min-width: 140px;
+    padding: 8px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    z-index: 1000;
+  `}
+
+  @media (max-width: 1199px) {
+    position: static;
+    box-shadow: none;
+    border: 1px solid rgba(51, 51, 51, 0.1);
+    margin: 10px 20px;
+    background-color: rgba(33, 37, 41, 0.1);
+    display: none;
+
+    /* aktifkan toggle dropdown di mobile */
+  }
+`;
+
+export const DropdownItem = styled.li`
+  min-width: 200px;
+
+  padding: 0;
+
+  & > a {
+    padding: 10px 20px;
+    font-size: 15px;
+    color: ${({ theme }) => theme.colors.default};
+    text-transform: none;
     display: block;
+
+    &:hover {
+      color: #f59e0b;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    min-width: auto;
+  }
+`;
+
+export const LogoutButton = styled.button`
+  width: 100%;
+  padding: 8px 20px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+
+  &:hover {
+    color: #f59e0b;
   }
 `;

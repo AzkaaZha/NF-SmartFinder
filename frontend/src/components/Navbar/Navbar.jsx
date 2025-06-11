@@ -1,66 +1,119 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
-  Header,
   HeaderContainer,
-  Logo,
+  HeaderWrapper,
+  LogoLink,
+  LogoImg,
   NavMenu,
-  GetStartedButton,
-  MobileNavToggle
+  NavList,
+  NavItem,
+  NavLink,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  LogoutButton,
 } from "./Navbar.styled";
 
 function Navbar() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      setUserName(user.name);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload(); 
+  };
 
   return (
-    <Header>
+    <HeaderWrapper>
       <HeaderContainer>
-        <Logo href="index.html">
-          <img src="/assets/img/logo.png" alt="logo" />
-        </Logo>
+        <LogoLink to="/">
+          <LogoImg src="/assets/img/logo.png" alt="logo" />
+        </LogoLink>
+        <button
+          className="mobile-nav-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            fontSize: "24px",
+            display: "none",
+            cursor: "pointer",
+          }}
+        >
+          <i className="bi bi-list"></i>
+        </button>
 
         <NavMenu>
-          <ul>
-            <li>
-              <Link to="/" className={isActive("/") ? "active" : ""}>
+          <NavList $isOpen={isMobileMenuOpen}>
+            <NavItem>
+              <NavLink $active={isActive("/")} to="/">
                 Home
-              </Link>
-            </li>
-            <li>
-              <a href="#about">About</a>
-            </li>
-            <li className="dropdown">
-              <a href="#">
-                <span>Features</span>{" "}
-                <i className="bi bi-chevron-down toggle-dropdown"></i>
-              </a>
-              <ul>
-                <li>
-                  <Link to="">Lapor Barang Temuan</Link>
-                </li>
-                <li>
-                  <Link to="">Lapor Barang Hilang</Link>
-                </li>
-                <li>
-                  <Link to="">Cari Barang Hilang</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/contact" className={isActive("/contact") ? "active" : ""}>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink as="a" href="#about">
+                About
+              </NavLink>
+            </NavItem>
+            <Dropdown>
+              <DropdownToggle href="#" onClick={(e) => e.preventDefault()}>
+                Features <i className="bi bi-chevron-down toggle-dropdown" />
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>
+                  <NavLink to="/form">Lapor Barang Temuan</NavLink>
+                </DropdownItem>
+                <DropdownItem>
+                  <NavLink $active={isActive("/lostitems")} to="/lostitems">
+                    Daftar Barang Hilang
+                  </NavLink>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+
+            <NavItem>
+              <NavLink $active={isActive("/contact")} to="/contact">
                 Contact
-              </Link>
-            </li>
-            <li>
-              <GetStartedButton as={Link} to="/login">
-                Login/Daftar
-              </GetStartedButton>
-            </li>
-          </ul>
-          <MobileNavToggle className="bi bi-list" />
+              </NavLink>
+            </NavItem>
+
+            {!userName ? (
+              <NavItem>
+                <NavLink className="btn-getstarted" to="/login">
+                  Login/Daftar
+                </NavLink>
+              </NavItem>
+            ) : (
+              <Dropdown style={{ position: "relative" }}>
+                <DropdownToggle href="#" onClick={(e) => e.preventDefault()} $user>
+                  <i className="bi bi-person-circle" />
+                  {userName}
+                  <i className="bi bi-chevron-down" />
+                </DropdownToggle>
+                <DropdownMenu $user>
+                  <DropdownItem>
+                    <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            )}
+          </NavList>
         </NavMenu>
       </HeaderContainer>
-    </Header>
+    </HeaderWrapper>
   );
 }
 
