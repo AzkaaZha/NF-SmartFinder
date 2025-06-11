@@ -5,8 +5,18 @@ import Login from './pages/Auth/Login';
 import Contact from './pages/Public/Contact/Contact';
 import { Routes, Route } from 'react-router-dom';
 // import PrivateRoute from './components/privateRoute';
-// import FormKlaimBarang from './pages/FormKlaimBarang';
+import PrivateRoute from "./components/privateRoute";
+import KlaimItem from './pages/KlaimItem';
 // import LostItemForm from './pages/LostItemForm';
+import AdminDashboard from "./pages/dashboard/admin/adminDashboard";
+import UserManagement from "./pages/dashboard/admin/user/userManagemen";
+import ItemCategorie from "./pages/dashboard/admin/categorie/ItemCategorie";
+import LocationList from "./pages/dashboard/admin/location/locationList";
+import MissingItem from "./pages/dashboard/admin/item/missingItem";
+import ItemVerification from "./pages/dashboard/admin/verification/itemVerification";
+import AdminDashboardLayout from "./layout/dashboard/admin";
+import CreateLocation from "./pages/dashboard/admin/location/create";
+import UpdateLocation from "./pages/dashboard/admin/location/update";
 import LostItems from './pages/LostItem';
 import { ThemeProvider } from 'styled-components';
 import theme from './utils/theme';
@@ -31,6 +41,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/lostitems" element={<LostItems />} />
+            <Route path="/klaim/:id" element={<KlaimItem />} />
           </Route>
 
           {/* Layout Admin / Private */}
@@ -56,6 +67,22 @@ function App() {
               }
             />
           </Route> */}
+
+           {/* admin dashboard route */}
+          <Route path="/dashboard" element={<AdminDashboardLayout />}>
+            <Route path="admin" element={<AdminDashboard />} />
+            <Route path="user" element={<UserManagement />} />
+            <Route path="categorie" element={<ItemCategorie />}/>
+            <Route path="location" element={<LocationList />}/>
+            <Route path="item" element={<MissingItem />}/>
+            <Route path="verification" element={<ItemVerification />}/>
+
+            {/* location */}
+            <Route path="create" element={<CreateLocation />} />
+            <Route path="update" element={<UpdateLocation />} />
+
+
+          </Route>
 
         </Routes>
       </>
