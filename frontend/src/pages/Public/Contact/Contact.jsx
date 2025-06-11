@@ -1,20 +1,25 @@
-import Header from "../layout/header";
-import Footer from "../layout/footer";
+import React from "react";
+import {
+  Section,
+  InfoBox,
+  InfoItem,
+  ContactForm,
+} from "./Contact.styled";
+import Button from "../../../components/ui/Button/Button";
 
 function Contact() {
   return (
     <div>
-      <header>{Header()}</header>
       <main className="main">
-        <section id="contact" className="contact section light-background mt-5">
+        <Section id="contact" className="contact section">
           <div className="container">
             <div className="row g-4 g-lg-5">
               <div className="col-lg-5">
-                <div className="info-box">
+                <InfoBox>
                   <h3>Informasi Kontak</h3>
                   <p>Kami siap membantu proses pelaporan dan pencarian barang hilang.</p>
 
-                  <div className="info-item">
+                  <InfoItem>
                     <div className="icon-box">
                       <i className="bi bi-geo-alt"></i>
                     </div>
@@ -22,9 +27,9 @@ function Contact() {
                       <h4>Alamat</h4>
                       <p>Jl. Raya Lenteng Agung No.20, Jakarta Selatan</p>
                     </div>
-                  </div>
+                  </InfoItem>
 
-                  <div className="info-item">
+                  <InfoItem>
                     <div className="icon-box">
                       <i className="bi bi-telephone"></i>
                     </div>
@@ -32,9 +37,9 @@ function Contact() {
                       <h4>Nomor Telepon</h4>
                       <p>+62 812 3456 7890</p>
                     </div>
-                  </div>
+                  </InfoItem>
 
-                  <div className="info-item">
+                  <InfoItem>
                     <div className="icon-box">
                       <i className="bi bi-envelope"></i>
                     </div>
@@ -42,12 +47,12 @@ function Contact() {
                       <h4>Email</h4>
                       <p>smartfinder@nf.or.id</p>
                     </div>
-                  </div>
-                </div>
+                  </InfoItem>
+                </InfoBox>
               </div>
 
               <div className="col-lg-7">
-                <div className="contact-form">
+                <ContactForm>
                   <h3>Kirim Pesan</h3>
                   <p>Masukkan pesan kamu di bawah ini. Kami akan merespons secepatnya.</p>
 
@@ -93,18 +98,16 @@ function Contact() {
                         <div className="loading">Loading</div>
                         <div className="error-message"></div>
                         <div className="sent-message">Pesanmu sudah terkirim. Terima kasih!</div>
-                        <button type="submit" className="btn btn-primary">Kirim Pesan</button>
+                        <Button variant="primary" type="submit" >Kirim Pesan</Button>
                       </div>
                     </div>
                   </form>
-                </div>
+                </ContactForm>
               </div>
-
             </div>
           </div>
-        </section>
+        </Section>
       </main>
-      <footer>{Footer()}</footer>
     </div>
   );
 }
