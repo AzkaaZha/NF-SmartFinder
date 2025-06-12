@@ -14,7 +14,19 @@ class StorageSeeder extends Seeder
     public function run(): void
     {
         Storage::create([
-            'name' => 'jeje',
+            'name' => 'Pos Satpam B-2',
+            'contact' => '123456789',
+            'users_id' => 1,
+        ]);
+
+        Storage::create([
+            'name' => 'Pos Satpam B-1',
+            'contact' => '123456789',
+            'users_id' => 1,
+        ]);
+
+        Storage::create([
+            'name' => 'Pos Satpam A-1',
             'contact' => '123456789',
             'users_id' => 1,
         ]);
