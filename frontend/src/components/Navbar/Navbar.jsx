@@ -20,7 +20,23 @@ function Navbar() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [userName, setUserName] = useState(null);
+
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -38,23 +54,16 @@ function Navbar() {
 
   return (
     <HeaderWrapper>
-      <HeaderContainer>
+      <HeaderContainer isScrolled={isScrolled}>
         <LogoLink to="/">
           <LogoImg src="/assets/img/logo.png" alt="logo" />
         </LogoLink>
         <button
-          className="mobile-nav-toggle"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            display: "none",
-            cursor: "pointer",
-          }}
+        className="mobile-nav-toggle"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          <i className="bi bi-list"></i>
-        </button>
+        <i className="bi bi-list"></i>
+      </button>
 
         <NavMenu>
           <NavList $isOpen={isMobileMenuOpen}>
@@ -92,7 +101,7 @@ function Navbar() {
 
             {!userName ? (
               <NavItem>
-                <NavLink className="btn-getstarted" to="/login">
+                <NavLink to="/login">
                   Login/Daftar
                 </NavLink>
               </NavItem>
