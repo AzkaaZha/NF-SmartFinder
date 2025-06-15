@@ -1,12 +1,11 @@
-// Footer.styled.js
 import styled from "styled-components";
 
 export const FooterWrapper = styled.footer`
-  background-color: #f7f9fc;
-  color: var(--default-color);
+  background-color: ${({ theme }) => theme.colors.lightBackground};
+  color: ${({ theme }) => theme.colors.default};
   font-size: 14px;
   padding-top: 50px;
-  padding-bottom: 25px;
+  padding-bottom: 10px;
   position: relative;
 `;
 
@@ -30,8 +29,8 @@ export const Logo = styled.img`
 `;
 
 export const Description = styled.p`
-  font-family: var(--heading-font);
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  font-family: ${({ theme }) => theme.fonts.heading};
+  color: ${({ theme }) => theme.colors.default};
 `;
 
 export const SectionTitle = styled.h4`
@@ -48,19 +47,19 @@ export const LinkList = styled.ul`
   li {
     margin: 8px 0;
     a {
-      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      color: ${({ theme }) => theme.colors.nav};
       text-decoration: none;
       transition: color 0.3s;
 
       &:hover {
-        color: var(--accent-color);
+        color: ${({ theme }) => theme.colors.navHover};
       }
     }
   }
 `;
 
 export const Copyright = styled.div`
-  padding-top: 25px;
-  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  padding-top: 10px;
+  border-top: 1px solid ${({ theme }) => theme.colors.navDropdownHover};
   font-size: 13px;
 `;
