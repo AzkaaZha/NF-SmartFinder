@@ -1,9 +1,8 @@
-// LostItemForm.Styled.js
 import styled from 'styled-components';
 
 export const FormWrapper = styled.div`
   max-width: 600px;
-  margin: 40px auto;
+  margin: 120px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 8px;

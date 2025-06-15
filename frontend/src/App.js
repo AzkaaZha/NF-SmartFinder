@@ -5,7 +5,7 @@ import Login from './pages/Auth/Login';
 import Home from './pages/Public/Home/Home';
 import Contact from './pages/Public/Contact/Contact';
 import KlaimItem from './pages/KlaimItem';
-import LostItemForm from './pages/LostItemForm';
+import LostItemForm from './pages/Public/ItemForm/LostItemForm';
 import AdminDashboard from "./pages/dashboard/admin/adminDashboard";
 import UserManagement from "./pages/dashboard/admin/user/userManagemen";
 import ItemCategorie from "./pages/dashboard/admin/categorie/ItemCategorie";
@@ -19,7 +19,7 @@ import LostItems from './pages/LostItem';
 import theme from './utils/theme';
 import GlobalStyle from './components/GlobalStyles/GlobalStyle';
 import PublicLayout from './layout/PublicLayout';
-import FormKlaimBarang from './pages/FormKlaimBarang';
+import FormKlaimBarang from './pages/Public/KlaimForm/FormKlaimBarang';
 import SplashScreen from './components/SplashScreen/SplashScreen'; 
 // import AdminLayout from './layouts/AdminLayout';
 
@@ -48,6 +48,7 @@ function App() {
               <Route path="/lostitems" element={<LostItems />} />
               <Route path="/klaim/:id" element={<KlaimItem />} />
               <Route path="/form" element={<LostItemForm />} />
+              
             </Route>
 
             {/* Admin Dashboard route */}

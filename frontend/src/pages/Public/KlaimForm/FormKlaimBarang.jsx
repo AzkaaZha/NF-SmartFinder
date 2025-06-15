@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
 import {
   FormWrapper,
   Form,
@@ -29,7 +27,6 @@ export default function FormKlaimBarang() {
 
   return (
     <div>
-      <Navbar/>
       <FormWrapper>
         <Title>Form Klaim Barang</Title>
         <Form onSubmit={handleSubmit}>
@@ -91,7 +88,6 @@ export default function FormKlaimBarang() {
           <SubmitButton type="submit">Kirim Klaim</SubmitButton>
         </Form>
       </FormWrapper>
-      <Footer />
     </div>
   );
 }
