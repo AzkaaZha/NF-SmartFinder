@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import {
     FormWrapper,
     Form,
@@ -111,11 +109,9 @@ export default function LostItemForm({ userId, userName }) {
 
     return (
         <div>
-            <Navbar />
             <FormWrapper>
                 <Form onSubmit={handleSubmit}>
                     <Title>Form Pelaporan Barang</Title>
-
                     <FormGroup>
                         <label>Nama Barang</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
@@ -171,11 +167,9 @@ export default function LostItemForm({ userId, userName }) {
                     <SubmitButton type="submit" disabled={loading}>
                         {loading ? 'Mengirim...' : 'Kirim Laporan'}
                     </SubmitButton>
-
                     {message && <Message>{message}</Message>}
                 </Form>
             </FormWrapper>
-            <Footer />
         </div>
     );
 }
