@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../layout/header';
-import Footer from '../layout/footer';
 
 export default function LostItemForm({ userId, userName }) {
     const [formData, setFormData] = useState({
@@ -103,7 +101,6 @@ export default function LostItemForm({ userId, userName }) {
 
     return (
         <div>
-            <Header />
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit} className="lost-item-form">
                     <h2>Form Pelaporan Barang</h2>
@@ -171,7 +168,6 @@ export default function LostItemForm({ userId, userName }) {
                     {message && <p className="message">{message}</p>}
                 </form>
             </div>
-            <Footer />
         </div>
     );
 }
