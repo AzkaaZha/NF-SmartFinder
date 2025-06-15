@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import { useParams } from 'react-router-dom';
 import {
     FormWrapper,
@@ -89,10 +87,9 @@ export default function KlaimItem({ userId, token }) {
 
     return (
         <div>
-            <Navbar />
-            <FormWrapper>
-                <Form onSubmit={handleSubmit}>
-                    <Title>Klaim Barang Hilang</Title>
+            <div className="form-wrapper">
+                <form onSubmit={handleSubmit} className="klaim-item-form">
+                    <h2>Klaim Barang Hilang</h2>
 
                     <FormGroup>
                         <label>Pesan</label>
@@ -118,10 +115,9 @@ export default function KlaimItem({ userId, token }) {
                         {loading ? 'Mengajukan...' : 'Ajukan Klaim'}
                     </SubmitButton>
 
-                    {message && <Message>{message}</Message>}
-                </Form>
-            </FormWrapper>
-            <Footer />
+                    {message && <p className="message">{message}</p>}
+                </form>
+            </div>
         </div>
     );
 }
