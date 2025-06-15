@@ -1,7 +1,9 @@
-// src/pages/Home/home.styled.js
 import styled from "styled-components";
 
+// About Section
 export const AboutSection = styled.section`
+  padding: 5rem 0;
+
   .about-meta {
     color: #27227d;
     font-weight: 600;
@@ -24,139 +26,140 @@ export const AboutSection = styled.section`
     margin-bottom: 2rem;
     color: color-mix(in srgb, var(--default-color), transparent 20%);
   }
-
-  .image-wrapper {
-    position: relative;
-
-    @media (max-width: 992px) {
-      padding-left: 0;
-      margin-top: 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .images {
-      @media (max-width: 992px) {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-    }
-  }
 `;
 
+export const SectionTitle = styled.div`
+  text-align: center;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+`;
+
+// Features Section
 export const FeaturesSection = styled.section`
+  padding: 1rem 0;
   background-color: #f7f9fc;
 
-  .nav-tabs {
-    border: 0;
-    background-color: color-mix(in srgb, var(--default-color), transparent 96%);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50px;
-    padding: 6px;
-    width: auto;
+  .row {
+    margin-bottom: 20px;
   }
 
-  .nav-item {
-    margin: 0;
-    padding: 0 5px 0 0;
-
-    &:last-child {
-      padding-right: 0;
-    }
+  h3 {
+    margin-bottom: 20px;
+    font-size: 1.75rem;
   }
 
-  .nav-link {
-    background-color: none;
-    color: var(--heading-color);
-    padding: 10px 30px;
-    transition: 0.3s;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    height: 100%;
-    border: 0;
-    margin: 0;
+  ul {
+    margin-bottom: 20px;
+    padding-left: 20px;
+    list-style-type: none;
 
-    @media (max-width: 468px) {
-      padding: 8px 20px;
-    }
+    li {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: ${({ theme }) => theme.colors.default};
 
-    i {
-      padding-right: 15px;
-      font-size: 48px;
-    }
-
-    h4 {
-      font-size: 14px;
-      font-weight: 500;
-      margin: 0;
-    }
-
-    &:hover {
-      border-color: color-mix(in srgb, var(--default-color), transparent 80%);
-      h4 {
-        color: var(--accent-color);
-      }
-    }
-
-    &.active {
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
-
-      h4 {
-        color: var(--contrast-color);
+      i {
+        margin-right: 8px;
+        color: ${({ theme }) => theme.colors.accent};
       }
     }
   }
 
   .tab-content {
-    margin-top: 30px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 
-  .tab-pane {
-    h3 {
-      color: var(--heading-color);
-      font-weight: 700;
-      font-size: 32px;
-      position: relative;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
+  .row {
+    margin-bottom: 40px;
+  }
 
-      &::after {
-        content: "";
-        position: absolute;
-        display: block;
-        width: 60px;
-        height: 3px;
-        background: var(--accent-color);
-        left: 0;
-        bottom: 0;
-      }
+  .col-lg-6 {
+    margin-bottom: 30px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  margin-top: 15px;
+  text-align: left;
+
+  @media (max-width: 1199px) {
+    text-align: center;
+  }
+`;
+
+// Lost Items Section
+export const LostItemsSection = styled.section`
+  padding: 3rem 0;
+`;
+
+// Card Wrapper
+export const CardWrapper = styled.div`
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+  }
+
+  .image-container {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-right: 20px;
+    background-color: #f8f9fa;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-
-      li {
-        padding-top: 10px;
-
-        i {
-          font-size: 20px;
-          padding-right: 4px;
-          color: var(--accent-color);
-        }
-      }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
+  }
 
-    p:last-child {
-      margin-bottom: 0;
+  .text-end {
+    text-align: right;
+
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 50px;
+      background-color: ${({ theme }) => theme.colors.accent};
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.warningDark};
+        transform: translateY(-3px);
+      }
     }
   }
 `;

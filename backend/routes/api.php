@@ -14,11 +14,22 @@ Route::get('/user', function (Request $request) {
     return $request->user();    
 })->middleware('auth:sanctum');
 
+// Login & Register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
 
+// Public Access ( No Login )
+Route::apiResource('items', ItemController::class)->only(['index', 'show']);
+Route::get('/locations', [LocationController::class, 'index']);
+Route::get('/locations/{id}', [LocationController::class, 'show']);
+Route::get('/storages', [StorageController::class, 'index']);
+Route::get('/storages/{id}', [StorageController::class, 'show']);
+Route::get('/categories', [CategorieController::class, 'index']);
+Route::get('/categories/{id}', [CategorieController::class, 'show']); 
+
+// User Authenticated ( User )
 Route::middleware('auth:api')->group(function () {
+<<<<<<< HEAD
 
     // Route Admin : Full Access    
     Route::middleware('role:admin')->group(function () {
@@ -49,39 +60,48 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('items', ItemController::class)->only('index', 'show', 'store', 'update');
         Route::apiResource('verifications', VerificationController::class)->only('index', 'show', 'store', 'update');
     });
+=======
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::post('/verifications', [VerificationController::class, 'store']);
+>>>>>>> ee6f0029ef73c74ccdd53c2219defcaa7a16ac99
 });
 
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
+// Admin Authenticated ( Admin )
+Route::middleware('auth:api', 'role:admin')->group(function () {
+    
+    // CRUD Users
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-Route::get('/locations', [LocationController::class, 'index']);
-Route::post('/locations', [LocationController::class, 'store']);
-Route::put('/locations/{id}', [LocationController::class, 'update']);   
-Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
+    // CRUD Locations
+    Route::post('/locations', [LocationController::class, 'store']);
+    Route::put('/locations/{id}', [LocationController::class, 'update']);
+    Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
 
-Route::get('/storages', [StorageController::class, 'index']);
-Route::post('/storages', [StorageController::class, 'store']);
-Route::get('/storages/{id}', [StorageController::class, 'show']);
-Route::put('/storages/{id}', [StorageController::class, 'update']);
-Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
+    // CRUD Storages
+    Route::post('/storages', [StorageController::class, 'store']);
+    Route::put('/storages/{id}', [StorageController::class, 'update']);
+    Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
 
-Route::get('/categories', [CategorieController::class, 'index']);
-Route::post('/categories', [CategorieController::class, 'store']);
-Route::get('/categories/{id}', [CategorieController::class, 'show']);
-Route::put('/categories/{id}', [CategorieController::class, 'update']);
-Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
+    // CRUD Categories
+    Route::post('/categories', [CategorieController::class, 'store']);
+    Route::put('/categories/{id}', [CategorieController::class, 'update']);
+    Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
 
-Route::get('/items', [ItemController::class, 'index']);
-Route::post('/items', [ItemController::class, 'store']);
-Route::get('/items/{id}', [ItemController::class, 'show']);
-Route::put('/items/{id}', [ItemController::class, 'update']);
-Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+    // CRUD Items
+    Route::put('/items/{id}', [ItemController::class, 'update']);
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']);    
+});
 
-Route::get('/verifications', [VerificationController::class, 'index']);
-Route::post('/verifications', [VerificationController::class, 'store']);
-Route::get('/verifications/{id}', [VerificationController::class, 'show']);
-Route::put('/verifications/{id}', [VerificationController::class, 'update']);
-Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+// Satpam Authenticated ( Satpam )
+Route::middleware('auth:api', 'role:satpam')->group(function () {
+
+    // CRUD Verifications
+    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+});
+
+
+
+
