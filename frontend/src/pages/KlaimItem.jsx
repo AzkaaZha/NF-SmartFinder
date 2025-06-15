@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../layout/header';
-import Footer from '../layout/footer';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 import { useParams } from 'react-router-dom';
-import './KlaimItem.css'
+import {
+    FormWrapper,
+    Form,
+    Title,
+    FormGroup,
+    SubmitButton,
+    Message
+} from './KlaimItem.styled';
 
 export default function KlaimItem({ userId, token }) {
-    const { id } = useParams(); // Mengambil ID dari URL
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         message: '',
         proof_image: null,
-        items_id: id || '', // Mengisi items_id dengan ID dari URL
+        items_id: id || '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -21,9 +28,7 @@ export default function KlaimItem({ userId, token }) {
         const fetchItems = async () => {
             try {
                 const res = await axios.get('http://localhost:8000/api/items', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setItems(res.data.data);
                 if (id) {
@@ -32,7 +37,7 @@ export default function KlaimItem({ userId, token }) {
                         setFormData(prev => ({
                             ...prev,
                             items_id: selectedItem.id,
-                            message: `Klaim untuk barang: ${selectedItem.name}` // Mengisi pesan default
+                            message: `Klaim untuk barang: ${selectedItem.name}`
                         }));
                     }
                 }
@@ -84,22 +89,22 @@ export default function KlaimItem({ userId, token }) {
 
     return (
         <div>
-            <Header />
-            <div className="form-wrapper">
-                <form onSubmit={handleSubmit} className="klaim-item-form">
-                    <h2>Klaim Barang Hilang</h2>
+            <Navbar />
+            <FormWrapper>
+                <Form onSubmit={handleSubmit}>
+                    <Title>Klaim Barang Hilang</Title>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Pesan</label>
                         <textarea name="message" value={formData.message} onChange={handleChange} rows="4" required />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Bukti Gambar (Opsional)</label>
                         <input type="file" name="proof_image" onChange={handleChange} accept="image/*" />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Item yang Dituju</label>
                         <select name="items_id" value={formData.items_id} onChange={handleChange} required>
                             <option value="">-- Pilih Item --</option>
@@ -107,15 +112,15 @@ export default function KlaimItem({ userId, token }) {
                                 <option key={item.id} value={item.id}>{item.name}</option>
                             ))}
                         </select>
-                    </div>
+                    </FormGroup>
 
-                    <button type="submit" disabled={loading}>
+                    <SubmitButton type="submit" disabled={loading}>
                         {loading ? 'Mengajukan...' : 'Ajukan Klaim'}
-                    </button>
+                    </SubmitButton>
 
-                    {message && <p className="message">{message}</p>}
-                </form>
-            </div>
+                    {message && <Message>{message}</Message>}
+                </Form>
+            </FormWrapper>
             <Footer />
         </div>
     );
