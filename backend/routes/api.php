@@ -17,6 +17,7 @@ Route::get('/user', function (Request $request) {
 // Login & Register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 // Public Access ( No Login )
 Route::apiResource('items', ItemController::class)->only(['index', 'show']);
@@ -29,48 +30,17 @@ Route::get('/categories/{id}', [CategorieController::class, 'show']);
 
 // User Authenticated ( User )
 Route::middleware('auth:api')->group(function () {
-<<<<<<< HEAD
-
-    // Route Admin : Full Access    
-    Route::middleware('role:admin')->group(function () {
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('locations', LocationController::class);
-        Route::apiResource('storages', StorageController::class);
-        Route::apiResource('categories', CategorieController::class);
-        Route::apiResource('items', ItemController::class);
-        Route::apiResource('verifications', VerificationController::class);
-    });
-
-    // Route Satpam 
-    Route::middleware('role:satpam')->group(function () {
-        Route::apiResource('users', UserController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('locations', LocationController::class)->only('index');
-        Route::apiResource('storages', StorageController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('categories', CategorieController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('items', ItemController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('verifications', VerificationController::class)->only('index', 'show', 'store', 'update');
-    });
-
-    // Route User
-    Route::middleware('role:user')->group(function () {
-        Route::apiResource('users', UserController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('locations', LocationController::class)->only('index');
-        Route::apiResource('storages', StorageController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('categories', CategorieController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('items', ItemController::class)->only('index', 'show', 'store', 'update');
-        Route::apiResource('verifications', VerificationController::class)->only('index', 'show', 'store', 'update');
-    });
-=======
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/items', [ItemController::class, 'store']);
     Route::post('/verifications', [VerificationController::class, 'store']);
->>>>>>> ee6f0029ef73c74ccdd53c2219defcaa7a16ac99
 });
 
 // Admin Authenticated ( Admin )
 Route::middleware('auth:api', 'role:admin')->group(function () {
     
     // CRUD Users
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']); 
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
@@ -91,7 +61,14 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
 
     // CRUD Items
     Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']);    
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']); 
+    
+    // CRUD Verifications
+    Route::get('/verifications', [VerificationController::class, 'index']);
+    Route::get('/verifications/{id}', [VerificationController::class, 'show']);
+    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+
 });
 
 // Satpam Authenticated ( Satpam )

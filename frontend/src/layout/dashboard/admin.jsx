@@ -92,6 +92,16 @@ export default function AdminDashboardLayout() {
               <span className="ml-2">Verifikasi</span>
             </Link>
           </li>
+          <li
+            className={`nav-item${
+              isActive("/dashboard/storage") ? " active" : ""
+            }`}
+          >
+            <Link className="nav-link" to="/dashboard/storage">
+              <i className="fas fa-check-circle"></i>
+              <span className="ml-2">Storage</span>
+            </Link>
+          </li>
         </ul>
         {/* End of Sidebar */}
 

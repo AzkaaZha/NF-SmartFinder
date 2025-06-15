@@ -4,15 +4,42 @@ import { useNavigate } from "react-router-dom";
 export default function CreateLocation() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) {
       setError("Nama lokasi wajib diisi.");
       return;
     }
-    alert(`Lokasi "${name}" berhasil ditambahkan!`);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:8000/api/locations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+      if (!res.ok) {
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (e) {}
+        setError(data.message || "Gagal menambah lokasi.");
+        setLoading(false);
+        return;
+      }
+      alert(`Lokasi "${name}" berhasil ditambahkan!`);
+      navigate(-1);
+    } catch (err) {
+      setError("Terjadi kesalahan server: " + err.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,6 +64,7 @@ export default function CreateLocation() {
                       setError("");
                     }}
                     placeholder="Masukkan nama lokasi"
+                    disabled={loading}
                   />
                   {error && <small className="text-danger">{error}</small>}
                 </div>
@@ -45,11 +73,12 @@ export default function CreateLocation() {
                     type="button"
                     className="btn btn-secondary"
                     onClick={() => navigate(-1)}
+                    disabled={loading}
                   >
                     Batal
                   </button>
-                  <button type="submit" className="btn btn-primary">
-                    Simpan
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? "Menyimpan..." : "Simpan"}
                   </button>
                 </div>
               </form>

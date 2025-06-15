@@ -7,7 +7,7 @@ import Contact from './pages/Public/Contact/Contact';
 import KlaimItem from './pages/KlaimItem';
 import LostItemForm from './pages/Public/ItemForm/LostItemForm';
 import AdminDashboard from "./pages/dashboard/admin/adminDashboard";
-import UserManagement from "./pages/dashboard/admin/user/userManagemen";
+import UserManagement from "./pages/dashboard/admin/user/userManagement";
 import ItemCategorie from "./pages/dashboard/admin/categorie/ItemCategorie";
 import LocationList from "./pages/dashboard/admin/location/locationList";
 import MissingItem from "./pages/dashboard/admin/item/missingItem";
@@ -21,6 +21,16 @@ import GlobalStyle from './components/GlobalStyles/GlobalStyle';
 import PublicLayout from './layout/PublicLayout';
 import FormKlaimBarang from './pages/Public/KlaimForm/FormKlaimBarang';
 import SplashScreen from './components/SplashScreen/SplashScreen'; 
+import StorageList from './pages/dashboard/admin/storage/storage';
+import CreateCategorie from './pages/dashboard/admin/categorie/create';
+import UpdateCategorie from './pages/dashboard/admin/categorie/update';
+import CreateItem from './pages/dashboard/admin/item/create';
+import UpdateItem from './pages/dashboard/admin/item/update';
+import CreateStorage from './pages/dashboard/admin/storage/create';
+import UpdateStorage from './pages/dashboard/admin/storage/update';
+import CreateUser from './pages/dashboard/admin/user/create';
+import CreateVerification from './pages/dashboard/admin/verification/create';
+import UpdateVerification from './pages/dashboard/admin/verification/update';
 // import AdminLayout from './layouts/AdminLayout';
 
 function App() {
@@ -51,35 +61,6 @@ function App() {
               
             </Route>
 
-<<<<<<< HEAD
-          {/* location */}
-          <Route path="createloc" element={<CreateLocation />} />
-          <Route path="updateloc" element={<UpdateLocation />} />
-          
-          {/* Layout Admin / Private */}
-          {/* <Route element={<AdminLayout />}>
-            <Route
-              path="/klaim"
-              element={
-                <PrivateRoute>
-                  <FormKlaimBarang />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/form"
-              element={
-                <PrivateRoute>
-                  {currentUser ? (
-                    <LostItemForm userId={currentUser.id} userName={currentUser.name} />
-                  ) : (
-                    <p>Loading user data...</p>
-                  )}
-                </PrivateRoute>
-              }
-            />
-          </Route> */}
-=======
             {/* Admin Dashboard route */}
             <Route path="/dashboard" element={<AdminDashboardLayout />}>
               <Route path="admin" element={<AdminDashboard />} />
@@ -88,11 +69,31 @@ function App() {
               <Route path="location" element={<LocationList />}/>
               <Route path="item" element={<MissingItem />}/>
               <Route path="verification" element={<ItemVerification />}/>
->>>>>>> ee6f0029ef73c74ccdd53c2219defcaa7a16ac99
+              <Route path="storage" element={<StorageList />}/>
 
               {/* Location routes */}
-              <Route path="create" element={<CreateLocation />} />
-              <Route path="update" element={<UpdateLocation />} />
+              <Route path="createloc" element={<CreateLocation />} />
+              <Route path="updateloc/:id" element={<UpdateLocation />} />
+
+              {/* categorie routes */}
+              <Route path="createcat" element={<CreateCategorie />} />
+              <Route path="updatecat/:id" element={<UpdateCategorie />} />
+
+              {/* item routes */}
+              <Route path="createitem" element={<CreateItem />} />
+              <Route path="updateitem/:id" element={<UpdateItem />} />
+
+              {/* storage route */}
+              <Route path="createsto" element={<CreateStorage />} />
+              <Route path="updatesto/:id" element={<UpdateStorage />} />
+
+              {/* user route */}
+              <Route path="createus" element={<CreateUser />} />
+
+              {/* verification route */}
+              <Route path="createver" element={<CreateVerification />} />
+              <Route path="updatever/:id" element={<UpdateVerification />} />
+
             </Route>
           </Routes>
         )}
