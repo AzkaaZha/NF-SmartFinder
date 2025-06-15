@@ -7,7 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 // import PrivateRoute from './components/privateRoute';
 import PrivateRoute from "./components/privateRoute";
 import KlaimItem from './pages/KlaimItem';
-// import LostItemForm from './pages/LostItemForm';
+import LostItemForm from './pages/LostItemForm';
 import AdminDashboard from "./pages/dashboard/admin/adminDashboard";
 import UserManagement from "./pages/dashboard/admin/user/userManagemen";
 import ItemCategorie from "./pages/dashboard/admin/categorie/ItemCategorie";
@@ -23,16 +23,19 @@ import theme from './utils/theme';
 import GlobalStyle from './components/GlobalStyles/GlobalStyle';
 
 import PublicLayout from './layout/PublicLayout';
+import FormKlaimBarang from './pages/FormKlaimBarang';
 // import AdminLayout from './layouts/AdminLayout';
 
 function App() {
-  // const currentUser = JSON.parse(localStorage.getItem('user'));
+  const currentUser = JSON.parse(localStorage.getItem('user'));
 
   return (
     <ThemeProvider theme={theme}>
       <>
         <GlobalStyle />
+        
         <Routes>
+          
           {/* Auth */}
           <Route path="/login" element={<Login />} />
 

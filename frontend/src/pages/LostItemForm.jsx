@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../layout/header';
-import Footer from '../layout/footer';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
+import {
+    FormWrapper,
+    Form,
+    Title,
+    FormGroup,
+    SubmitButton,
+    Message
+} from './LostItemForm.styled';
 
 export default function LostItemForm({ userId, userName }) {
     const [formData, setFormData] = useState({
@@ -45,17 +53,17 @@ export default function LostItemForm({ userId, userName }) {
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === 'image' && files && files[0]) {
-        const file = files[0];
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        img.onload = () => {
-            if (img.width > 2000 || img.height > 2000) {
-                alert('Gambar terlalu besar. Maksimal dimensi 2000x2000 px.');
-                return;
-            } else {
-                setFormData(prev => ({ ...prev, image: file }));
-            }
-        };
+            const file = files[0];
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                if (img.width > 2000 || img.height > 2000) {
+                    alert('Gambar terlalu besar. Maksimal dimensi 2000x2000 px.');
+                    return;
+                } else {
+                    setFormData(prev => ({ ...prev, image: file }));
+                }
+            };
         } else {
             setFormData({
                 ...formData,
@@ -103,35 +111,32 @@ export default function LostItemForm({ userId, userName }) {
 
     return (
         <div>
-            <Header />
-            <div className="form-wrapper">
-                <form onSubmit={handleSubmit} className="lost-item-form">
-                    <h2>Form Pelaporan Barang</h2>
+            <Navbar />
+            <FormWrapper>
+                <Form onSubmit={handleSubmit}>
+                    <Title>Form Pelaporan Barang</Title>
 
-                    {/* Tampilkan info user sebagai teks */}
-                    {/* <p><strong>Pelapor:</strong> {userName}</p> */}
-
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Nama Barang</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Tanggal Penemuan</label>
                         <input type="date" name="date" value={formData.date} onChange={handleChange} required />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Deskripsi</label>
                         <textarea name="description" value={formData.description} onChange={handleChange} rows="4" required />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Upload Gambar (Opsional)</label>
                         <input type="file" name="image" onChange={handleChange} accept="image/*" />
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Lokasi</label>
                         <select name="locations_id" value={formData.locations_id} onChange={handleChange} required>
                             <option value="">-- Pilih Lokasi --</option>
@@ -139,9 +144,9 @@ export default function LostItemForm({ userId, userName }) {
                                 <option key={loc.id} value={loc.id}>{loc.name}</option>
                             ))}
                         </select>
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Kategori</label>
                         <select name="categories_id" value={formData.categories_id} onChange={handleChange} required>
                             <option value="">-- Pilih Kategori --</option>
@@ -149,9 +154,9 @@ export default function LostItemForm({ userId, userName }) {
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </select>
-                    </div>
+                    </FormGroup>
 
-                    <div className="form-group">
+                    <FormGroup>
                         <label>Penyimpanan</label>
                         <select name="storages_id" value={formData.storages_id} onChange={handleChange} required>
                             <option value="">-- Pilih Penyimpanan --</option>
@@ -159,18 +164,17 @@ export default function LostItemForm({ userId, userName }) {
                                 <option key={stor.id} value={stor.id}>{stor.name}</option>
                             ))}
                         </select>
-                    </div>
+                    </FormGroup>
 
-                    {/* Hidden input untuk users_id */}
                     <input type="hidden" name="users_id" value={userId} />
 
-                    <button type="submit" disabled={loading}>
+                    <SubmitButton type="submit" disabled={loading}>
                         {loading ? 'Mengirim...' : 'Kirim Laporan'}
-                    </button>
+                    </SubmitButton>
 
-                    {message && <p className="message">{message}</p>}
-                </form>
-            </div>
+                    {message && <Message>{message}</Message>}
+                </Form>
+            </FormWrapper>
             <Footer />
         </div>
     );
