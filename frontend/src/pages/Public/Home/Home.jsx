@@ -12,7 +12,7 @@ import {
 } from "./Home.styled";
 import Container from "../../../components/ui/Container";
 import Button  from "../../../components/ui/Button/Button";
-import Hero from "../../../components/Navbar/Navbar";
+import Hero from "../../../components/Hero/Hero";
 
 const statusBadgeStyle = (status) => {
   switch (status) {
@@ -33,7 +33,7 @@ const statusBadgeStyle = (status) => {
 function Home() {
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);  // Declare the selectedItem state
+  const [selectedItem, setSelectedItem] = useState(null);  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function Home() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedItem(null);  // Close modal and clear selected item
+    setSelectedItem(null);  
   };
 
   const formatDate = (dateString) => {

@@ -95,10 +95,7 @@ function Contact() {
                         ></textarea>
                       </div>
                       <div className="col-12 text-center">
-                        <div className="loading">Loading</div>
-                        <div className="error-message"></div>
-                        <div className="sent-message">Pesanmu sudah terkirim. Terima kasih!</div>
-                        <Button variant="primary" type="submit" >Kirim Pesan</Button>
+                        <Button variant="primary" type="submit">Kirim Pesan</Button>
                       </div>
                     </div>
                   </form>

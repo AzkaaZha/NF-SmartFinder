@@ -1,22 +1,23 @@
 import styled from "styled-components";
 
 export const Section = styled.section`
-  padding: 4rem 0;
+  padding: 5rem 0;
   background-color: var(--surface-color);
   margin-top: 5rem;
 `;
 
 export const InfoBox = styled.div`
   background-color: #27227d;
-  color: var(--contrast-color);
+  color: ${({ theme }) => theme.colors.default};
   padding: 3rem;
   border-radius: 1rem;
   height: 100%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 
   h3 {
     font-size: 2rem;
     margin-bottom: 1rem;
-    color: var(--contrast-color);
+    color: ${({ theme }) => theme.colors.default};
   }
 
   p {
@@ -29,7 +30,7 @@ export const InfoBox = styled.div`
   }
 
   @media (max-width: 992px) {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
   @media (max-width: 767.98px) {
@@ -88,13 +89,13 @@ export const InfoItem = styled.div`
 
 export const ContactForm = styled.div`
   background-color: var(--surface-color);
-  padding: 3rem;
+  padding: 3.5rem;
   border-radius: 1rem;
   height: 100%;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.05);
 
   h3 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 1rem;
   }
 
@@ -105,7 +106,7 @@ export const ContactForm = styled.div`
 
   .form-control,
   .form-select {
-    padding: 0.875rem 1.25rem;
+    padding: 1rem 1.5rem;
     border-color: color-mix(in srgb, var(--default-color), transparent 90%);
     border-radius: 0.5rem;
     background-color: color-mix(in srgb, var(--surface-color) 90%, white 5%);
@@ -141,7 +142,7 @@ export const ContactForm = styled.div`
   }
 
   @media (max-width: 992px) {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
   @media (max-width: 768px) {
