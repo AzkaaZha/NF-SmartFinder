@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import Login from './pages/Auth/Login';  
+import Login from './pages/Auth/login/Login';  
 import Home from './pages/Public/Home/Home';
 import Contact from './pages/Public/Contact/Contact';
 import KlaimItem from './pages/KlaimItem';
