@@ -3,7 +3,7 @@ import { HeroSection, HeroContainer, HeroContent, HeroImage} from "./Hero.styled
 
 function Hero() {
   return (
-    <HeroSection id="hero">
+    <HeroSection>
       <HeroContainer>
         <HeroContent>
           <h1>
@@ -16,9 +16,7 @@ function Hero() {
             mencari barang yang hilang!
           </p>
 
-          <div className="hero-buttons">
-            <Button variant="primary" to="/form">Buat Laporan</Button>
-          </div>
+          <Button variant="primary" to="/form">Buat Laporan</Button>
         </HeroContent>
 
         <HeroImage>

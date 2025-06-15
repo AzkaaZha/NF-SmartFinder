@@ -8,10 +8,8 @@ export const HeaderWrapper = styled.header`
   right: 0;
   width: 100%;
   z-index: 997;
-  background-color: rgba(255, 255, 255, 0);
-  transition: all 0.5s;
-  color: ${({ theme }) => theme.colors.default}; 
   padding: 20px 0;
+  color: ${({ theme }) => theme.colors.default};
 
   @media (max-width: 1200px) {
     padding-top: 10px;
@@ -23,21 +21,39 @@ export const HeaderContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 5px 25px;
-  background-color: ${({ theme }) => theme.colors.surface};
+  background-color: ${({ isScrolled, theme }) =>
+    isScrolled ? "rgba(255, 255, 255, 0.7)" : theme.colors.surface}; 
   border-radius: 50px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: ${({ isScrolled }) => (isScrolled ? "none" : "0 2px 15px rgba(0, 0, 0, 0.1)")};
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   .mobile-nav-toggle {
     display: none;
-
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 999;  
+    
     @media (max-width: 1199px) {
       display: block;
       position: absolute;
       right: 20px;
+      top: 15px;
+      font-size: 30px;  
+      color: ${({ theme }) => theme.colors.default};
+      transition: all 0.3s ease;
+    }
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.accent};
+    }
+
+    &.active i {
+      transform: rotate(90deg);  
     }
   }
 `;
@@ -57,6 +73,7 @@ export const LogoImg = styled.img`
   max-height: 70px;
   margin-right: 8px;
 `;
+
 
 export const NavMenu = styled.nav`
   flex-grow: 1;
@@ -86,8 +103,10 @@ export const NavList = styled.ul`
     width: 100%;
     display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
     padding: 15px 25px;
+    transition: transform 0.3s ease;  
   }
 `;
+
 
 export const NavItem = styled.li`
   position: relative;
@@ -98,7 +117,6 @@ export const NavItem = styled.li`
   }
 
   @media (max-width: 1199px) {
-    /* Mobile styling jika mau aktifkan menu toggle */
   }
 `;
 
@@ -134,7 +152,6 @@ export const Dropdown = styled.li`
   @media (max-width: 1199px) {
     width: 100%;
 
-    /* bisa aktifkan toggle dropdown mobile disini */
   }
 `;
 
@@ -214,7 +231,6 @@ export const DropdownMenu = styled.ul`
     background-color: rgba(33, 37, 41, 0.1);
     display: none;
 
-    /* aktifkan toggle dropdown di mobile */
   }
 `;
 
