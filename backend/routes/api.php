@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();    
+    return $request->user();
 })->middleware('auth:sanctum');
 
 // Login & Register
@@ -25,7 +25,7 @@ Route::get('/locations/{id}', [LocationController::class, 'show']);
 Route::get('/storages', [StorageController::class, 'index']);
 Route::get('/storages/{id}', [StorageController::class, 'show']);
 Route::get('/categories', [CategorieController::class, 'index']);
-Route::get('/categories/{id}', [CategorieController::class, 'show']); 
+Route::get('/categories/{id}', [CategorieController::class, 'show']);
 
 // User Authenticated ( User )
 Route::middleware('auth:api')->group(function () {
@@ -36,8 +36,9 @@ Route::middleware('auth:api')->group(function () {
 
 // Admin Authenticated ( Admin )
 Route::middleware('auth:api', 'role:admin')->group(function () {
-    
+
     // CRUD Users
+    Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
@@ -58,7 +59,7 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
 
     // CRUD Items
     Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']);    
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']);
 });
 
 // Satpam Authenticated ( Satpam )
