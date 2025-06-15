@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Home from './pages/Public/Home/Home';
-import Login from './pages/Auth/Login';  
+import Login from './pages/Auth/login/Login';  
 import Contact from './pages/Public/Contact/Contact';
 import { Routes, Route } from 'react-router-dom';
 // import PrivateRoute from './components/privateRoute';

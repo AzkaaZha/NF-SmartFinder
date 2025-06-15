@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../layout/header';
-import Footer from '../layout/footer';
 import { useParams } from 'react-router-dom';
 import './KlaimItem.css'
 
@@ -84,7 +82,6 @@ export default function KlaimItem({ userId, token }) {
 
     return (
         <div>
-            <Header />
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit} className="klaim-item-form">
                     <h2>Klaim Barang Hilang</h2>
@@ -116,7 +113,6 @@ export default function KlaimItem({ userId, token }) {
                     {message && <p className="message">{message}</p>}
                 </form>
             </div>
-            <Footer />
         </div>
     );
 }
