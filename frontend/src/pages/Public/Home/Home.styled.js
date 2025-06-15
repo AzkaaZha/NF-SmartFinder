@@ -98,7 +98,6 @@ export const ButtonWrapper = styled.div`
 // Lost Items Section
 export const LostItemsSection = styled.section`
   padding: 3rem 0;
-  background-color: ${({ theme }) => theme.colors.lightBackground};
 `;
 
 // Card Wrapper
