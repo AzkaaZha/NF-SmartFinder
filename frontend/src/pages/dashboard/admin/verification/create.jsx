@@ -59,7 +59,7 @@ export default function CreateVerification() {
         formData.append("proof_image", proofImage);
       }
 
-      const res = await fetch("http://localhost:8000/api/verification", {
+      const res = await fetch("http://localhost:8000/api/verifications", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export default function CreateVerification() {
       }
 
       alert("Verifikasi berhasil ditambahkan!");
-      navigate("/dashboard/verifications");
+      navigate("/dashboard/verification");
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging

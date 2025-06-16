@@ -74,9 +74,9 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
 // Satpam Authenticated ( Satpam )
 Route::middleware('auth:api', 'role:satpam')->group(function () {
 
-    // CRUD Verifications
-    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
-    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+    // // CRUD Verifications
+    // Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+    // Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
 });
 
 

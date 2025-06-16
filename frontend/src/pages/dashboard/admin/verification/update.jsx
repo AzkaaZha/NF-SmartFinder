@@ -8,6 +8,8 @@ export default function UpdateVerification() {
   const [status, setStatus] = useState("pending"); // Default status: pending
   const [proofImage, setProofImage] = useState(null); // Untuk gambar baru (optional)
   const [currentProofImage, setCurrentProofImage] = useState(""); // Gambar lama
+  const [itemsId, setItemsId] = useState(""); // ID Item yang dipilih
+  const [items, setItems] = useState([]); // Daftar item untuk dropdown
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ export default function UpdateVerification() {
       setVerification(verification);
       setMessage(verification.message);
       setStatus(verification.status);
+      setItemsId(verification.items_id); // Set items_id
       setCurrentProofImage(verification.proof_image);  // Menyimpan gambar lama
       setLoading(false);
     } catch (err) {
@@ -44,16 +47,41 @@ export default function UpdateVerification() {
     }
   };
 
+  // Ambil data items (untuk dropdown)
+  const fetchItems = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:8000/api/items", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || "Gagal mengambil data items.");
+        return;
+      }
+
+      const data = await res.json();
+      setItems(data.data);
+    } catch (err) {
+      setError("Terjadi kesalahan saat mengambil data items: " + err.message);
+    }
+  };
+
   useEffect(() => {
     fetchVerificationData();
+    fetchItems(); // Ambil data items untuk dropdown
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validasi input
-    if (!message || !status) {
-      setError("Pesan dan status wajib diisi!");
+    if (!message || !status || !itemsId) {
+      setError("Pesan, status, dan Item ID wajib diisi!");
       return;
     }
 
@@ -62,11 +90,16 @@ export default function UpdateVerification() {
       const formData = new FormData();
       formData.append("message", message);
       formData.append("status", status);
+      formData.append("items_id", itemsId); // Kirim items_id yang valid
+
+      // Jika ada gambar baru, kirim gambar tersebut
       if (proofImage) {
-        formData.append("proof_image", proofImage);
-      } else {
-        formData.append("proof_image", currentProofImage); // Jika tidak ada gambar baru, tetap kirim gambar lama
+        formData.append("proof_image", proofImage); // Mengirim gambar baru
+      } else if (currentProofImage) {
+        // Jangan kirim proof_image jika tidak ada gambar baru
+        formData.append("proof_image", currentProofImage); // Kirim gambar lama hanya jika dibutuhkan
       }
+
       formData.append("_method", "PUT"); // Tambahkan ini untuk menggunakan metode PUT pada formData
 
       const token = localStorage.getItem("token");
@@ -92,7 +125,7 @@ export default function UpdateVerification() {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);
     }
-  };
+};
 
   return (
     <div className="container-fluid">
@@ -148,6 +181,25 @@ export default function UpdateVerification() {
                   style={{ maxWidth: "200px" }}
                 />
               )}
+            </div>
+
+            {/* Item ID (Dropdown) */}
+            <div className="form-group">
+              <label htmlFor="items_id">Item</label>
+              <select
+                className="form-control"
+                id="items_id"
+                value={itemsId}
+                onChange={(e) => setItemsId(e.target.value)}
+                disabled={loading}
+              >
+                <option value="">Pilih Item</option>
+                {items.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Error Message */}
