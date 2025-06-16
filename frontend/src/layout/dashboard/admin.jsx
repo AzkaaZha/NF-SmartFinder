@@ -158,9 +158,9 @@ export default function AdminDashboardLayout() {
 
                 {/* Nav Item - User Information */}
                 <li className="nav-item dropdown no-arrow">
-                  <a
+                  <Link
                     className="nav-link dropdown-toggle"
-                    href="#"
+                    to={"/"}
                     id="userDropdown"
                     role="button"
                     data-toggle="dropdown"
@@ -168,13 +168,13 @@ export default function AdminDashboardLayout() {
                     aria-expanded="false"
                   >
                     <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                      user_name
+                      Home
                     </span>
                     <i
-                      className="bi bi-person-circle"
-                      style={{ fontSize: "2rem", color: "#b0b0b0" }}
+                      className="bi bi-house-fill"
+                      style={{ fontSize: "2rem", color: "#234bbf" }}
                     ></i>
-                  </a>
+                  </Link>
                   {/* Dropdown - User Information */}
                   <div
                     className="dropdown-menu dropdown-menu-right shadow animated--grow-in"

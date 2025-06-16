@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function UpdateItem() {
-  const { id } = useParams(); // Ambil ID dari URL
-  const [item, setItem] = useState({});
+export default function CreateItemPam() {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -15,18 +13,17 @@ export default function UpdateItem() {
   const [categoriesId, setCategoriesId] = useState("");
   const [usersId, setUsersId] = useState("");
   const [storagesId, setStoragesId] = useState("");
-  const [image, setImage] = useState(null);  // Untuk gambar baru (optional)
-  const [currentImage, setCurrentImage] = useState("");  // Gambar lama
-  const [status, setStatus] = useState(""); // Status
+  const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data terkait: Lokasi, Kategori, Pengguna, Storage
+  // Fetching data terkait: Lokasi, Kategori, Pengguna, Storage
   const fetchRelatedData = async () => {
     try {
       const token = localStorage.getItem("token");
 
+      // Fetch Lokasi, Kategori, Pengguna, dan Storage
       const [locationsRes, categoriesRes, usersRes, storagesRes] = await Promise.all([
         fetch("http://localhost:8000/api/locations", {
           headers: { Authorization: `Bearer ${token}` },
@@ -62,48 +59,9 @@ export default function UpdateItem() {
     }
   };
 
-  // Ambil data item berdasarkan ID untuk mengupdate
-  const fetchItemData = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        setError(data.message || "Gagal mengambil data item.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      const item = data.data;
-      setItem(item);
-      setName(item.name);
-      setDate(item.date);
-      setDescription(item.description);
-      setLocationsId(item.locations_id);
-      setCategoriesId(item.categories_id);
-      setUsersId(item.users_id);
-      setStoragesId(item.storages_id);
-      setCurrentImage(item.image);  // Menyimpan gambar lama
-      setStatus(item.status); // Set status item
-      setLoading(false);
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchItemData();
-    fetchRelatedData(); // Ambil data terkait (lokasi, kategori, pengguna, storage)
-  }, [id]);
+    fetchRelatedData(); // Ambil data terkait saat pertama kali render
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,20 +82,10 @@ export default function UpdateItem() {
       formData.append("categories_id", categoriesId);
       formData.append("users_id", usersId);
       formData.append("storages_id", storagesId);
-      formData.append("status", status); // Tambahkan status ke formData
-
-      // Jika gambar baru dipilih, tambahkan ke formData
-      if (image) {
-        formData.append("image", image);
-      } else if (currentImage) {
-        // Jika gambar baru tidak dipilih, kirim gambar lama
-        formData.append("image", currentImage); // Mengirimkan gambar lama
-      }
-
-      formData.append("_method", "PUT"); // Tambahkan ini!
+      if (image) formData.append("image", image);
 
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
+      const res = await fetch("http://localhost:8000/api/items", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -146,15 +94,14 @@ export default function UpdateItem() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal mengupdate item.");
+        let data = await res.json();
+        setError(data.message || "Gagal menambahkan item.");
         setLoading(false);
         return;
       }
 
-      alert("Item berhasil diupdate!");
-      navigate("/dashboard/items");
+      alert("Item berhasil ditambahkan!");
+      navigate("/dashboardpam/items"); // Kembali ke halaman daftar item
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);
@@ -164,9 +111,9 @@ export default function UpdateItem() {
   return (
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
-        Ubah Item
+        Tambah Item Baru
         <button
-          onClick={() => navigate("/dashboard/items")}
+          onClick={() => navigate("/dashboardpam/items")}
           className="btn btn-secondary btn-sm"
         >
           Kembali
@@ -291,27 +238,9 @@ export default function UpdateItem() {
               </select>
             </div>
 
-            {/* Status (Dropdown) */}
+            {/* Gambar (Opsional) */}
             <div className="form-group">
-              <label htmlFor="status">Status</label>
-              <select
-                id="status"
-                className="form-control"
-                value={status}
-                onChange={e => setStatus(e.target.value)}
-                required
-                disabled={loading}
-              >
-                <option value="">-- Pilih Status --</option>
-                <option value="pending">pending</option>
-                <option value="approved">approved</option>
-                <option value="rejected">rejected</option>
-              </select>
-            </div>
-
-            {/* Gambar (Wajib) */}
-            <div className="form-group">
-              <label htmlFor="image">Gambar</label>
+              <label htmlFor="image">Gambar (Opsional)</label>
               <input
                 type="file"
                 className="form-control"
@@ -319,14 +248,6 @@ export default function UpdateItem() {
                 onChange={(e) => setImage(e.target.files[0])}
                 disabled={loading}
               />
-              {currentImage && !image && (
-                <img
-                  src={`http://localhost:8000/storage/${currentImage}`}
-                  alt="current"
-                  className="mt-3"
-                  style={{ maxWidth: "200px" }}
-                />
-              )}
             </div>
 
             {/* Error Message */}
@@ -336,7 +257,7 @@ export default function UpdateItem() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate("/dashboard/items")}
+                onClick={() => navigate("/dashboardpam/item")}
                 disabled={loading}
               >
                 Batal

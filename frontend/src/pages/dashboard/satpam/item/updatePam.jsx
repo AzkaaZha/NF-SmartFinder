@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function UpdateItem() {
+export default function UpdateItemPam() {
   const { id } = useParams(); // Ambil ID dari URL
   const [item, setItem] = useState({});
   const [name, setName] = useState("");
@@ -154,7 +154,7 @@ export default function UpdateItem() {
       }
 
       alert("Item berhasil diupdate!");
-      navigate("/dashboard/items");
+      navigate("/dashboardpam/items");
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);
@@ -166,7 +166,7 @@ export default function UpdateItem() {
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Ubah Item
         <button
-          onClick={() => navigate("/dashboard/items")}
+          onClick={() => navigate("/dashboardpam/items")}
           className="btn btn-secondary btn-sm"
         >
           Kembali
@@ -336,7 +336,7 @@ export default function UpdateItem() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate("/dashboard/items")}
+                onClick={() => navigate("/dashboardpam/items")}
                 disabled={loading}
               >
                 Batal
