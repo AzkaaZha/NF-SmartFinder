@@ -15,7 +15,7 @@ import ItemVerification from "./pages/dashboard/admin/verification/itemVerificat
 import AdminDashboardLayout from "./layout/dashboard/admin";
 import CreateLocation from "./pages/dashboard/admin/location/create";
 import UpdateLocation from "./pages/dashboard/admin/location/update";
-import LostItems from './pages/LostItem';
+import LostItems from './pages/Public/LostItems/LostItem';
 import theme from './utils/theme';
 import GlobalStyle from './components/GlobalStyles/GlobalStyle';
 import PublicLayout from './layout/PublicLayout';
