@@ -1,10 +1,11 @@
 import axios from "axios";
 
+const url = "https://nfsmartfinder.karyakreasi.id";
+
 export const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api"
+  baseURL: `${url}/api`,
 });
 
-// API Gambar
 export const API_IMAGE = axios.create({
-  baseURL: "http://127.0.0.1:8000/storage/"
+  baseURL: `${url}/storage`,
 });
