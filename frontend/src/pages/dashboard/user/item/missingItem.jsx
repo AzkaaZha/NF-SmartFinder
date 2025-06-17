@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function MissingItem() {
+export default function MissingItemUser() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [deleteLoading, setDeleteLoading] = useState(null);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -42,40 +41,11 @@ export default function MissingItem() {
     fetchItems();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus item ini?")) return;
-    setDeleteLoading(id);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus item.");
-        setDeleteLoading(null);
-        return;
-      }
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      setDeleteLoading(null);
-    } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
-      setDeleteLoading(null);
-    }
-  };
-
   return (
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Item
-        <Link to="/dashboard/createitem" className="btn btn-primary btn-sm">
+        <Link to="/dashboarduser/createitem" className="btn btn-primary btn-sm">
           <i className="fas fa-plus mr-1"></i> Tambah Data
         </Link>
       </h4>
@@ -95,12 +65,12 @@ export default function MissingItem() {
                     <th>Tanggal</th>
                     <th>Deskripsi</th>
                     <th>Gambar</th>
-                    <th>status</th>
+                    <th>Status</th>
                     <th>Lokasi ID</th>
                     <th>Kategori ID</th>
                     <th>Pengguna ID</th>
                     <th>Storage ID</th>
-                    <th>Aksi</th>
+                    <th>Detail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,26 +87,16 @@ export default function MissingItem() {
                       <td>{item.users_id}</td>
                       <td>{item.storages_id}</td>
                       <td>
-                        <Link to={`/dashboard/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
-                          <i className="fas fa-edit"></i>
+                        {/* Link ke halaman detail item */}
+                        <Link to={`/dashboarduser/itemdetail/${item.id}`} className="btn btn-info btn-sm">
+                          <i className="fas fa-eye"></i> Lihat Detail
                         </Link>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(item.id)}
-                          disabled={deleteLoading === item.id}
-                        >
-                          {deleteLoading === item.id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          ) : (
-                            <i className="fas fa-trash"></i>
-                          )}
-                        </button>
                       </td>
                     </tr>
                   ))}
                   {items.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="text-center">
+                      <td colSpan={11} className="text-center">
                         Tidak ada data item.
                       </td>
                     </tr>

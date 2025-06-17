@@ -1,6 +1,6 @@
 import { Link, useLocation, Outlet } from "react-router-dom";
 
-export default function AdminDashboardLayout() {
+export default function UserDashboardLayout() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 
@@ -16,7 +16,7 @@ export default function AdminDashboardLayout() {
           {/* Sidebar - Brand */}
           <li className="sidebar-brand d-flex align-items-center justify-content-center mb-4">
             <Link
-              to="/dashboard/admin"
+              to="/"
               className="logo d-flex align-items-center me-auto me-xl-0"
             >
               <img
@@ -34,62 +34,16 @@ export default function AdminDashboardLayout() {
           <hr className="sidebar-divider" />
 
           <div className="sidebar-heading text-white" style={{ fontSize: 13 }}>
-            Data Master
+            Daftar barang hilang
           </div>
-
-          <li
-            className={`nav-item${isActive("/admin/users") ? " active" : ""}`}
-          >
-            <Link className="nav-link" to="/dashboard/user">
-              <i className="fas fa-users"></i>
-              <span className="ml-2">User Management</span>
-            </Link>
-          </li>
           <li
             className={`nav-item${
-              isActive("/dashboard/categorie") ? " active" : ""
+              isActive("/dashboarduser/item") ? " active" : ""
             }`}
           >
-            <Link className="nav-link" to="/dashboard/categorie">
-              <i className="fas fa-tags"></i>
-              <span className="ml-2">Kategori Barang</span>
-            </Link>
-          </li>
-          <li
-            className={`nav-item${
-              isActive("/dashboard/location") ? " active" : ""
-            }`}
-          >
-            <Link className="nav-link" to="/dashboard/location">
-              <i className="fas fa-map-marker-alt"></i>
-              <span className="ml-2">Lokasi</span>
-            </Link>
-          </li>
-
-          <hr className="sidebar-divider" />
-
-          <div className="sidebar-heading text-white" style={{ fontSize: 13 }}>
-            Manajemen Barang
-          </div>
-
-          <li
-            className={`nav-item${
-              isActive("/dashboard/item") ? " active" : ""
-            }`}
-          >
-            <Link className="nav-link" to="/dashboard/item">
+            <Link className="nav-link" to="/dashboarduser/item">
               <i className="fas fa-search"></i>
               <span className="ml-2">Barang Hilang</span>
-            </Link>
-          </li>
-          <li
-            className={`nav-item${
-              isActive("/dashboard/verification") ? " active" : ""
-            }`}
-          >
-            <Link className="nav-link" to="/dashboard/verification">
-              <i className="fas fa-check-circle"></i>
-              <span className="ml-2">Verifikasi</span>
             </Link>
           </li>
         </ul>
@@ -148,9 +102,9 @@ export default function AdminDashboardLayout() {
 
                 {/* Nav Item - User Information */}
                 <li className="nav-item dropdown no-arrow">
-                  <a
+                  <Link
                     className="nav-link dropdown-toggle"
-                    href="#"
+                    to={"/"}
                     id="userDropdown"
                     role="button"
                     data-toggle="dropdown"
@@ -158,13 +112,13 @@ export default function AdminDashboardLayout() {
                     aria-expanded="false"
                   >
                     <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                      user_name
+                      Home
                     </span>
                     <i
-                      className="bi bi-person-circle"
-                      style={{ fontSize: "2rem", color: "#b0b0b0" }}
+                      className="bi bi-house-fill"
+                      style={{ fontSize: "2rem", color: "#234bbf" }}
                     ></i>
-                  </a>
+                  </Link>
                   {/* Dropdown - User Information */}
                   <div
                     className="dropdown-menu dropdown-menu-right shadow animated--grow-in"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function MissingItem() {
+export default function MissingItemPam() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -75,7 +75,7 @@ export default function MissingItem() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Item
-        <Link to="/dashboard/createitem" className="btn btn-primary btn-sm">
+        <Link to="/dashboardpam/createitem" className="btn btn-primary btn-sm">
           <i className="fas fa-plus mr-1"></i> Tambah Data
         </Link>
       </h4>
@@ -117,7 +117,7 @@ export default function MissingItem() {
                       <td>{item.users_id}</td>
                       <td>{item.storages_id}</td>
                       <td>
-                        <Link to={`/dashboard/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
+                        <Link to={`/dashboardpam/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
                           <i className="fas fa-edit"></i>
                         </Link>
                         <button

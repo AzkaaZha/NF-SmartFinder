@@ -17,6 +17,7 @@ Route::get('/user', function (Request $request) {
 // Login & Register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 // Public Access ( No Login )
 Route::apiResource('items', ItemController::class)->only(['index', 'show']);
@@ -38,7 +39,8 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api', 'role:admin')->group(function () {
 
     // CRUD Users
-    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']); 
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
@@ -58,16 +60,56 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
     Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
 
     // CRUD Items
+    Route::post('/items', [ItemController::class, 'store']);
     Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']); 
+    
+    // CRUD Verifications
+    Route::get('/verifications', [VerificationController::class, 'index']);
+    Route::get('/verifications/{id}', [VerificationController::class, 'show']);
+    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
 });
 
 // Satpam Authenticated ( Satpam )
 Route::middleware('auth:api', 'role:satpam')->group(function () {
 
-    // CRUD Verifications
+    // Verifications
     Route::put('/verifications/{id}', [VerificationController::class, 'update']);
-    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+
+    // Storage
+    Route::put('/storages/{id}', [StorageController::class, 'update']);
+
+    // Items
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::put('/items/{id}', [ItemController::class, 'update']);
+});
+
+// summary dashboard
+Route::middleware('auth:api')->get('/dashboard-summary', function() {
+    $userCount = \App\Models\User::count();
+    $categoryCount = \App\Models\Categorie::count();
+    $locationCount = \App\Models\Location::count();
+    $lostItemsCount = \App\Models\Item::where('status', 'pending')->count(); 
+    $verificationCount = \App\Models\Verification::where('status', 'pending')->count();  
+
+    $statistics = [
+        'totalReports' => \App\Models\Item::count(),
+        'verified' => \App\Models\Verification::where('status', 'approved')->count(),
+        'unverified' => \App\Models\Verification::where('status', 'rejected')->count(),
+    ];
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'users' => $userCount,
+            'categories' => $categoryCount,
+            'locations' => $locationCount,
+            'lostItems' => $lostItemsCount,
+            'verifications' => $verificationCount,
+            'statistics' => $statistics,
+        ]
+    ]);
 });
 
 

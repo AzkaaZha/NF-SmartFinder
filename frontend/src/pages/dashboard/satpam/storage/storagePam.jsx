@@ -1,74 +1,69 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function VerificationList() {
-  const [verifications, setVerifications] = useState([]);
+export default function StorageListPam() {
+  const [storages, setStorages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(null);
 
-  // Fungsi untuk mengambil data verifikasi
-  const fetchVerifications = async () => {
+  const fetchStorages = async () => {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token"); // Mengambil token dari localStorage
-      const res = await fetch("http://localhost:8000/api/verifications", {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:8000/api/storages", {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
-
-      // Memeriksa apakah response sukses
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.message || "Gagal mengambil data verifikasi.");
-        setVerifications([]);
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (e) {}
+        setError(data.message || "Gagal mengambil data storage.");
+        setStorages([]);
         setLoading(false);
         return;
       }
-
-      // Jika sukses, set data ke state verifications
       const data = await res.json();
-      setVerifications(data.data || []); // Pastikan data di-set dengan benar
+      setStorages(Array.isArray(data.data) ? data.data : []);
       setLoading(false);
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
-      setVerifications([]);
+      setStorages([]);
       setLoading(false);
     }
   };
 
-  // Memanggil fungsi fetchVerifications pada saat komponen pertama kali dimuat
   useEffect(() => {
-    fetchVerifications();
+    fetchStorages();
   }, []);
 
-  // Fungsi untuk menghapus verifikasi
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus verifikasi ini?")) return;
+    if (!window.confirm("Yakin ingin menghapus storage ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token"); // Mengambil token dari localStorage
-      const res = await fetch(`http://localhost:8000/api/verifications/${id}`, {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
-
-      // Memeriksa apakah response berhasil
       if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || "Gagal menghapus verifikasi.");
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (e) {}
+        alert(data.message || "Gagal menghapus storage.");
         setDeleteLoading(null);
         return;
       }
-
-      // Jika berhasil, filter data dan hapus verifikasi yang dihapus dari daftar
-      setVerifications((prev) => prev.filter((ver) => ver.id !== id));
+      setStorages((prev) => prev.filter((storage) => storage.id !== id));
       setDeleteLoading(null);
     } catch (err) {
       alert("Terjadi kesalahan server: " + err.message);
@@ -79,8 +74,8 @@ export default function VerificationList() {
   return (
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
-        Daftar Verifikasi
-        <Link to="/dashboard/createver" className="btn btn-primary btn-sm">
+        Daftar Storage
+        <Link to="/dashboardpam/createsto" className="btn btn-primary btn-sm">
           <i className="fas fa-plus mr-1"></i> Tambah Data
         </Link>
       </h4>
@@ -96,44 +91,32 @@ export default function VerificationList() {
                 <thead className="thead-light">
                   <tr>
                     <th>No</th>
-                    <th>Pesan</th>
-                    <th>Gambar Bukti</th>
-                    <th>Status</th>
-                    <th>Item ID</th>
+                    <th>Nama Storage</th>
+                    <th>Contact</th>
+                    <th>Users ID</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {verifications.map((ver, idx) => (
-                    <tr key={ver.id}>
+                  {storages.map((storage, idx) => (
+                    <tr key={storage.id}>
                       <td>{idx + 1}</td>
-                      <td>{ver.message}</td>
-                      <td>
-                        {ver.proof_image && (
-                          <a
-                            href={ver.proof_image}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Lihat Gambar
-                          </a>
-                        )}
-                      </td>
-                      <td>{ver.status}</td>
-                      <td>{ver.items_id}</td>
+                      <td>{storage.name}</td>
+                      <td>{storage.contact}</td>
+                      <td>{storage.users_id}</td>
                       <td>
                         <Link
-                          to={`/dashboard/updatever/${ver.id}`}
+                          to={`/dashboardpam/updatesto/${storage.id}`}
                           className="btn btn-warning btn-sm mr-2"
                         >
                           <i className="fas fa-edit"></i>
                         </Link>
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(ver.id)}
-                          disabled={deleteLoading === ver.id}
+                          onClick={() => handleDelete(storage.id)}
+                          disabled={deleteLoading === storage.id}
                         >
-                          {deleteLoading === ver.id ? (
+                          {deleteLoading === storage.id ? (
                             <span className="spinner-border spinner-border-sm"></span>
                           ) : (
                             <i className="fas fa-trash"></i>
@@ -142,10 +125,10 @@ export default function VerificationList() {
                       </td>
                     </tr>
                   ))}
-                  {verifications.length === 0 && (
+                  {storages.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="text-center">
-                        Tidak ada data verifikasi.
+                      <td colSpan={3} className="text-center">
+                        Tidak ada data storage.
                       </td>
                     </tr>
                   )}

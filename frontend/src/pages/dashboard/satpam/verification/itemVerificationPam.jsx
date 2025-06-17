@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function VerificationList() {
+export default function VerificationListPam() {
   const [verifications, setVerifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -80,7 +80,7 @@ export default function VerificationList() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Verifikasi
-        <Link to="/dashboard/createver" className="btn btn-primary btn-sm">
+        <Link to="/dashboardpam/createver" className="btn btn-primary btn-sm">
           <i className="fas fa-plus mr-1"></i> Tambah Data
         </Link>
       </h4>
@@ -123,7 +123,7 @@ export default function VerificationList() {
                       <td>{ver.items_id}</td>
                       <td>
                         <Link
-                          to={`/dashboard/updatever/${ver.id}`}
+                          to={`/dashboardpam/updatever/${ver.id}`}
                           className="btn btn-warning btn-sm mr-2"
                         >
                           <i className="fas fa-edit"></i>

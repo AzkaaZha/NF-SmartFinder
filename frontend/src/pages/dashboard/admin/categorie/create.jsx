@@ -1,55 +1,23 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function UpdateLocation() {
-  const { id } = useParams();
+export default function CreateCategorie() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLocation = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/locations/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        });
-        if (!res.ok) {
-          let data = {};
-          try {
-            data = await res.json();
-          } catch (e) {}
-          setError(data.message || "Gagal mengambil data lokasi.");
-          setLoading(false);
-          return;
-        }
-        const data = await res.json();
-        setName(data.data?.name || "");
-        setLoading(false);
-      } catch (err) {
-        setError("Terjadi kesalahan server: " + err.message);
-        setLoading(false);
-      }
-    };
-    fetchLocation();
-  }, [id]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Nama lokasi wajib diisi.");
+      setError("Nama kategori wajib diisi.");
       return;
     }
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/locations/${id}`, {
-        method: "PUT",
+      const res = await fetch("http://localhost:8000/api/categories", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -62,12 +30,12 @@ export default function UpdateLocation() {
         try {
           data = await res.json();
         } catch (e) {}
-        setError(data.message || "Gagal mengubah lokasi.");
+        setError(data.message || "Gagal menambah kategori.");
         setLoading(false);
         return;
       }
-      alert("Lokasi berhasil diubah!");
-      navigate(-1);
+      alert(`Kategori "${name}" berhasil ditambahkan!`);
+      navigate("/dashboard/categorie"); // Kembali ke daftar kategori
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);
@@ -80,12 +48,12 @@ export default function UpdateLocation() {
         <div className="col-md-6">
           <div className="card shadow mt-4">
             <div className="card-header">
-              <h5 className="mb-0">Ubah Lokasi</h5>
+              <h5 className="mb-0">Tambah Kategori Baru</h5>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="name">Nama Lokasi</label>
+                  <label htmlFor="name">Nama Kategori</label>
                   <input
                     type="text"
                     className="form-control"
@@ -95,7 +63,7 @@ export default function UpdateLocation() {
                       setName(e.target.value);
                       setError("");
                     }}
-                    placeholder="Masukkan nama lokasi"
+                    placeholder="Masukkan nama kategori"
                     disabled={loading}
                   />
                   {error && <small className="text-danger">{error}</small>}
@@ -104,7 +72,7 @@ export default function UpdateLocation() {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/dashboard/categories")}
                     disabled={loading}
                   >
                     Batal

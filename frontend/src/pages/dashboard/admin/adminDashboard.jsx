@@ -1,19 +1,52 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
-  // Contoh data dummy, nanti bisa diganti dengan data dari API
-  const summary = {
-    users: 120,
-    categories: 8,
-    locations: 15,
-    lostItems: 34,
-    verifications: 12,
+  const [summary, setSummary] = useState({
+    users: 0,
+    categories: 0,
+    locations: 0,
+    lostItems: 0,
+    verifications: 0,
     statistics: {
-      totalReports: 100,
-      verified: 80,
-      unverified: 20,
+      totalReports: 0,
+      verified: 0,
+      unverified: 0,
     },
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Fetch data from the backend API
+  const fetchSummaryData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // Call your API to get the data
+      const res = await fetch("http://localhost:8000/api/dashboard-summary", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Gagal mengambil data dashboard.");
+      }
+
+      const data = await res.json();
+      setSummary(data.data);
+      setLoading(false);
+    } catch (err) {
+      setError("Terjadi kesalahan: " + err.message);
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchSummaryData();
+  }, []);
 
   return (
     <div className="row">
@@ -21,6 +54,8 @@ export default function AdminDashboard() {
       <div className="col-md-12 mb-3">
         <h5>Data Master</h5>
       </div>
+
+      {/* Users */}
       <div className="col-md-4 mb-4">
         <div className="card shadow h-100 py-2">
           <div className="card-body d-flex align-items-center">
@@ -30,7 +65,7 @@ export default function AdminDashboard() {
                 User Management
               </div>
               <div className="h5 mb-0 font-weight-bold text-gray-800">
-                {summary.users} User
+                {loading ? "Loading..." : summary.users} User
               </div>
               <Link to="/dashboard/user" className="small">
                 Lihat Detail
@@ -39,6 +74,8 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Categories */}
       <div className="col-md-4 mb-4">
         <div className="card shadow h-100 py-2">
           <div className="card-body d-flex align-items-center">
@@ -48,7 +85,7 @@ export default function AdminDashboard() {
                 Kategori Barang
               </div>
               <div className="h5 mb-0 font-weight-bold text-gray-800">
-                {summary.categories} Kategori
+                {loading ? "Loading..." : summary.categories} Kategori
               </div>
               <Link to="/dashboard/categorie" className="small">
                 Lihat Detail
@@ -57,6 +94,8 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Locations */}
       <div className="col-md-4 mb-4">
         <div className="card shadow h-100 py-2">
           <div className="card-body d-flex align-items-center">
@@ -66,7 +105,7 @@ export default function AdminDashboard() {
                 Lokasi
               </div>
               <div className="h5 mb-0 font-weight-bold text-gray-800">
-                {summary.locations} Lokasi
+                {loading ? "Loading..." : summary.locations} Lokasi
               </div>
               <Link to="/dashboard/location" className="small">
                 Lihat Detail
@@ -76,10 +115,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Manajemen Barang */}
-      <div className="col-md-12 mb-3 mt-4">
-        <h5>Manajemen Barang</h5>
-      </div>
+      {/* Lost Items */}
       <div className="col-md-6 mb-4">
         <div className="card shadow h-100 py-2">
           <div className="card-body d-flex align-items-center">
@@ -89,7 +125,7 @@ export default function AdminDashboard() {
                 Barang Hilang
               </div>
               <div className="h5 mb-0 font-weight-bold text-gray-800">
-                {summary.lostItems} Laporan
+                {loading ? "Loading..." : summary.lostItems} Laporan
               </div>
               <Link to="/dashboard/item" className="small">
                 Lihat Detail
@@ -98,6 +134,8 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Verifications */}
       <div className="col-md-6 mb-4">
         <div className="card shadow h-100 py-2">
           <div className="card-body d-flex align-items-center">
@@ -107,36 +145,12 @@ export default function AdminDashboard() {
                 Verifikasi
               </div>
               <div className="h5 mb-0 font-weight-bold text-gray-800">
-                {summary.verifications} Perlu Verifikasi
+                {loading ? "Loading..." : summary.verifications} Perlu
+                Verifikasi
               </div>
               <Link to="/dashboard/verification" className="small">
                 Lihat Detail
               </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Laporan & Statistik */}
-      <div className="col-md-12 mb-3 mt-4">
-        <h5>Laporan & Statistik</h5>
-      </div>
-      <div className="col-md-12 mb-4">
-        <div className="card shadow h-100 py-2">
-          <div className="card-body">
-            <div className="d-flex align-items-center">
-              <i className="fas fa-chart-bar fa-2x text-danger mr-3"></i>
-              <div>
-                <div className="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                  Statistik
-                </div>
-                <div className="mb-1">
-                  Total Laporan: <b>{summary.statistics.totalReports}</b> <br />
-                  Sudah Diverifikasi: <b>{summary.statistics.verified}</b>{" "}
-                  <br />
-                  Belum Diverifikasi: <b>{summary.statistics.unverified}</b>
-                </div>
-              </div>
             </div>
           </div>
         </div>

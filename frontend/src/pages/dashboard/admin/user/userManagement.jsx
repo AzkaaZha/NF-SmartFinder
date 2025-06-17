@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function MissingItem() {
-  const [items, setItems] = useState([]);
+export default function UserManagement() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(null);
 
-  const fetchItems = async () => {
+  const fetchUsers = async () => {
     setLoading(true);
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/items", {
+      const res = await fetch("http://localhost:8000/api/users", {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -23,31 +23,31 @@ export default function MissingItem() {
         try {
           data = await res.json();
         } catch (e) {}
-        setError(data.message || "Gagal mengambil data item.");
-        setItems([]);
+        setError(data.message || "Gagal mengambil data pengguna.");
+        setUsers([]);
         setLoading(false);
         return;
       }
       const data = await res.json();
-      setItems(Array.isArray(data.data) ? data.data : []);
+      setUsers(Array.isArray(data.data) ? data.data : []);
       setLoading(false);
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
-      setItems([]);
+      setUsers([]);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchItems();
+    fetchUsers();
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus item ini?")) return;
+    if (!window.confirm("Yakin ingin menghapus pengguna ini?")) return;
     setDeleteLoading(id);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
+      const res = await fetch(`http://localhost:8000/api/users/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,11 +59,11 @@ export default function MissingItem() {
         try {
           data = await res.json();
         } catch (e) {}
-        alert(data.message || "Gagal menghapus item.");
+        alert(data.message || "Gagal menghapus pengguna.");
         setDeleteLoading(null);
         return;
       }
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      setUsers((prev) => prev.filter((user) => user.id !== id));
       setDeleteLoading(null);
     } catch (err) {
       alert("Terjadi kesalahan server: " + err.message);
@@ -74,8 +74,8 @@ export default function MissingItem() {
   return (
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
-        Daftar Item
-        <Link to="/dashboard/createitem" className="btn btn-primary btn-sm">
+        Daftar Pengguna
+        <Link to="/dashboard/createus" className="btn btn-primary btn-sm">
           <i className="fas fa-plus mr-1"></i> Tambah Data
         </Link>
       </h4>
@@ -91,41 +91,26 @@ export default function MissingItem() {
                 <thead className="thead-light">
                   <tr>
                     <th>No</th>
-                    <th>Nama Item</th>
-                    <th>Tanggal</th>
-                    <th>Deskripsi</th>
-                    <th>Gambar</th>
-                    <th>status</th>
-                    <th>Lokasi ID</th>
-                    <th>Kategori ID</th>
-                    <th>Pengguna ID</th>
-                    <th>Storage ID</th>
+                    <th>Nama Pengguna</th>
+                    <th>Email</th>
+                    <th>Role</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item, idx) => (
-                    <tr key={item.id}>
+                  {users.map((user, idx) => (
+                    <tr key={user.id}>
                       <td>{idx + 1}</td>
-                      <td>{item.name}</td>
-                      <td>{item.date}</td>
-                      <td>{item.description}</td>
-                      <td>{item.image}</td>
-                      <td>{item.status}</td>
-                      <td>{item.locations_id}</td>
-                      <td>{item.categories_id}</td>
-                      <td>{item.users_id}</td>
-                      <td>{item.storages_id}</td>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
                       <td>
-                        <Link to={`/dashboard/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
-                          <i className="fas fa-edit"></i>
-                        </Link>
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(item.id)}
-                          disabled={deleteLoading === item.id}
+                          onClick={() => handleDelete(user.id)}
+                          disabled={deleteLoading === user.id}
                         >
-                          {deleteLoading === item.id ? (
+                          {deleteLoading === user.id ? (
                             <span className="spinner-border spinner-border-sm"></span>
                           ) : (
                             <i className="fas fa-trash"></i>
@@ -134,10 +119,10 @@ export default function MissingItem() {
                       </td>
                     </tr>
                   ))}
-                  {items.length === 0 && (
+                  {users.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="text-center">
-                        Tidak ada data item.
+                      <td colSpan={5} className="text-center">
+                        Tidak ada data pengguna.
                       </td>
                     </tr>
                   )}
