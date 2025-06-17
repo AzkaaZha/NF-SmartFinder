@@ -53,6 +53,24 @@ class LocationController extends Controller
         ], 201);
     }
 
+    public function show($id)
+{
+    $location = \App\Models\Location::find($id);
+    if (!$location) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Location not found',
+            'data' => null
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Detail lokasi',
+        'data' => $location
+    ], 200);
+}
+
     public function update (Request $request, $id){
         // validate the request
         $validator = Validator::make($request->all(), [

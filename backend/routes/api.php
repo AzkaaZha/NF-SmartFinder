@@ -6,6 +6,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,37 +14,104 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
+// Login & Register
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
+// Public Access ( No Login )
+Route::apiResource('items', ItemController::class)->only(['index', 'show']);
 Route::get('/locations', [LocationController::class, 'index']);
-Route::post('/locations', [LocationController::class, 'store']);
-Route::put('/locations/{id}', [LocationController::class, 'update']);
-Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
-
+Route::get('/locations/{id}', [LocationController::class, 'show']);
 Route::get('/storages', [StorageController::class, 'index']);
-Route::post('/storages', [StorageController::class, 'store']);
 Route::get('/storages/{id}', [StorageController::class, 'show']);
-Route::put('/storages/{id}', [StorageController::class, 'update']);
-Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
-
 Route::get('/categories', [CategorieController::class, 'index']);
-Route::post('/categories', [CategorieController::class, 'store']);
 Route::get('/categories/{id}', [CategorieController::class, 'show']);
-Route::put('/categories/{id}', [CategorieController::class, 'update']);
-Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
 
-Route::get('/items', [ItemController::class, 'index']);
-Route::post('/items', [ItemController::class, 'store']);
-Route::get('/items/{id}', [ItemController::class, 'show']);
-Route::put('/items/{id}', [ItemController::class, 'update']);
-Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+// User Authenticated ( User )
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::post('/verifications', [VerificationController::class, 'store']);
+});
 
-Route::get('/verifications', [VerificationController::class, 'index']);
-Route::post('/verifications', [VerificationController::class, 'store']);
-Route::get('/verifications/{id}', [VerificationController::class, 'show']);
-Route::put('/verifications/{id}', [VerificationController::class, 'update']);
-Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+// Admin Authenticated ( Admin )
+Route::middleware('auth:api', 'role:admin')->group(function () {
+
+    // CRUD Users
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']); 
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    // CRUD Locations
+    Route::post('/locations', [LocationController::class, 'store']);
+    Route::put('/locations/{id}', [LocationController::class, 'update']);
+    Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
+
+    // CRUD Storages
+    Route::post('/storages', [StorageController::class, 'store']);
+    Route::put('/storages/{id}', [StorageController::class, 'update']);
+    Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
+
+    // CRUD Categories
+    Route::post('/categories', [CategorieController::class, 'store']);
+    Route::put('/categories/{id}', [CategorieController::class, 'update']);
+    Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
+
+    // CRUD Items
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::put('/items/{id}', [ItemController::class, 'update']);
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']); 
+    
+    // CRUD Verifications
+    Route::get('/verifications', [VerificationController::class, 'index']);
+    Route::get('/verifications/{id}', [VerificationController::class, 'show']);
+    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+});
+
+// Satpam Authenticated ( Satpam )
+Route::middleware('auth:api', 'role:satpam')->group(function () {
+
+    // Verifications
+    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+
+    // Storage
+    Route::put('/storages/{id}', [StorageController::class, 'update']);
+
+    // Items
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::put('/items/{id}', [ItemController::class, 'update']);
+});
+
+// summary dashboard
+Route::middleware('auth:api')->get('/dashboard-summary', function() {
+    $userCount = \App\Models\User::count();
+    $categoryCount = \App\Models\Categorie::count();
+    $locationCount = \App\Models\Location::count();
+    $lostItemsCount = \App\Models\Item::where('status', 'pending')->count(); 
+    $verificationCount = \App\Models\Verification::where('status', 'pending')->count();  
+
+    $statistics = [
+        'totalReports' => \App\Models\Item::count(),
+        'verified' => \App\Models\Verification::where('status', 'approved')->count(),
+        'unverified' => \App\Models\Verification::where('status', 'rejected')->count(),
+    ];
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'users' => $userCount,
+            'categories' => $categoryCount,
+            'locations' => $locationCount,
+            'lostItems' => $lostItemsCount,
+            'verifications' => $verificationCount,
+            'statistics' => $statistics,
+        ]
+    ]);
+});
+
+
+
+

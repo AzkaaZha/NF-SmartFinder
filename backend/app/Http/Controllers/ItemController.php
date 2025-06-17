@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -11,13 +12,20 @@ class ItemController extends Controller
 {
     public function index(){
         $items = Item::all();
-        if ($items->isEmpty()){
+        $items = Item::with(['location', 'category', 'storage', 'user'])->get();
+        if ($items->isEmpty()){ 
             return response()->json([
                 'success' => false,
                 'message' => 'No data found',
                 'data' => null
             ], 404);
         }
+
+        // Tambahkan img_url manual
+        $items = $items->map(function ($item) {
+            $item->img_url = asset('storage/images/' . $item->image);
+            return $item;
+        });
 
         return response()->json([
             'success' => true,
@@ -50,7 +58,7 @@ class ItemController extends Controller
 
         // upload image
         $image = $request->file('image');
-        $image->store('items', 'public');
+        $image->store('images', 'public');
 
         // buat data
         $item = Item::create([

@@ -40,5 +40,19 @@ class ItemSeeder extends Seeder
             'storages_id' => 1,
             ],
         );
+
+        Item::create(
+            [
+            'name' => 'Charger Laptop',
+            'date' => '2024-05-22',
+            'description' => 'merek acer',
+            'image' => 'charger.jpg',
+            'status' => 'pending',
+            'locations_id' => 1,
+            'categories_id' => 1,
+            'users_id' => 1,
+            'storages_id' => 1,
+            ],
+        );
     }
 }
