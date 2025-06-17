@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+
+// Import Public
 import Login from "./pages/Auth/login/Login";
 import Home from "./pages/Public/Home/Home";
 import Contact from "./pages/Public/Contact/Contact";
 import KlaimItem from "./pages/KlaimItem";
 import LostItemForm from "./pages/Public/ItemForm/LostItemForm";
+
+// Import Dashboard
 import AdminDashboard from "./pages/dashboard/admin/adminDashboard";
 import UserManagement from "./pages/dashboard/admin/user/userManagement";
 import ItemCategorie from "./pages/dashboard/admin/categorie/ItemCategorie";
@@ -40,6 +44,7 @@ import UserDashboardLayout from "./layout/dashboard/user";
 import MissingItemUser from "./pages/dashboard/user/item/missingItem";
 import CreateItemUser from "./pages/dashboard/user/item/create";
 import ItemDetail from "./pages/dashboard/user/item/itemDetail";
+
 import LostItems from './pages/Public/LostItems/LostItem';
 import theme from './utils/theme';
 import GlobalStyle from './components/GlobalStyles/GlobalStyle';
