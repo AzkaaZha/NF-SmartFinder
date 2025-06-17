@@ -15,12 +15,6 @@ import ItemVerification from "./pages/dashboard/admin/verification/itemVerificat
 import AdminDashboardLayout from "./layout/dashboard/admin";
 import CreateLocation from "./pages/dashboard/admin/location/create";
 import UpdateLocation from "./pages/dashboard/admin/location/update";
-import LostItems from "./pages/LostItem";
-import theme from "./utils/theme";
-import GlobalStyle from "./components/GlobalStyles/GlobalStyle";
-import PublicLayout from "./layout/PublicLayout";
-import FormKlaimBarang from "./pages/Public/KlaimForm/FormKlaimBarang";
-import SplashScreen from "./components/SplashScreen/SplashScreen";
 import StorageList from "./pages/dashboard/admin/storage/storage";
 import CreateCategorie from "./pages/dashboard/admin/categorie/create";
 import UpdateCategorie from "./pages/dashboard/admin/categorie/update";
@@ -46,6 +40,12 @@ import UserDashboardLayout from "./layout/dashboard/user";
 import MissingItemUser from "./pages/dashboard/user/item/missingItem";
 import CreateItemUser from "./pages/dashboard/user/item/create";
 import ItemDetail from "./pages/dashboard/user/item/itemDetail";
+import LostItems from './pages/Public/LostItems/LostItem';
+import theme from './utils/theme';
+import GlobalStyle from './components/GlobalStyles/GlobalStyle';
+import PublicLayout from './layout/PublicLayout';
+import FormKlaimBarang from './pages/Public/KlaimForm/FormKlaimBarang';
+import SplashScreen from './components/SplashScreen/SplashScreen'; 
 // import AdminLayout from './layouts/AdminLayout';
 
 function App() {

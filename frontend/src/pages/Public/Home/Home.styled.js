@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 // About Section
 export const AboutSection = styled.section`
-  padding: 5rem 0;
+  padding: auto;
 
   .about-meta {
     color: #27227d;
@@ -38,7 +38,7 @@ export const SectionTitle = styled.div`
 
 // Features Section
 export const FeaturesSection = styled.section`
-  padding: 1rem 0;
+  padding: auto;
   background-color: #f7f9fc;
 
   .row {
@@ -97,7 +97,7 @@ export const ButtonWrapper = styled.div`
 
 // Lost Items Section
 export const LostItemsSection = styled.section`
-  padding: 3rem 0;
+  padding: auto;
 `;
 
 // Card Wrapper

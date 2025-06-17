@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();    
+    return $request->user();
 })->middleware('auth:sanctum');
 
 // Login & Register
@@ -26,7 +26,7 @@ Route::get('/locations/{id}', [LocationController::class, 'show']);
 Route::get('/storages', [StorageController::class, 'index']);
 Route::get('/storages/{id}', [StorageController::class, 'show']);
 Route::get('/categories', [CategorieController::class, 'index']);
-Route::get('/categories/{id}', [CategorieController::class, 'show']); 
+Route::get('/categories/{id}', [CategorieController::class, 'show']);
 
 // User Authenticated ( User )
 Route::middleware('auth:api')->group(function () {
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
 
 // Admin Authenticated ( Admin )
 Route::middleware('auth:api', 'role:admin')->group(function () {
-    
+
     // CRUD Users
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users', [UserController::class, 'store']); 
@@ -69,7 +69,6 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
     Route::get('/verifications/{id}', [VerificationController::class, 'show']);
     Route::put('/verifications/{id}', [VerificationController::class, 'update']);
     Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
-
 });
 
 // Satpam Authenticated ( Satpam )

@@ -2,13 +2,13 @@ import styled from "styled-components";
 
 export const Section = styled.section`
   padding: 5rem 0;
-  background-color: var(--surface-color);
+  background-color: ${({ theme }) => theme.colors.surface};  
   margin-top: 5rem;
 `;
 
 export const InfoBox = styled.div`
-  background-color: #27227d;
-  color: ${({ theme }) => theme.colors.default};
+  background-color: ${({ theme }) => theme.colors.primary}; 
+  color: ${({ theme }) => theme.colors.contrast}; 
   padding: 3rem;
   border-radius: 1rem;
   height: 100%;
@@ -17,16 +17,17 @@ export const InfoBox = styled.div`
   h3 {
     font-size: 2rem;
     margin-bottom: 1rem;
-    color: ${({ theme }) => theme.colors.default};
+    color: ${({ theme }) => theme.colors.contrast};  
   }
 
   p {
     opacity: 0.8;
     margin-bottom: 2rem;
+    color: ${({ theme }) => theme.colors.contrast};  
   }
 
   a {
-    color: var(--contrast-color);
+    color: ${({ theme }) => theme.colors.accent};  
   }
 
   @media (max-width: 992px) {
@@ -52,7 +53,7 @@ export const InfoItem = styled.div`
   .icon-box {
     width: 3.5rem;
     height: 3.5rem;
-    background-color: color-mix(in srgb, var(--contrast-color), transparent 85%);
+    background-color: ${({ theme }) => theme.colors.accent};  
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -62,16 +63,16 @@ export const InfoItem = styled.div`
 
     i {
       font-size: 1.5rem;
-      color: var(--contrast-color);
+      color: ${({ theme }) => theme.colors.contrast};  
     }
   }
 
   &:hover .icon-box {
-    background-color: color-mix(in srgb, var(--contrast-color), transparent 70%);
+    background-color: ${({ theme }) => theme.colors.accentDark};  
   }
 
   .content h4 {
-    color: var(--contrast-color);
+    color: ${({ theme }) => theme.colors.contrast}; 
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
@@ -88,7 +89,7 @@ export const InfoItem = styled.div`
 `;
 
 export const ContactForm = styled.div`
-  background-color: var(--surface-color);
+  background-color: ${({ theme }) => theme.colors.surface};  
   padding: 3.5rem;
   border-radius: 1rem;
   height: 100%;
@@ -97,34 +98,35 @@ export const ContactForm = styled.div`
   h3 {
     font-size: 2.2rem;
     margin-bottom: 1rem;
+    color: ${({ theme }) => theme.colors.primaryText};  
   }
-
+  
   p {
-    color: color-mix(in srgb, var(--default-color), transparent 25%);
+    color: ${({ theme }) => theme.colors.darkText};  
     margin-bottom: 2rem;
   }
 
   .form-control,
   .form-select {
     padding: 1rem 1.5rem;
-    border-color: color-mix(in srgb, var(--default-color), transparent 90%);
+    border-color: ${({ theme }) => theme.colors.primary};  
     border-radius: 0.5rem;
-    background-color: color-mix(in srgb, var(--surface-color) 90%, white 5%);
-    color: var(--default-color);
+    background-color: ${({ theme }) => theme.colors.surfaceLight}; 
+    color: ${({ theme }) => theme.colors.default};
 
     &:focus {
       box-shadow: none;
-      border-color: var(--accent-color);
+      border-color: ${({ theme }) => theme.colors.accent};
     }
 
     &::placeholder {
-      color: color-mix(in srgb, var(--default-color), transparent 50%);
+      color: ${({ theme }) => theme.colors.placeholder};  
     }
   }
 
   .btn {
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.contrast};
     padding: 1rem 2rem;
     border-radius: 2rem;
     display: inline-flex;
@@ -137,7 +139,7 @@ export const ContactForm = styled.div`
     }
 
     &:hover {
-      background-color: color-mix(in srgb, var(--accent-color), var(--contrast-color) 20%);
+      background-color: ${({ theme }) => theme.colors.accentDark};
     }
   }
 
