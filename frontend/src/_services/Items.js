@@ -21,10 +21,14 @@ export const getItemById = async (id) => {
   }
 }
 
-export const createItem = async (itemData) => {
+export const createItem = async (data) => {
     try {
-      const { data } = await API.post('/items', itemData);
-      return data.data;
+      const response = await API.post('/items', data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }
+      });
+      return response.data;
     } catch (error) {
       console.error("Error creating item:", error);
       throw error;  

@@ -7,7 +7,7 @@ import Login from './pages/Auth/login/Login';
 import Home from './pages/Public/Home/Home';
 import Contact from './pages/Public/Contact/Contact';
 import LostItemForm from './pages/Public/ItemForm/LostItemForm';
-import LostItems from './pages/LostItem';
+import LostItems from './pages/Public/LostItems/LostItem';
 import KlaimItem from './pages/KlaimItem';
 
 // Layout
