@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createItem } from "../../../_services/Items"; // Sesuaikan path jika perlu
 import axios from "axios";
 import {
   FormWrapper,
@@ -18,7 +19,7 @@ export default function LostItemForm() {
     locations_id: "",
     categories_id: "",
     storages_id: "",
-    users_id: "", // Jangan lupa pastikan users_id ada di sini
+    users_id: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -41,9 +42,9 @@ export default function LostItemForm() {
     const fetchData = async () => {
       try {
         const [locRes, catRes, storRes] = await Promise.all([
-          axios.get("http://localhost:8000/api/locations"),
-          axios.get("http://localhost:8000/api/categories"),
-          axios.get("http://localhost:8000/api/storages"),
+          axios.get("https://nfsmartfinder.karyakreasi.id/api/locations"),
+          axios.get("https://nfsmartfinder.karyakreasi.id/api/categories"),
+          axios.get("https://nfsmartfinder.karyakreasi.id/api/storages"),
         ]);
         setLocations(locRes.data.data);
         setCategories(catRes.data.data);
@@ -55,7 +56,7 @@ export default function LostItemForm() {
     };
 
     fetchData();
-  }, [userId]); 
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -91,15 +92,8 @@ export default function LostItemForm() {
       }
     });
 
-    const token = localStorage.getItem("token"); 
-
     try {
-      await axios.post("http://localhost:8000/api/items", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, 
-        },
-      });
+      await createItem(data);
       setMessage("Laporan berhasil dikirim.");
       setFormData({
         name: "",
@@ -112,10 +106,8 @@ export default function LostItemForm() {
         users_id: userId,
       });
     } catch (err) {
-      console.error("Error response:", err.response);
-      if (err.response && err.response.data && err.response.data.errors) {
-        setMessage("Gagal mengirim laporan. Pastikan semua data sudah benar.");
-      }
+      console.error("Error response:", err);
+      setMessage("Gagal mengirim laporan. Pastikan semua data sudah benar.");
     } finally {
       setLoading(false);
     }
