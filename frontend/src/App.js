@@ -49,13 +49,11 @@ import LostItems from './pages/Public/LostItems/LostItem';
 import theme from './utils/theme';
 import GlobalStyle from './components/GlobalStyles/GlobalStyle';
 import PublicLayout from './layout/PublicLayout';
-import FormKlaimBarang from './pages/Public/KlaimForm/FormKlaimBarang';
 import SplashScreen from './components/SplashScreen/SplashScreen'; 
 // import AdminLayout from './layouts/AdminLayout';
 
 function App() {
   const [isSplashFinished, setIsSplashFinished] = useState(false);
-  const currentUser = JSON.parse(localStorage.getItem("user"));
 
   const handleSplashFinish = () => {
     setIsSplashFinished(true);

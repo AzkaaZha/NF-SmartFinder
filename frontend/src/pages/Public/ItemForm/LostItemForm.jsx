@@ -8,6 +8,9 @@ import {
   SubmitButton,
   Message,
 } from "./LostItemForm.styled";
+import { getLocations } from "../../../_services/locations";
+import { getCategories } from "../../../_services/categories";
+import { getStorages } from "../../../_services/storages";
 
 export default function LostItemForm() {
   const [formData, setFormData] = useState({
@@ -40,22 +43,22 @@ export default function LostItemForm() {
 
     const fetchData = async () => {
       try {
-        const [locRes, catRes, storRes] = await Promise.all([
-          axios.get("http://localhost:8000/api/locations"),
-          axios.get("http://localhost:8000/api/categories"),
-          axios.get("http://localhost:8000/api/storages"),
+        const [LocatioData, CategoryData, StorageData] = await Promise.all([
+          getLocations(),
+          getCategories(),
+          getStorages(),
         ]);
-        setLocations(locRes.data.data);
-        setCategories(catRes.data.data);
-        setStorages(storRes.data.data);
+        setLocations(LocatioData);
+        setCategories(CategoryData);
+        setStorages(StorageData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setMessage("Gagal memuat data dropdown.");
       }
-    };
+    }
 
     fetchData();
-  }, [userId]); 
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -91,13 +94,13 @@ export default function LostItemForm() {
       }
     });
 
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
 
     try {
       await axios.post("http://localhost:8000/api/items", data, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       setMessage("Laporan berhasil dikirim.");
@@ -120,6 +123,7 @@ export default function LostItemForm() {
       setLoading(false);
     }
   };
+
 
   return (
     <div>

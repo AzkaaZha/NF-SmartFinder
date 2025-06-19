@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import {
     FormWrapper,
@@ -9,13 +8,16 @@ import {
     SubmitButton,
     Message
 } from './KlaimItem.styled';
+import { getItems } from '../_services/Items';
+import { createVerification } from '../_services/verifications';
 
-export default function KlaimItem({ userId, token }) {
+export default function KlaimItem({ token }) {
     const { id } = useParams();
     const [formData, setFormData] = useState({
         message: '',
         proof_image: null,
         items_id: id || '',
+        users_id: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -23,14 +25,22 @@ export default function KlaimItem({ userId, token }) {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+        const userIdFromStorage = currentUser ? currentUser.id : '';
+
+        setFormData(prev => ({
+            ...prev,
+            users_id: userIdFromStorage,
+        }));
+
         const fetchItems = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/items', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                setItems(res.data.data);
+                const [ItemData] = await Promise.all([
+                  getItems(),
+                ])
+                setItems(ItemData);
                 if (id) {
-                    const selectedItem = res.data.data.find(item => item.id === parseInt(id));
+                    const selectedItem =ItemData.find(item => item.id === parseInt(id));
                     if (selectedItem) {
                         setFormData(prev => ({
                             ...prev,
@@ -57,39 +67,37 @@ export default function KlaimItem({ userId, token }) {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage('');
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
 
-        const data = new FormData();
-        Object.keys(formData).forEach(key => {
-            if (formData[key]) {
-                data.append(key, formData[key]);
-            }
-        });
+  const data = new FormData();
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) data.append(key, value);
+  });
 
-        try {
-            const res = await axios.post('http://localhost:8000/api/verifications', data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            setMessage('Klaim berhasil diajukan.');
-            setFormData({ message: '', proof_image: null, items_id: '' });
-        } catch (err) {
-            console.error('Error response:', err.response);
-            setMessage('Gagal mengajukan klaim. Pastikan semua data sudah benar.');
-        } finally {
-            setLoading(false);
-        }
-    };
+  try {
+    await createVerification(data, token);
+    setMessage("Klaim berhasil diajukan.");
+    setFormData({
+      message: "",
+      proof_image: null,
+      items_id: "",
+      users_id: formData.users_id, // reset tapi tetap isi user
+    });
+  } catch (err) {
+    setMessage("Gagal mengajukan klaim. Pastikan semua data sudah benar.");
+  } finally {
+    setLoading(false);
+  }
+};
 
+    
     return (
-        <div>
-            <div className="form-wrapper">
-                <form onSubmit={handleSubmit} className="klaim-item-form">
-                    <h2>Klaim Barang Hilang</h2>
+        <FormWrapper>
+            <FormGroup className="form-wrapper">
+                <Form onSubmit={handleSubmit} className="klaim-item-form">
+                    <Title>Klaim Barang Hilang</Title>
 
                     <FormGroup>
                         <label>Pesan</label>
@@ -111,13 +119,15 @@ export default function KlaimItem({ userId, token }) {
                         </select>
                     </FormGroup>
 
+                    <input type="hidden" name="users_id" value={formData.users_id} />
+
                     <SubmitButton type="submit" disabled={loading}>
                         {loading ? 'Mengajukan...' : 'Ajukan Klaim'}
                     </SubmitButton>
 
-                    {message && <p className="message">{message}</p>}
-                </form>
-            </div>
-        </div>
+                    {message && <Message className="message">{message}</Message>}
+                </Form>
+            </FormGroup>
+        </FormWrapper>
     );
 }
