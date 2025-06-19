@@ -1,3 +1,4 @@
+// FormKlaimBarang.Styled.js
 import styled from 'styled-components';
 
 export const FormWrapper = styled.div`
@@ -7,23 +8,17 @@ export const FormWrapper = styled.div`
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  top: 50px;
-
-  @media (min-height: 700px) {
-    margin-top: 80px;
-  }
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
 `;
 
 export const Title = styled.h2`
   text-align: center;
   margin-bottom: 25px;
   color: #333;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `;
 
 export const FormGroup = styled.div`
@@ -37,7 +32,6 @@ export const FormGroup = styled.div`
   }
 
   input,
-  select,
   textarea {
     width: 100%;
     padding: 10px;
@@ -53,23 +47,15 @@ export const FormGroup = styled.div`
 
 export const SubmitButton = styled.button`
   padding: 12px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #28a745;
+  color: white;
   font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
-  &:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
+  &:hover {
+    background-color: #218838;
   }
-`;
-
-export const Message = styled.p`
-  margin-top: 20px;
-  text-align: center;
-  color: #d9534f;
-  font-weight: 500;
 `;

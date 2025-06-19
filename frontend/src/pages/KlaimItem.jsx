@@ -87,9 +87,9 @@ export default function KlaimItem({ userId, token }) {
 
     return (
         <div>
-            <FormWrapper className="form-wrapper">
-                <Form onSubmit={handleSubmit} className="klaim-item-form">
-                    <Title>Klaim Barang Hilang</Title>
+            <div className="form-wrapper">
+                <form onSubmit={handleSubmit} className="klaim-item-form">
+                    <h2>Klaim Barang Hilang</h2>
 
                     <FormGroup>
                         <label>Pesan</label>
@@ -115,9 +115,9 @@ export default function KlaimItem({ userId, token }) {
                         {loading ? 'Mengajukan...' : 'Ajukan Klaim'}
                     </SubmitButton>
 
-                    {message && <Message className="message">{message}</Message>}
-                </Form>
-            </FormWrapper>
+                    {message && <p className="message">{message}</p>}
+                </form>
+            </div>
         </div>
     );
 }
