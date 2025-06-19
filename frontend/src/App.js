@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 // Import Public
-import Login from "./pages/Auth/login/Login";
+import Auth from "./pages/Auth/Auth";
 import Home from "./pages/Public/Home/Home";
 import Contact from "./pages/Public/Contact/Contact";
 import KlaimItem from "./pages/KlaimItem";
@@ -69,7 +69,7 @@ function App() {
         {isSplashFinished && (
           <Routes>
             {/* Auth */}
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Auth />} />
 
             {/* Layout Public */}
             <Route element={<PublicLayout />}>
