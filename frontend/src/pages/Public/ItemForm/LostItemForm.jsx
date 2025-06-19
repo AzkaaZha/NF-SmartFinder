@@ -30,7 +30,7 @@ export default function LostItemForm() {
   const [categories, setCategories] = useState([]);
   const [storages, setStorages] = useState([]);
 
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUser = JSON.parse(localStorage.getItem("userInfo"));
   const userId = currentUser ? currentUser.id : null;
 
   useEffect(() => {
@@ -118,6 +118,8 @@ export default function LostItemForm() {
       setLoading(false);
     }
   };
+
+  console.log("formData:", formData);
 
   return (
     <div>

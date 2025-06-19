@@ -39,7 +39,7 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
+    const userData = localStorage.getItem("userInfo");
     if (userData) {
       const user = JSON.parse(userData);
       setUserName(user.name);
@@ -47,8 +47,8 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userInfo");
     window.location.reload(); 
   };
 

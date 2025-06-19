@@ -22,21 +22,21 @@ export const getItemById = async (id) => {
 }
 
 export const createItem = async (data) => {
-  const token = localStorage.getItem("token");
-
-    try {
-      const response = await API.post('/items', data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // "Content-Type" : "multipart/form-data"
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error creating item:", error);
-      throw error;  
-    }
+  const token = localStorage.getItem("accessToken"); // Sesuaikan dengan nama token di localStorage
+  try {
+    const response = await API.post("/items", data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Kirim token di header
+        // Jangan set Content-Type saat kirim FormData, biar axios auto-set
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating item:", error);
+    throw error;
   }
+};
+
 
 export const updateItem = async (id, itemData) => {
   try {

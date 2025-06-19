@@ -6,7 +6,7 @@ import { ThemeProvider } from "styled-components";
 import Auth from "./pages/Auth/Auth";
 import Home from "./pages/Public/Home/Home";
 import Contact from "./pages/Public/Contact/Contact";
-import KlaimItem from "./pages/KlaimItem";
+import KlaimItem from "./pages/Public/KlaimForm/KlaimItem";
 import LostItemForm from "./pages/Public/ItemForm/LostItemForm";
 
 // Import Dashboard

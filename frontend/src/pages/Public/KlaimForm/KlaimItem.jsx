@@ -8,10 +8,10 @@ import {
   SubmitButton,
   Message,
 } from "./KlaimItem.styled";
-import { getItems } from "../_services/Items";
-import { createVerification } from "../_services/verifications";
+import { getItems } from "../../../_services/Items";
+import { createVerification } from "../../../_services/verifications";
 
-export default function KlaimItem({ token }) {
+export default function KlaimItem() {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     message: "",
@@ -56,7 +56,7 @@ export default function KlaimItem({ token }) {
     };
 
     fetchItems();
-  }, [token, id]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -75,11 +75,10 @@ export default function KlaimItem({ token }) {
   Object.entries(formData).forEach(([key, value]) => {
     if (value) form.append(key, value);
   });
-
-  const token = localStorage.getItem("token"); // Pastikan ini nama token yang benar
+// Pastikan ini nama token yang benar
 
   try {
-    await createVerification(form, token);
+    await createVerification(form);
     setMessage("Klaim berhasil diajukan.");
     setFormData({
       message: "",
