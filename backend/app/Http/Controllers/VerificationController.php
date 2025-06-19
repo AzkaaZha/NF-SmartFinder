@@ -32,6 +32,7 @@ class VerificationController extends Controller
             'message' => 'required|string|max:255',
             'proof_image' => 'nullable|image|max:2048',
             'items_id' => 'required|exists:items,id',
+            'users_id' => 'required|exists:users,id',
         ]);
 
         // cek validasi
@@ -53,6 +54,7 @@ class VerificationController extends Controller
             'proof_image' => $proof_image ? $proof_image->hashName() : null,
             'status' => 'pending',
             'items_id' => $request->items_id,
+            'users_id' => $request->users_id,
         ]);
 
         // response
@@ -96,6 +98,7 @@ class VerificationController extends Controller
             'proof_image' => 'nullable|image|max:2048',
             'status' => 'required|in:pending,approved,rejected',
             'items_id' => 'required|exists:items,id',
+            'users_id' => 'required|exists:users,id',
         ]);
 
         if ($validator->fails()) {
