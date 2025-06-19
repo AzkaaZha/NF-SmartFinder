@@ -40,7 +40,7 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
 
     // CRUD Users
     Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users', [UserController::class, 'store']); 
+    Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
@@ -60,10 +60,9 @@ Route::middleware('auth:api', 'role:admin')->group(function () {
     Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
 
     // CRUD Items
-    Route::post('/items', [ItemController::class, 'store']);
     Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']); 
-    
+    Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+
     // CRUD Verifications
     Route::get('/verifications', [VerificationController::class, 'index']);
     Route::get('/verifications/{id}', [VerificationController::class, 'show']);
@@ -81,7 +80,6 @@ Route::middleware('auth:api', 'role:satpam')->group(function () {
     Route::put('/storages/{id}', [StorageController::class, 'update']);
 
     // Items
-    Route::post('/items', [ItemController::class, 'store']);
     Route::put('/items/{id}', [ItemController::class, 'update']);
 });
 
@@ -90,8 +88,8 @@ Route::middleware('auth:api')->get('/dashboard-summary', function() {
     $userCount = \App\Models\User::count();
     $categoryCount = \App\Models\Categorie::count();
     $locationCount = \App\Models\Location::count();
-    $lostItemsCount = \App\Models\Item::where('status', 'pending')->count(); 
-    $verificationCount = \App\Models\Verification::where('status', 'pending')->count();  
+    $lostItemsCount = \App\Models\Item::where('status', 'pending')->count();
+    $verificationCount = \App\Models\Verification::where('status', 'pending')->count();
 
     $statistics = [
         'totalReports' => \App\Models\Item::count(),

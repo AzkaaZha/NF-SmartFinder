@@ -1,6 +1,5 @@
 import { API } from "../_api";
 
-// Menampilkan Item
 export const getItems = async () => {
   try {
     const { data } = await API.get('/items');
@@ -22,12 +21,10 @@ export const getItemById = async (id) => {
 }
 
 export const createItem = async (data) => {
-  const token = localStorage.getItem("accessToken"); // Sesuaikan dengan nama token di localStorage
   try {
     const response = await API.post("/items", data, {
       headers: {
-        Authorization: `Bearer ${token}`, // Kirim token di header
-        // Jangan set Content-Type saat kirim FormData, biar axios auto-set
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, 
       },
     });
     return response.data;
