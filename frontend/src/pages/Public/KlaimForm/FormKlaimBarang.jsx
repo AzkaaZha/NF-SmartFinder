@@ -5,7 +5,9 @@ import {
   Title,
   FormGroup,
   SubmitButton,
+  Message,
 } from "./FormKlaimBarang.styled";
+import { createVerification } from "../../../_services/verifications";
 
 export default function FormKlaimBarang() {
   const [form, setForm] = useState({
@@ -16,20 +18,50 @@ export default function FormKlaimBarang() {
     tanggal: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data klaim dikirim:", form);
+    setLoading(true);
+    setMessage("");
+
+    const dataToSend = {
+      name: form.nama,
+      phone: form.telepon,
+      description: form.deskripsi,
+      lost_location: form.lokasi,
+      lost_date: form.tanggal,
+      status: "pending", // default status klaim
+    };
+
+    try {
+      await createVerification(dataToSend);
+      setMessage("Klaim berhasil dikirim. Menunggu verifikasi.");
+      setForm({
+        nama: "",
+        telepon: "",
+        deskripsi: "",
+        lokasi: "",
+        tanggal: "",
+      });
+    } catch (error) {
+      console.error("Gagal mengirim klaim:", error);
+      setMessage("Gagal mengirim klaim. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div>
       <FormWrapper>
-        <Title>Form Klaim Barang</Title>
         <Form onSubmit={handleSubmit}>
+          <Title>Form Klaim Barang</Title>
           <FormGroup>
             <label>Nama</label>
             <input
@@ -85,7 +117,11 @@ export default function FormKlaimBarang() {
             />
           </FormGroup>
 
-          <SubmitButton type="submit">Kirim Klaim</SubmitButton>
+          <SubmitButton type="submit" disabled={loading}>
+            {loading ? "Mengirim..." : "Kirim Klaim"}
+          </SubmitButton>
+
+          {message && <Message>{message}</Message>}
         </Form>
       </FormWrapper>
     </div>

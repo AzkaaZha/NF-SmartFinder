@@ -1,9 +1,8 @@
-// KlaimItem.Styled.js
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const FormWrapper = styled.div`
   max-width: 600px;
-  margin: 40px auto;
+  margin: 120px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -31,14 +30,14 @@ export const FormGroup = styled.div`
     color: #555;
   }
 
-  input[type='file'],
+  input,
   select,
   textarea {
     width: 100%;
     padding: 10px;
+    font-family: inherit;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-family: inherit;
   }
 
   textarea {
