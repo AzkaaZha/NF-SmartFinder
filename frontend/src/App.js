@@ -50,34 +50,13 @@ import theme from "./utils/theme";
 import GlobalStyle from "./components/GlobalStyles/GlobalStyle";
 import PublicLayout from "./layout/PublicLayout";
 import SplashScreen from "./components/SplashScreen/SplashScreen";
+import { ProtectedRoute } from "./_services/ProtectedRoute";
 // import AdminLayout from './layouts/AdminLayout';
 
 // Di luar komponen App
 
 function App() {
-  const roleRedirectMap = {
-    admin: "/dashboard/admin",
-    satpam: "/dashboardpam/satpam",
-    user: "/dashboarduser/item",
-  };
-
-  const ProtectedRoute = ({ element, role }) => {
-    const token = localStorage.getItem("token");
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-
-    // Belum login
-    if (!token || !userInfo) return <Navigate to="/login" replace />;
-
-    // Login tapi role tidak sesuai
-    if (role && userInfo.role !== role) {
-      const redirectPath = roleRedirectMap[userInfo.role] || "/";
-      return <Navigate to={redirectPath} replace />;
-    }
-
-    return element;
-  };
-
-  const [isSplashFinished, setIsSplashFinished] = useState(false);
+    const [isSplashFinished, setIsSplashFinished] = useState(false);
 
   const handleSplashFinish = () => {
     setIsSplashFinished(true);
@@ -103,7 +82,7 @@ function App() {
             </Route>
             
             {/* Public must Login */}
-            <Route element={<ProtectedRoute role="user" element={<PublicLayout />}/>}>
+            <Route element={<ProtectedRoute role={["user", "admin", "satpam"]} element={<PublicLayout />}/>}>
               <Route path="/form" element={<LostItemForm />} />
               <Route path="/klaim/:id" element={<KlaimItem />} />
             </Route>
