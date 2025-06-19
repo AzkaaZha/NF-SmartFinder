@@ -44,10 +44,11 @@ export const getVerificationById = async (id) => {
 
 // Service: Tambah data verifikasi baru
 export const createVerification = async (verificationData, token) => {
+  
   try {
     const { data } = await API.post("/verifications", verificationData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });

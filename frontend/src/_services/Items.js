@@ -22,11 +22,14 @@ export const getItemById = async (id) => {
 }
 
 export const createItem = async (data) => {
+  const token = localStorage.getItem("token");
+
     try {
       const response = await API.post('/items', data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        }
+          Authorization: `Bearer ${token}`,
+          // "Content-Type" : "multipart/form-data"
+        },
       });
       return response.data;
     } catch (error) {

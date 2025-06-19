@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 // Import Public
@@ -53,8 +53,6 @@ import SplashScreen from "./components/SplashScreen/SplashScreen";
 import { ProtectedRoute } from "./_services/ProtectedRoute";
 // import AdminLayout from './layouts/AdminLayout';
 
-// Di luar komponen App
-
 function App() {
     const [isSplashFinished, setIsSplashFinished] = useState(false);
 
@@ -77,8 +75,6 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/lostitems" element={<LostItems />} />
-              {/* <Route path="/klaim/:id" element={<ProtectedRoute role= "user" element={<KlaimItem />} />}/>
-              <Route path="/form" element={<ProtectedRoute role= "user" element={<LostItemForm />} />}/> */}
             </Route>
             
             {/* Public must Login */}
