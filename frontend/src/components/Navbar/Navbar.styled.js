@@ -207,30 +207,20 @@ export const DropdownMenu = styled.ul`
   min-width: 200px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s;
-  z-index: 99;
 
-  ${({ $user }) =>
-    $user &&
+  ${({ $isOpen }) =>
+    $isOpen &&
     `
-    right: 0;
-    left: auto;
-    top: 120%;
-    min-width: 140px;
-    padding: 8px 0;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 6px;
-    z-index: 1000;
-  `}
+      opacity: 1;
+      visibility: visible;
+      display: block;
+    `}
 
   @media (max-width: 1199px) {
     position: static;
-    box-shadow: none;
-    border: 1px solid rgba(51, 51, 51, 0.1);
-    margin: 10px 20px;
-    background-color: rgba(33, 37, 41, 0.1);
-    display: none;
-
+    display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+    opacity: 1;
+    visibility: visible;
   }
 `;
 

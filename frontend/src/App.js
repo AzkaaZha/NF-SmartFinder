@@ -1,11 +1,17 @@
-import { useState } from "react";
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { ProtectedRoute } from "./_services/ProtectedRoute";
+import useSplashScreen from "./_services/splashScreen";
 
 // Import Public
+import theme from "./utils/theme";
+import GlobalStyle from "./components/GlobalStyles/GlobalStyle";
+import PublicLayout from "./layout/PublicLayout";
+import SplashScreen from "./components/SplashScreen/SplashScreen";
 import Auth from "./pages/Auth/Auth";
 import Home from "./pages/Public/Home/Home";
 import Contact from "./pages/Public/Contact/Contact";
+import LostItems from "./pages/Public/LostItems/LostItem";
 import KlaimItem from "./pages/Public/KlaimForm/KlaimItem";
 import LostItemForm from "./pages/Public/ItemForm/LostItemForm";
 
@@ -45,27 +51,16 @@ import MissingItemUser from "./pages/dashboard/user/item/missingItem";
 import CreateItemUser from "./pages/dashboard/user/item/create";
 import ItemDetail from "./pages/dashboard/user/item/itemDetail";
 
-import LostItems from "./pages/Public/LostItems/LostItem";
-import theme from "./utils/theme";
-import GlobalStyle from "./components/GlobalStyles/GlobalStyle";
-import PublicLayout from "./layout/PublicLayout";
-import SplashScreen from "./components/SplashScreen/SplashScreen";
-import { ProtectedRoute } from "./_services/ProtectedRoute";
-// import AdminLayout from './layouts/AdminLayout';
-
 function App() {
-    const [isSplashFinished, setIsSplashFinished] = useState(false);
-
-  const handleSplashFinish = () => {
-    setIsSplashFinished(true);
-  };
+  const isSplashFinished = useSplashScreen();
 
   return (
     <ThemeProvider theme={theme}>
       <>
         <GlobalStyle />
-        {!isSplashFinished && <SplashScreen onFinish={handleSplashFinish} />}
-        {isSplashFinished && (
+        {!isSplashFinished ? (
+          <SplashScreen />
+        ) : (
           <Routes>
             {/* Auth */}
             <Route path="/login" element={<Auth />} />
@@ -76,9 +71,16 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/lostitems" element={<LostItems />} />
             </Route>
-            
+
             {/* Public must Login */}
-            <Route element={<ProtectedRoute role={["user", "admin", "satpam"]} element={<PublicLayout />}/>}>
+            <Route
+              element={
+                <ProtectedRoute
+                  role={["user", "admin", "satpam"]}
+                  element={<PublicLayout />}
+                />
+              }
+            >
               <Route path="/form" element={<LostItemForm />} />
               <Route path="/klaim/:id" element={<KlaimItem />} />
             </Route>

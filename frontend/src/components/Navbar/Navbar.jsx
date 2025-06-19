@@ -1,20 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  HeaderContainer,
-  HeaderWrapper,
-  LogoLink,
-  LogoImg,
-  NavMenu,
-  NavList,
-  NavItem,
-  NavLink,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  LogoutButton,
-} from "./Navbar.styled";
+import { HeaderContainer,HeaderWrapper,LogoLink,LogoImg,NavMenu,NavList,NavItem,NavLink,Dropdown,DropdownToggle,DropdownMenu,DropdownItem,LogoutButton} from "./Navbar.styled";
 
 function Navbar() {
   const location = useLocation();
@@ -22,6 +8,8 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [userName, setUserName] = useState(null);
+  const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   const handleScroll = () => {
     if (window.scrollY > 50) {
@@ -78,10 +66,16 @@ function Navbar() {
               </NavLink>
             </NavItem>
             <Dropdown>
-              <DropdownToggle href="#" onClick={(e) => e.preventDefault()}>
+              <DropdownToggle
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsFeatureOpen(!isFeatureOpen);
+                }}
+              >
                 Features <i className="bi bi-chevron-down toggle-dropdown" />
               </DropdownToggle>
-              <DropdownMenu>
+              <DropdownMenu $isOpen={isFeatureOpen}>
                 <DropdownItem>
                   <NavLink to="/form">Lapor Barang Temuan</NavLink>
                 </DropdownItem>
@@ -92,7 +86,6 @@ function Navbar() {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-
             <NavItem>
               <NavLink $active={isActive("/contact")} to="/contact">
                 Contact
@@ -107,12 +100,19 @@ function Navbar() {
               </NavItem>
             ) : (
               <Dropdown style={{ position: "relative" }}>
-                <DropdownToggle href="#" onClick={(e) => e.preventDefault()} $user>
+                <DropdownToggle
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsUserDropdownOpen(!isUserDropdownOpen);
+                  }}
+                  $user
+                >
                   <i className="bi bi-person-circle" />
                   {userName}
                   <i className="bi bi-chevron-down" />
                 </DropdownToggle>
-                <DropdownMenu $user>
+                <DropdownMenu $user $isOpen={isUserDropdownOpen}>
                   <DropdownItem>
                     <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
                   </DropdownItem>
