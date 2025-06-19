@@ -12,7 +12,7 @@ export default function VerificationList() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token"); // Mengambil token dari localStorage
+      const token = localStorage.getItem("accessToken"); // Mengambil token dari localStorage
       const res = await fetch("http://localhost:8000/api/verifications", {
         headers: {
           Authorization: `Bearer ${token}`,

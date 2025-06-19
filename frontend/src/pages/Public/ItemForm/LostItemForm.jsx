@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   FormWrapper,
   Form,
@@ -11,6 +10,7 @@ import {
 import { getLocations } from "../../../_services/locations";
 import { getCategories } from "../../../_services/categories";
 import { getStorages } from "../../../_services/storages";
+import { createItem } from "../../../_services/Items";
 
 export default function LostItemForm() {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ export default function LostItemForm() {
   const [categories, setCategories] = useState([]);
   const [storages, setStorages] = useState([]);
 
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUser = JSON.parse(localStorage.getItem("userInfo"));
   const userId = currentUser ? currentUser.id : null;
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function LostItemForm() {
         console.error("Error fetching data:", error);
         setMessage("Gagal memuat data dropdown.");
       }
-    }
+    };
 
     fetchData();
   }, [userId]);
@@ -87,22 +87,15 @@ export default function LostItemForm() {
     setLoading(true);
     setMessage("");
 
-    const data = new FormData();
+    const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
-        data.append(key, formData[key]);
+        form.append(key, formData[key]);
       }
     });
 
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.post("http://localhost:8000/api/items", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await createItem(form);
       setMessage("Laporan berhasil dikirim.");
       setFormData({
         name: "",
@@ -115,15 +108,18 @@ export default function LostItemForm() {
         users_id: userId,
       });
     } catch (err) {
-      console.error("Error response:", err.response);
+      console.error("Error creating item:", err);
       if (err.response && err.response.data && err.response.data.errors) {
         setMessage("Gagal mengirim laporan. Pastikan semua data sudah benar.");
+      } else {
+        setMessage("Terjadi kesalahan saat mengirim laporan.");
       }
     } finally {
       setLoading(false);
     }
   };
 
+  console.log("formData:", formData);
 
   return (
     <div>
