@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 // Import Public
@@ -45,14 +45,38 @@ import MissingItemUser from "./pages/dashboard/user/item/missingItem";
 import CreateItemUser from "./pages/dashboard/user/item/create";
 import ItemDetail from "./pages/dashboard/user/item/itemDetail";
 
-import LostItems from './pages/Public/LostItems/LostItem';
-import theme from './utils/theme';
-import GlobalStyle from './components/GlobalStyles/GlobalStyle';
-import PublicLayout from './layout/PublicLayout';
-import SplashScreen from './components/SplashScreen/SplashScreen'; 
+import LostItems from "./pages/Public/LostItems/LostItem";
+import theme from "./utils/theme";
+import GlobalStyle from "./components/GlobalStyles/GlobalStyle";
+import PublicLayout from "./layout/PublicLayout";
+import SplashScreen from "./components/SplashScreen/SplashScreen";
 // import AdminLayout from './layouts/AdminLayout';
 
+// Di luar komponen App
+
 function App() {
+  const roleRedirectMap = {
+    admin: "/dashboard/admin",
+    satpam: "/dashboardpam/satpam",
+    user: "/dashboarduser/item",
+  };
+
+  const ProtectedRoute = ({ element, role }) => {
+    const token = localStorage.getItem("token");
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+
+    // Belum login
+    if (!token || !userInfo) return <Navigate to="/login" replace />;
+
+    // Login tapi role tidak sesuai
+    if (role && userInfo.role !== role) {
+      const redirectPath = roleRedirectMap[userInfo.role] || "/";
+      return <Navigate to={redirectPath} replace />;
+    }
+
+    return element;
+  };
+
   const [isSplashFinished, setIsSplashFinished] = useState(false);
 
   const handleSplashFinish = () => {
@@ -74,12 +98,26 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/lostitems" element={<LostItems />} />
-              <Route path="/klaim/:id" element={<KlaimItem />} />
+              {/* <Route path="/klaim/:id" element={<ProtectedRoute role= "user" element={<KlaimItem />} />}/>
+              <Route path="/form" element={<ProtectedRoute role= "user" element={<LostItemForm />} />}/> */}
+            </Route>
+            
+            {/* Public must Login */}
+            <Route element={<ProtectedRoute role="user" element={<PublicLayout />}/>}>
               <Route path="/form" element={<LostItemForm />} />
+              <Route path="/klaim/:id" element={<KlaimItem />} />
             </Route>
 
             {/* Admin Dashboard route */}
-            <Route path="/dashboard" element={<AdminDashboardLayout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute
+                  role="admin"
+                  element={<AdminDashboardLayout />}
+                />
+              }
+            >
               <Route path="admin" element={<AdminDashboard />} />
               <Route path="user" element={<UserManagement />} />
               <Route path="categorie" element={<ItemCategorie />} />
@@ -113,7 +151,15 @@ function App() {
             </Route>
 
             {/* Satpam Dashboard route */}
-            <Route path="/dashboardpam" element={<SatpamDashboardLayout />}>
+            <Route
+              path="/dashboardpam"
+              element={
+                <ProtectedRoute
+                  role="satpam"
+                  element={<SatpamDashboardLayout />}
+                />
+              }
+            >
               <Route path="satpam" element={<SatpamDashboard />} />
               <Route path="item" element={<MissingItemPam />} />
               <Route path="verification" element={<VerificationListPam />} />
@@ -133,13 +179,17 @@ function App() {
             </Route>
 
             {/* USer Dashboard route */}
-            <Route path="/dashboarduser" element={<UserDashboardLayout />}>
+            <Route
+              path="/dashboarduser"
+              element={
+                <ProtectedRoute role="user" element={<UserDashboardLayout />} />
+              }
+            >
               <Route path="item" element={<MissingItemUser />} />
 
               {/* item routes */}
               <Route path="createitem" element={<CreateItemUser />} />
               <Route path="itemdetail/:id" element={<ItemDetail />} />
-
             </Route>
           </Routes>
         )}
