@@ -33,7 +33,7 @@ import UpdateItem from "./pages/dashboard/admin/item/update";
 import CreateStorage from "./pages/dashboard/admin/storage/create";
 import UpdateStorage from "./pages/dashboard/admin/storage/update";
 import CreateUser from "./pages/dashboard/admin/user/create";
-import CreateVerification from "./pages/dashboard/admin/verification/create";
+// import CreateVerification from "./pages/dashboard/admin/verification/create";
 import UpdateVerification from "./pages/dashboard/admin/verification/update";
 import SatpamDashboard from "./pages/dashboard/satpam/satpamDashboard";
 import SatpamDashboardLayout from "./layout/dashboard/satpam";
@@ -120,7 +120,7 @@ function App() {
               <Route path="createus" element={<CreateUser />} />
 
               {/* verification route */}
-              <Route path="createver" element={<CreateVerification />} />
+              {/* <Route path="createver" element={<CreateVerification />} /> */}
               <Route path="updatever/:id" element={<UpdateVerification />} />
             </Route>
 
