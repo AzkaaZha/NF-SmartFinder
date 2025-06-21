@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  getVerification,
-  deleteVerification,
-  getStatusBadgeStyle,
-} from "../../../../_services/verifications";
+import { deleteVerification, getStatusBadgeStyle, getVerification } from "../../../../_services/verifications";
+
 
 export default function VerificationList() {
   const [verifications, setVerifications] = useState([]);
@@ -18,13 +15,10 @@ export default function VerificationList() {
     try {
       const data = await getVerification();
       setVerifications(data || []);
-      setLoading(false);
     } catch (err) {
-      console.error("Error fetching verifications:", err);
-      setError(
-        err.response?.data?.message || "Gagal mengambil data verifikasi."
-      );
+      setError("Gagal mengambil data verifikasi.");
       setVerifications([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -39,10 +33,9 @@ export default function VerificationList() {
     try {
       await deleteVerification(id);
       setVerifications((prev) => prev.filter((ver) => ver.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      console.error(`Error deleting verification with ID ${id}:`, err);
-      alert(err.response?.data?.message || "Gagal menghapus verifikasi.");
+      alert("Gagal menghapus verifikasi.");
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -51,9 +44,6 @@ export default function VerificationList() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Verifikasi
-        <Link to="/dashboard/createver" className="btn btn-primary btn-sm">
-          <i className="fas fa-plus mr-1"></i> Tambah Data
-        </Link>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">
@@ -71,7 +61,6 @@ export default function VerificationList() {
                     <th>Gambar Bukti</th>
                     <th>Status</th>
                     <th>Item ID</th>
-                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -95,26 +84,7 @@ export default function VerificationList() {
                           {ver.status}
                         </span>
                       </td>
-                      <td>{ver.items_id}</td>
-                      <td>
-                        <Link
-                          to={`/dashboard/updatever/${ver.id}`}
-                          className="btn btn-warning btn-sm mr-2"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </Link>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(ver.id)}
-                          disabled={deleteLoading === ver.id}
-                        >
-                          {deleteLoading === ver.id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          ) : (
-                            <i className="fas fa-trash"></i>
-                          )}
-                        </button>
-                      </td>
+                      <td>{ver.items_id}</td>    
                     </tr>
                   ))}
                   {verifications.length === 0 && (
