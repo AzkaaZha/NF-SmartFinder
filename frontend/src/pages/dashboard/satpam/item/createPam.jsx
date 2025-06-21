@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCategories } from "../../../../_services/categories";
 import { getLocations } from "../../../../_services/locations";
-import { getUsers } from "../../../../_services/user";
+import { getUser, getUsers } from "../../../../_services/user";
 import { getStorages } from "../../../../_services/storages";
 import { createItem } from "../../../../_services/Items";
 
@@ -29,7 +29,7 @@ export default function CreateItemPam() {
         const [locData, catData, userData, stoData] = await Promise.all([
           getLocations(),
           getCategories(),
-          getUsers(),
+          getUser(),
           getStorages(),
         ]);
         setLocations(locData);

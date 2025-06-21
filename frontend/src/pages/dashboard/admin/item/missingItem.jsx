@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteItem, getItems } from "../../../../_services/Items";
 
 export default function MissingItem() {
   const [items, setItems] = useState([]);
@@ -11,28 +12,12 @@ export default function MissingItem() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/items", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data item.");
-        setItems([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setItems(Array.isArray(data.data) ? data.data : []);
+      const data = await getItems();
+      setItems(Array.isArray(data) ? data : []);
       setLoading(false);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Error fetching items:", err);
+      setError(err.response?.data?.message || "Gagal mengambil data item.");
       setItems([]);
       setLoading(false);
     }
@@ -46,27 +31,12 @@ export default function MissingItem() {
     if (!window.confirm("Yakin ingin menghapus item ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus item.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      console.error(`Error deleting item with ID ${id}:`, err);
+      alert(err.response?.data?.message || "Gagal menghapus item.");
       setDeleteLoading(null);
     }
   };
@@ -75,9 +45,6 @@ export default function MissingItem() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Item
-        <Link to="/dashboard/createitem" className="btn btn-primary btn-sm">
-          <i className="fas fa-plus mr-1"></i> Tambah Data
-        </Link>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">
@@ -110,7 +77,13 @@ export default function MissingItem() {
                       <td>{item.name}</td>
                       <td>{item.date}</td>
                       <td>{item.description}</td>
-                      <td>{item.image}</td>
+                      <td>
+                        {item.image && (
+                          <a href={item.image} target="_blank" rel="noopener noreferrer">
+                            Lihat Gambar
+                          </a>
+                        )}
+                      </td>
                       <td>{item.status}</td>
                       <td>{item.locations_id}</td>
                       <td>{item.categories_id}</td>
@@ -136,7 +109,7 @@ export default function MissingItem() {
                   ))}
                   {items.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="text-center">
+                      <td colSpan={11} className="text-center">
                         Tidak ada data item.
                       </td>
                     </tr>

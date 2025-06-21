@@ -1,80 +1,51 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { createStorage } from "../../../../_services/storages";
+import { getUser } from "../../../../_services/user";
 
 export default function CreateStorage() {
   const [name, setName] = useState("");
-  const [contact, setContact] = useState(""); // Tambahkan state untuk contact
-  const [users, setUsers] = useState([]); // Tambahkan state untuk users
-  const [usersId, setUsersId] = useState(""); // Tambahkan state untuk users_id
+  const [contact, setContact] = useState("");
+  const [users, setUsers] = useState([]);
+  const [usersId, setUsersId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data users
-  const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Gagal mengambil data pengguna.");
-      }
-
-      const data = await res.json();
-      setUsers(data.data);
-    } catch (err) {
-      setError("Terjadi kesalahan server saat mengambil data pengguna: " + err.message);
-    }
-  };
-
   useEffect(() => {
-    fetchUsers();
+    const fetchUsersData = async () => {
+      try {
+        setLoading(true);
+        const usersData = await getUser();
+        setUsers(usersData);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError(err.response?.data?.message || "Gagal mengambil data pengguna.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsersData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !contact || !usersId) {
-      setError("Nama, Contact dan Pengguna storage wajib diisi!");
+      setError("Nama, Contact, dan Pengguna storage wajib diisi!");
       return;
     }
 
     setLoading(true);
+    setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/storages", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          contact: contact,
-          users_id: usersId, // Mengirimkan users_id
-        }),
-      });
-
-      // Cek jika status code tidak OK
-      if (!res.ok) {
-        let data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal menambahkan storage.");
-        setLoading(false);
-        return;
-      }
-
+      await createStorage({ name, contact, users_id: usersId });
       alert("Storage berhasil ditambahkan!");
       navigate("/dashboard/storages");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging
+      console.error("Error creating storage:", err);
+      setError(err.response?.data?.message || "Gagal menambahkan storage.");
+    } finally {
       setLoading(false);
     }
   };
@@ -85,7 +56,6 @@ export default function CreateStorage() {
       <div className="card shadow mb-4">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            {/* Nama Storage */}
             <div className="form-group">
               <label htmlFor="name">Nama Storage</label>
               <input
@@ -99,7 +69,6 @@ export default function CreateStorage() {
               />
             </div>
 
-            {/* Contact Storage */}
             <div className="form-group">
               <label htmlFor="contact">Contact</label>
               <input
@@ -113,7 +82,6 @@ export default function CreateStorage() {
               />
             </div>
 
-            {/* Users ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="usersId">Pengguna</label>
               <select
@@ -132,7 +100,6 @@ export default function CreateStorage() {
               </select>
             </div>
 
-            {/* Error Message */}
             {error && <div className="text-danger">{error}</div>}
 
             <div className="d-flex justify-content-between mt-4">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { deleteUser, getUser } from "../../../../_services/user";
-
+ // sesuaikan path
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);

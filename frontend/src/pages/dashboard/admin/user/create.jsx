@@ -29,7 +29,7 @@ export default function CreateUser() {
     try {
       await getCreateUser(form);
       alert("Pengguna berhasil dibuat!");
-      navigate("/dashboard/users");
+      navigate("/dashboard/user");
     } catch (err) {
       console.error("Gagal membuat user:", err);
       setError(err?.response?.data?.message || "Gagal membuat pengguna.");
@@ -93,6 +93,7 @@ export default function CreateUser() {
                 disabled={loading}
               >
                 <option value="user">User</option>
+                <option value="satpam">Satpam</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
