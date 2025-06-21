@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function UpdateCategorie() {
-  const { id } = useParams(); // Mengambil ID kategori dari URL
+  const { id } = useParams(); 
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch data kategori berdasarkan ID saat halaman pertama kali dimuat
   useEffect(() => {
     const fetchCategorie = async () => {
       setLoading(true);
@@ -68,7 +67,7 @@ export default function UpdateCategorie() {
         return;
       }
       alert("Kategori berhasil diubah!");
-      navigate("/dashboard/categorie"); // Kembali ke daftar kategori
+      navigate("/dashboard/categorie"); 
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);

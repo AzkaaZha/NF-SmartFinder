@@ -2,17 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function UpdateStorage() {
-  const { id } = useParams(); // Ambil ID dari URL
+  const { id } = useParams(); 
   const [storage, setStorage] = useState({});
   const [name, setName] = useState("");
-  const [contact, setContact] = useState(""); // Tambahkan state untuk contact
-  const [users, setUsers] = useState([]); // Tambahkan state untuk users
-  const [usersId, setUsersId] = useState(""); // Tambahkan state untuk users_id
+  const [contact, setContact] = useState(""); 
+  const [users, setUsers] = useState([]); 
+  const [usersId, setUsersId] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data users
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -34,7 +33,6 @@ export default function UpdateStorage() {
     }
   };
 
-  // Ambil data storage berdasarkan ID untuk mengupdate
   const fetchStorageData = async () => {
     setLoading(true);
     try {
@@ -58,7 +56,7 @@ export default function UpdateStorage() {
       setStorage(storageData);
       setName(storageData.name);
       setContact(storageData.contact);
-      setUsersId(storageData.users_id); // Set ID pengguna yang sudah ada
+      setUsersId(storageData.users_id);
       setLoading(false);
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
@@ -68,13 +66,12 @@ export default function UpdateStorage() {
 
   useEffect(() => {
     fetchStorageData();
-    fetchUsers(); // Ambil data pengguna
+    fetchUsers(); 
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !contact || !usersId) {
       setError("Nama, Contact dan Pengguna storage wajib diisi!");
       return;
@@ -92,11 +89,10 @@ export default function UpdateStorage() {
         body: JSON.stringify({
           name: name,
           contact: contact,
-          users_id: usersId, // Mengirimkan users_id
+          users_id: usersId, 
         }),
       });
 
-      // Cek jika status code tidak OK
       if (!res.ok) {
         let data = await res.json();
         console.error("Error detail:", data);
@@ -109,7 +105,7 @@ export default function UpdateStorage() {
       navigate("/dashboard/storages");
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging
+      console.error("Terjadi kesalahan:", err); 
       setLoading(false);
     }
   };

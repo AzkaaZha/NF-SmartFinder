@@ -5,7 +5,7 @@ export default function CreateUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user"); // Default role: user
+  const [role, setRole] = useState("user"); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ export default function CreateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !email || !password || !role) {
       setError("Semua kolom wajib diisi!");
       return;
@@ -36,12 +35,10 @@ export default function CreateUser() {
         }),
       });
 
-      // Menangani respons jika status bukan OK
       if (!res.ok) {
-        // Jika status bukan OK, coba ambil respons JSON untuk debugging
-        let data = await res.text();  // Mengambil data dalam bentuk teks
+        let data = await res.text();  
         try {
-          data = JSON.parse(data);  // Mengonversi ke JSON jika memungkinkan
+          data = JSON.parse(data);  
         } catch (e) {
           setError("Terjadi kesalahan: Tidak dapat mengurai respons dari server.");
           console.error("Error response:", data);
@@ -58,7 +55,7 @@ export default function CreateUser() {
       navigate("/dashboard/users");
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging
+      console.error("Terjadi kesalahan:", err); 
       setLoading(false);
     }
   };

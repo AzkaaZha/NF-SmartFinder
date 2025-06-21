@@ -21,7 +21,7 @@ export default function LostItemForm() {
     locations_id: "",
     categories_id: "",
     storages_id: "",
-    users_id: "", // Jangan lupa pastikan users_id ada di sini
+    users_id: "", 
   });
 
   const [loading, setLoading] = useState(false);

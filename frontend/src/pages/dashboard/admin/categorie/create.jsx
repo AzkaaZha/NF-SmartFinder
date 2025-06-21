@@ -35,7 +35,7 @@ export default function CreateCategorie() {
         return;
       }
       alert(`Kategori "${name}" berhasil ditambahkan!`);
-      navigate("/dashboard/categorie"); // Kembali ke daftar kategori
+      navigate("/dashboard/categorie"); 
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);

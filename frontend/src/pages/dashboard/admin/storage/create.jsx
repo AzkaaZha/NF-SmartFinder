@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateStorage() {
   const [name, setName] = useState("");
-  const [contact, setContact] = useState(""); // Tambahkan state untuk contact
-  const [users, setUsers] = useState([]); // Tambahkan state untuk users
-  const [usersId, setUsersId] = useState(""); // Tambahkan state untuk users_id
+  const [contact, setContact] = useState(""); 
+  const [users, setUsers] = useState([]); 
+  const [usersId, setUsersId] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data users
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -39,7 +38,6 @@ export default function CreateStorage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !contact || !usersId) {
       setError("Nama, Contact dan Pengguna storage wajib diisi!");
       return;
@@ -57,11 +55,10 @@ export default function CreateStorage() {
         body: JSON.stringify({
           name: name,
           contact: contact,
-          users_id: usersId, // Mengirimkan users_id
+          users_id: usersId, 
         }),
       });
 
-      // Cek jika status code tidak OK
       if (!res.ok) {
         let data = await res.json();
         console.error("Error detail:", data);
@@ -74,7 +71,7 @@ export default function CreateStorage() {
       navigate("/dashboard/storages");
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging
+      console.error("Terjadi kesalahan:", err);
       setLoading(false);
     }
   };

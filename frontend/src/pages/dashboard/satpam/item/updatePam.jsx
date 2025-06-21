@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function UpdateItemPam() {
-  const { id } = useParams(); // Ambil ID dari URL
+  const { id } = useParams(); 
   const [item, setItem] = useState({});
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -15,14 +15,13 @@ export default function UpdateItemPam() {
   const [categoriesId, setCategoriesId] = useState("");
   const [usersId, setUsersId] = useState("");
   const [storagesId, setStoragesId] = useState("");
-  const [image, setImage] = useState(null);  // Untuk gambar baru (optional)
-  const [currentImage, setCurrentImage] = useState("");  // Gambar lama
-  const [status, setStatus] = useState(""); // Status
+  const [image, setImage] = useState(null); 
+  const [currentImage, setCurrentImage] = useState("");  
+  const [status, setStatus] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data terkait: Lokasi, Kategori, Pengguna, Storage
   const fetchRelatedData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -62,7 +61,6 @@ export default function UpdateItemPam() {
     }
   };
 
-  // Ambil data item berdasarkan ID untuk mengupdate
   const fetchItemData = async () => {
     setLoading(true);
     try {
@@ -91,8 +89,8 @@ export default function UpdateItemPam() {
       setCategoriesId(item.categories_id);
       setUsersId(item.users_id);
       setStoragesId(item.storages_id);
-      setCurrentImage(item.image);  // Menyimpan gambar lama
-      setStatus(item.status); // Set status item
+      setCurrentImage(item.image);  
+      setStatus(item.status); 
       setLoading(false);
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
@@ -102,13 +100,12 @@ export default function UpdateItemPam() {
 
   useEffect(() => {
     fetchItemData();
-    fetchRelatedData(); // Ambil data terkait (lokasi, kategori, pengguna, storage)
+    fetchRelatedData();
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !date || !description || !locationsId || !categoriesId || !usersId || !storagesId) {
       setError("Semua kolom wajib diisi!");
       return;
@@ -124,17 +121,15 @@ export default function UpdateItemPam() {
       formData.append("categories_id", categoriesId);
       formData.append("users_id", usersId);
       formData.append("storages_id", storagesId);
-      formData.append("status", status); // Tambahkan status ke formData
+      formData.append("status", status); 
 
-      // Jika gambar baru dipilih, tambahkan ke formData
       if (image) {
         formData.append("image", image);
       } else if (currentImage) {
-        // Jika gambar baru tidak dipilih, kirim gambar lama
-        formData.append("image", currentImage); // Mengirimkan gambar lama
+        formData.append("image", currentImage); 
       }
 
-      formData.append("_method", "PUT"); // Tambahkan ini!
+      formData.append("_method", "PUT"); 
 
       const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:8000/api/items/${id}`, {

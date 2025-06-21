@@ -18,12 +18,10 @@ export default function CreateItemPam() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Fetching data terkait: Lokasi, Kategori, Pengguna, Storage
   const fetchRelatedData = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Fetch Lokasi, Kategori, Pengguna, dan Storage
       const [locationsRes, categoriesRes, usersRes, storagesRes] = await Promise.all([
         fetch("http://localhost:8000/api/locations", {
           headers: { Authorization: `Bearer ${token}` },
@@ -60,13 +58,12 @@ export default function CreateItemPam() {
   };
 
   useEffect(() => {
-    fetchRelatedData(); // Ambil data terkait saat pertama kali render
+    fetchRelatedData(); 
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !date || !description || !locationsId || !categoriesId || !usersId || !storagesId) {
       setError("Semua kolom wajib diisi!");
       return;
@@ -101,7 +98,7 @@ export default function CreateItemPam() {
       }
 
       alert("Item berhasil ditambahkan!");
-      navigate("/dashboardpam/items"); // Kembali ke halaman daftar item
+      navigate("/dashboardpam/items"); 
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       setLoading(false);
