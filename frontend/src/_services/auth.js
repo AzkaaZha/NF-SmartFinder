@@ -61,3 +61,20 @@ export const useDecodeToken = (token) => {
     };
   }
 }
+
+export const getDashboardLink = () => {
+  const userData = localStorage.getItem("userInfo");
+  if (!userData) return "/login";
+  const user = JSON.parse(userData);
+  
+  switch (user.role) {
+    case "admin":
+      return "/dashboard/admin";
+    case "satpam":
+      return "/dashboardpam/satpam";
+    case "user":
+      return "/user/dashboard";
+    default:
+      return "/";
+  }
+};

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import {
+  getVerification,
+  deleteVerification,
+  getStatusBadgeStyle,
+} from "../../../../_services/verifications";
 
 export default function VerificationListPam() {
   const [verifications, setVerifications] = useState([]);
@@ -7,71 +12,33 @@ export default function VerificationListPam() {
   const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(null);
 
-  // Fungsi untuk mengambil data verifikasi
   const fetchVerifications = async () => {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token"); // Mengambil token dari localStorage
-      const res = await fetch("http://localhost:8000/api/verifications", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      // Memeriksa apakah response sukses
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.message || "Gagal mengambil data verifikasi.");
-        setVerifications([]);
-        setLoading(false);
-        return;
-      }
-
-      // Jika sukses, set data ke state verifications
-      const data = await res.json();
-      setVerifications(data.data || []); // Pastikan data di-set dengan benar
-      setLoading(false);
+      const data = await getVerification();
+      setVerifications(data || []);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      setError("Gagal mengambil data verifikasi.");
       setVerifications([]);
+    } finally {
       setLoading(false);
     }
   };
 
-  // Memanggil fungsi fetchVerifications pada saat komponen pertama kali dimuat
   useEffect(() => {
     fetchVerifications();
   }, []);
 
-  // Fungsi untuk menghapus verifikasi
   const handleDelete = async (id) => {
     if (!window.confirm("Yakin ingin menghapus verifikasi ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token"); // Mengambil token dari localStorage
-      const res = await fetch(`http://localhost:8000/api/verifications/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      // Memeriksa apakah response berhasil
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || "Gagal menghapus verifikasi.");
-        setDeleteLoading(null);
-        return;
-      }
-
-      // Jika berhasil, filter data dan hapus verifikasi yang dihapus dari daftar
+      await deleteVerification(id);
       setVerifications((prev) => prev.filter((ver) => ver.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      alert("Gagal menghapus verifikasi.");
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -80,9 +47,6 @@ export default function VerificationListPam() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Verifikasi
-        <Link to="/dashboardpam/createver" className="btn btn-primary btn-sm">
-          <i className="fas fa-plus mr-1"></i> Tambah Data
-        </Link>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">
@@ -119,7 +83,11 @@ export default function VerificationListPam() {
                           </a>
                         )}
                       </td>
-                      <td>{ver.status}</td>
+                      <td>
+                        <span style={getStatusBadgeStyle(ver.status)}>
+                          {ver.status}
+                        </span>
+                      </td>
                       <td>{ver.items_id}</td>
                       <td>
                         <Link

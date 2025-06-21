@@ -25,22 +25,18 @@ export default function KlaimItem() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    const userIdFromStorage = currentUser ? currentUser.id : "";
-
-    setFormData((prev) => ({
-      ...prev,
-      users_id: userIdFromStorage,
-    }));
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if (user?.id) {
+      setFormData((prev) => ({ ...prev, users_id: user.id }));
+    }
 
     const fetchItems = async () => {
       try {
         const [ItemData] = await Promise.all([getItems()]);
         setItems(ItemData);
+
         if (id) {
-          const selectedItem = ItemData.find(
-            (item) => item.id === parseInt(id)
-          );
+          const selectedItem = ItemData.find((item) => item.id === parseInt(id));
           if (selectedItem) {
             setFormData((prev) => ({
               ...prev,
@@ -49,8 +45,7 @@ export default function KlaimItem() {
             }));
           }
         }
-      } catch (error) {
-        console.error("Error fetching items:", error);
+      } catch {
         setMessage("Gagal memuat daftar item.");
       }
     };
@@ -67,38 +62,41 @@ export default function KlaimItem() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setMessage("");
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-  const form = new FormData();
-  Object.entries(formData).forEach(([key, value]) => {
-    if (value) form.append(key, value);
-  });
-// Pastikan ini nama token yang benar
-
-  try {
-    await createVerification(form);
-    setMessage("Klaim berhasil diajukan.");
-    setFormData({
-      message: "",
-      proof_image: null,
-      items_id: "",
-      users_id: formData.users_id, // tetap simpan user ID
+    const form = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === "proof_image" && !value) return;
+      form.append(key, value);
     });
-  } catch (err) {
-    console.error("Gagal membuat verifikasi:", err);
-    setMessage("Gagal mengajukan klaim. Pastikan semua data sudah benar.");
-  } finally {
-    setLoading(false);
-  }
-};
 
+    try {
+      await createVerification(form);
+      setMessage("Klaim berhasil diajukan.");
+      setFormData({
+        message: "",
+        proof_image: null,
+        items_id: "",
+        users_id: formData.users_id,
+      });
+    } catch (err) {
+      if (err.response?.data?.data) {
+        const allMessages = Object.values(err.response.data.data).flat().join(", ");
+        setMessage(`Validasi gagal: ${allMessages}`);
+      } else {
+        setMessage("Gagal mengajukan klaim.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <FormWrapper>
-      <FormGroup className="form-wrapper">
-        <Form onSubmit={handleSubmit} className="klaim-item-form">
+      <FormGroup>
+        <Form onSubmit={handleSubmit}>
           <Title>Klaim Barang Hilang</Title>
 
           <FormGroup>
@@ -131,12 +129,11 @@ export default function KlaimItem() {
               required
             >
               <option value="">-- Pilih Item --</option>
-              {Array.isArray(items) &&
-                items.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
+              {items.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
             </select>
           </FormGroup>
 
@@ -146,7 +143,7 @@ export default function KlaimItem() {
             {loading ? "Mengajukan..." : "Ajukan Klaim"}
           </SubmitButton>
 
-          {message && <Message className="message">{message}</Message>}
+          {message && <Message>{message}</Message>}
         </Form>
       </FormGroup>
     </FormWrapper>

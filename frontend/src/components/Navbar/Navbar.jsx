@@ -1,6 +1,20 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { HeaderContainer,HeaderWrapper,LogoLink,LogoImg,NavMenu,NavList,NavItem,NavLink,Dropdown,DropdownToggle,DropdownMenu,DropdownItem,LogoutButton} from "./Navbar.styled";
+import {
+  HeaderContainer,
+  HeaderWrapper,
+  LogoLink,
+  LogoImg,
+  NavMenu,
+  NavList,
+  NavItem,
+  NavLink,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "./Navbar.styled";
+import { getDashboardLink } from "../../_services/auth";
 
 function Navbar() {
   const location = useLocation();
@@ -37,7 +51,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userInfo");
-    window.location.reload(); 
+    window.location.reload();
   };
 
   return (
@@ -47,11 +61,11 @@ function Navbar() {
           <LogoImg src="/assets/img/logo.png" alt="logo" />
         </LogoLink>
         <button
-        className="mobile-nav-toggle"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="mobile-nav-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-        <i className="bi bi-list"></i>
-      </button>
+          <i className="bi bi-list"></i>
+        </button>
 
         <NavMenu>
           <NavList $isOpen={isMobileMenuOpen}>
@@ -94,9 +108,7 @@ function Navbar() {
 
             {!userName ? (
               <NavItem>
-                <NavLink to="/login">
-                  Login/Daftar
-                </NavLink>
+                <NavLink to="/login">Login/Daftar</NavLink>
               </NavItem>
             ) : (
               <Dropdown style={{ position: "relative" }}>
@@ -114,7 +126,10 @@ function Navbar() {
                 </DropdownToggle>
                 <DropdownMenu $user $isOpen={isUserDropdownOpen}>
                   <DropdownItem>
-                    <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+                    <NavLink to={getDashboardLink()}>Dashboard</NavLink>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavLink onClick={handleLogout}>Logout</NavLink>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

@@ -22,7 +22,7 @@ export default function AdminDashboardLayout() {
               <img
                 src="/assets/img/logo.png"
                 alt="logo"
-                style={{ height: 48, marginRight: 8 }}
+                style={{ height: 80, marginRight: 8 }}
               />
             </Link>
           </li>

@@ -64,14 +64,6 @@ export const CardWrapperContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   width: 100%;
-
-  @media (max-width: 992px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const CardWrapper = styled.div`
@@ -154,9 +146,16 @@ export const FilterSidebar = styled.div`
   gap: 15px;
   align-items: stretch;
   height: fit-content;
+
+  @media (max-width: 992px) {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    flex-basis: 100%;
+    width: 100%;
+  }
 `;
 
-// Styled Button
 export const DetailButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
@@ -185,5 +184,3 @@ export const ResetButton = styled(Button)`
     background-color: ${({ theme }) => theme.colors.primary};
   }
 `;
-
-

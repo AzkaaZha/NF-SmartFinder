@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AboutSection,
   FeaturesSection,
@@ -18,6 +18,7 @@ import { getLocations } from "../../../_services/locations";
 import ItemDetail from "../LostItems/ItemDetail";
 
 function Home() {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
@@ -182,9 +183,9 @@ function Home() {
                       </li>
                     </ul>
                     <ButtonWrapper>
-                      <Button as={Link} to="/lostitems" variant="outline">
-                        Buat Laporan
-                      </Button>
+                      <Button variant="outline"
+                        onClick={() => navigate("/form")}
+                      >Buat Laporan</Button>
                     </ButtonWrapper>
                   </div>
                   <div className="col-lg-6 order-1 order-lg-2 text-center">

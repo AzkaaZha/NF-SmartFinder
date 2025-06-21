@@ -44,12 +44,8 @@ import CreateItemPam from "./pages/dashboard/satpam/item/createPam";
 import UpdateItemPam from "./pages/dashboard/satpam/item/updatePam";
 import CreateStoragePam from "./pages/dashboard/satpam/storage/createPam";
 import UpdateStoragePam from "./pages/dashboard/satpam/storage/updatePam";
-import CreateVerificationPam from "./pages/dashboard/satpam/verification/createPam";
 import UpdateVerificationPam from "./pages/dashboard/satpam/verification/updatePam";
-import UserDashboardLayout from "./layout/dashboard/user";
-import MissingItemUser from "./pages/dashboard/user/item/missingItem";
-import CreateItemUser from "./pages/dashboard/user/item/create";
-import ItemDetail from "./pages/dashboard/user/item/itemDetail";
+import UserDashboard from "./pages/dashboard/user/userDashboard";
 
 function App() {
   const isSplashFinished = useSplashScreen();
@@ -70,6 +66,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/lostitems" element={<LostItems />} />
+              <Route path="/user/dashboard" element={<UserDashboard />} />
             </Route>
 
             {/* Public must Login */}
@@ -151,22 +148,7 @@ function App() {
               <Route path="updatesto/:id" element={<UpdateStoragePam />} />
 
               {/* verification route */}
-              <Route path="createver" element={<CreateVerificationPam />} />
               <Route path="updatever/:id" element={<UpdateVerificationPam />} />
-            </Route>
-
-            {/* USer Dashboard route */}
-            <Route
-              path="/dashboarduser"
-              element={
-                <ProtectedRoute role="user" element={<UserDashboardLayout />} />
-              }
-            >
-              <Route path="item" element={<MissingItemUser />} />
-
-              {/* item routes */}
-              <Route path="createitem" element={<CreateItemUser />} />
-              <Route path="itemdetail/:id" element={<ItemDetail />} />
             </Route>
           </Routes>
         )}

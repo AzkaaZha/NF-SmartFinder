@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
-import { getItems } from "../../../_services/Items";
-import { getCategories } from "../../../_services/categories";
-import { getLocations } from "../../../_services/locations";
-import { SearchFilterWrapper, LoadingWrapper, CardWrapperContainer, ResetButton,       FilterSidebar, SectionTitle, CardWrapper, DetailButton } from "./LostItem.styled";
+import {
+  SearchFilterWrapper,
+  LoadingWrapper,
+  CardWrapperContainer,
+  ResetButton,
+  FilterSidebar,
+  SectionTitle,
+  CardWrapper,
+  DetailButton,
+} from "./LostItem.styled";
 import { Form, Spinner } from "react-bootstrap";
 import ItemDetail from "./ItemDetail";
 import Container from "../../../components/ui/Container";
+import { getItems } from "../../../_services/Items";
+import { getCategories } from "../../../_services/categories";
+import { getLocations } from "../../../_services/locations";
 
 function LostItems() {
   const [items, setItems] = useState([]);
@@ -97,7 +106,8 @@ function LostItems() {
         <p>Mencari barang dengan mudah untuk ditemukan.</p>
       </SectionTitle>
       <Container>
-        <div className="d-flex">
+        <div className="d-flex flex-column flex-md-row">
+          {/* Filter Sidebar */}
           <FilterSidebar>
             <SearchFilterWrapper>
               <Form.Control

@@ -12,11 +12,12 @@ class Verification extends Model
         'proof_image',
         'status',
         'items_id',
+        'users_id',
     ];
 
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'items_id');
     }
 
     public function user()

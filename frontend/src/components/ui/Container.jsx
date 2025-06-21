@@ -8,8 +8,6 @@ const Container = styled.div`
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     padding-left: 1rem;

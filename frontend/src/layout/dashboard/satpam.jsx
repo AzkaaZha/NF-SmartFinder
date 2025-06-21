@@ -11,7 +11,7 @@ export default function SatpamDashboardLayout() {
         {/* Sidebar */}
         <ul
           style={{
-            background: "linear-gradient(to top, #ff7e5f, #feb47b)",
+            background: "linear-gradient(to top, #e95935, #feb47b)",
           }}
           className="navbar-nav sidebar sidebar-dark accordion"
           id="accordionSidebar"
@@ -25,7 +25,7 @@ export default function SatpamDashboardLayout() {
               <img
                 src="/assets/img/logo.png"
                 alt="logo"
-                style={{ height: 48, marginRight: 8 }}
+                style={{ height: 80 }}
               />
             </Link>
           </li>

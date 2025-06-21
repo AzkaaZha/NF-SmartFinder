@@ -26,8 +26,9 @@ class VerificationController extends Controller
         ], 200);
     }
 
-    public function store (Request $request){
-        // validate the request
+    public function store(Request $request)
+    {
+        // Validasi input
         $validator = Validator::make($request->all(), [
             'message' => 'required|string|max:255',
             'proof_image' => 'nullable|image|max:2048',
@@ -35,7 +36,6 @@ class VerificationController extends Controller
             'users_id' => 'required|exists:users,id',
         ]);
 
-        // cek validasi
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -44,26 +44,30 @@ class VerificationController extends Controller
             ], 422);
         }
 
-        // upload image
-        $proof_image = $request->file('proof_image');
-        $proof_image->store('verifications', 'public');
+        // Tangani upload gambar jika ada
+        $proof_image = null;
+        if ($request->hasFile('proof_image')) {
+            $proof_image = $request->file('proof_image');
+            $proof_image->store('verifications', 'public');
+            $proof_image = $proof_image->hashName();
+        }
 
-        // buat data
+        // Buat verifikasi baru
         $verification = Verification::create([
-            'message' => $request->message,
-            'proof_image' => $proof_image ? $proof_image->hashName() : null,
+            'message' => $request->input('message'),
+            'proof_image' => $proof_image,
             'status' => 'pending',
-            'items_id' => $request->items_id,
-            'users_id' => $request->users_id,
+            'items_id' => $request->input('items_id'),
+            'users_id' => $request->input('users_id'), // <- PENTING
         ]);
 
-        // response
         return response()->json([
             'success' => true,
             'message' => 'Verification created successfully',
             'data' => $verification
         ], 201);
     }
+
 
     public function show($id){
         $verification = Verification::find($id);
@@ -98,7 +102,7 @@ class VerificationController extends Controller
             'proof_image' => 'nullable|image|max:2048',
             'status' => 'required|in:pending,approved,rejected',
             'items_id' => 'required|exists:items,id',
-            'users_id' => 'required|exists:users,id',
+            'users_id' => 'nullable|exists:users,id',
         ]);
 
         if ($validator->fails()) {
