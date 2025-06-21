@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCategoryById, updateCategory } from "../../../../_services/categories";
 
 export default function UpdateCategorie() {
-  const { id } = useParams();
+  const { id } = useParams(); 
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ export default function UpdateCategorie() {
     try {
       await updateCategory(id, { name });
       alert("Kategori berhasil diubah!");
-      navigate("/dashboard/categories");
+      navigate("/dashboard/categorie"); 
     } catch (err) {
       console.error("Update error:", err);
       setError(err?.response?.data?.message || "Gagal mengubah kategori.");

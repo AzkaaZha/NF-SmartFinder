@@ -18,12 +18,10 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch data from the backend API
   const fetchSummaryData = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Call your API to get the data
       const res = await fetch("http://localhost:8000/api/dashboard-summary", {
         headers: {
           Authorization: `Bearer ${token}`,

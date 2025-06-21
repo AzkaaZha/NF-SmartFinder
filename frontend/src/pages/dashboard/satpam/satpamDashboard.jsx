@@ -17,7 +17,6 @@ export default function SatpamDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Ambil data summary dari API
   const fetchDashboardData = async () => {
     setLoading(true);
     try {

@@ -5,13 +5,43 @@ import { getUser } from "../../../../_services/user";
 
 export default function CreateStorage() {
   const [name, setName] = useState("");
+<<<<<<< HEAD
   const [contact, setContact] = useState("");
   const [users, setUsers] = useState([]);
   const [usersId, setUsersId] = useState("");
+=======
+  const [contact, setContact] = useState(""); 
+  const [users, setUsers] = useState([]); 
+  const [usersId, setUsersId] = useState(""); 
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+=======
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:8000/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Gagal mengambil data pengguna.");
+      }
+
+      const data = await res.json();
+      setUsers(data.data);
+    } catch (err) {
+      setError("Terjadi kesalahan server saat mengambil data pengguna: " + err.message);
+    }
+  };
+
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   useEffect(() => {
     const fetchUsersData = async () => {
       try {
@@ -39,6 +69,7 @@ export default function CreateStorage() {
     setLoading(true);
     setError("");
     try {
+<<<<<<< HEAD
       await createStorage({ name, contact, users_id: usersId });
       alert("Storage berhasil ditambahkan!");
       navigate("/dashboard/storages");
@@ -46,6 +77,35 @@ export default function CreateStorage() {
       console.error("Error creating storage:", err);
       setError(err.response?.data?.message || "Gagal menambahkan storage.");
     } finally {
+=======
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:8000/api/storages", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          contact: contact,
+          users_id: usersId, 
+        }),
+      });
+
+      if (!res.ok) {
+        let data = await res.json();
+        console.error("Error detail:", data);
+        setError(data.message || "Gagal menambahkan storage.");
+        setLoading(false);
+        return;
+      }
+
+      alert("Storage berhasil ditambahkan!");
+      navigate("/dashboard/storages");
+    } catch (err) {
+      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Terjadi kesalahan:", err);
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
       setLoading(false);
     }
   };

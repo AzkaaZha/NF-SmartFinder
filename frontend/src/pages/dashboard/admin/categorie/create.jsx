@@ -20,7 +20,7 @@ export default function CreateCategorie() {
     try {
       await createCategory({ name });
       alert(`Kategori "${name}" berhasil ditambahkan!`);
-      navigate("/dashboard/categories");
+      navigate("/dashboard/categorie"); 
     } catch (err) {
       console.error("Error:", err);
       setError(err?.response?.data?.message || "Gagal menambah kategori.");
