@@ -28,7 +28,7 @@ import UpdateLocation from "./pages/dashboard/admin/location/update";
 import StorageList from "./pages/dashboard/admin/storage/storage";
 import CreateCategorie from "./pages/dashboard/admin/categorie/create";
 import UpdateCategorie from "./pages/dashboard/admin/categorie/update";
-import CreateItem from "./pages/dashboard/admin/item/create";
+// import CreateItem from "./pages/dashboard/admin/item/create";
 import UpdateItem from "./pages/dashboard/admin/item/update";
 import CreateStorage from "./pages/dashboard/admin/storage/create";
 import UpdateStorage from "./pages/dashboard/admin/storage/update";

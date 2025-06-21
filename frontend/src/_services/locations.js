@@ -30,7 +30,7 @@ export const getLocationById = async (id) => {
   try {
     const { data } = await API.get(`/locations/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
     return data.data;

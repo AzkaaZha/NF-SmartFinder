@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { createStorage } from "../../../../_services/storages";
+import { getUser } from "../../../../_services/user";
 
 export default function CreateStorage() {
   const [name, setName] = useState("");
+<<<<<<< HEAD
+  const [contact, setContact] = useState("");
+  const [users, setUsers] = useState([]);
+  const [usersId, setUsersId] = useState("");
+=======
   const [contact, setContact] = useState(""); 
   const [users, setUsers] = useState([]); 
   const [usersId, setUsersId] = useState(""); 
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+=======
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -31,20 +41,43 @@ export default function CreateStorage() {
     }
   };
 
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   useEffect(() => {
-    fetchUsers();
+    const fetchUsersData = async () => {
+      try {
+        setLoading(true);
+        const usersData = await getUser();
+        setUsers(usersData);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError(err.response?.data?.message || "Gagal mengambil data pengguna.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsersData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !contact || !usersId) {
-      setError("Nama, Contact dan Pengguna storage wajib diisi!");
+      setError("Nama, Contact, dan Pengguna storage wajib diisi!");
       return;
     }
 
     setLoading(true);
+    setError("");
     try {
+<<<<<<< HEAD
+      await createStorage({ name, contact, users_id: usersId });
+      alert("Storage berhasil ditambahkan!");
+      navigate("/dashboard/storages");
+    } catch (err) {
+      console.error("Error creating storage:", err);
+      setError(err.response?.data?.message || "Gagal menambahkan storage.");
+    } finally {
+=======
       const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/storages", {
         method: "POST",
@@ -72,6 +105,7 @@ export default function CreateStorage() {
     } catch (err) {
       setError("Terjadi kesalahan server: " + err.message);
       console.error("Terjadi kesalahan:", err);
+>>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
       setLoading(false);
     }
   };
@@ -82,7 +116,6 @@ export default function CreateStorage() {
       <div className="card shadow mb-4">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            {/* Nama Storage */}
             <div className="form-group">
               <label htmlFor="name">Nama Storage</label>
               <input
@@ -96,7 +129,6 @@ export default function CreateStorage() {
               />
             </div>
 
-            {/* Contact Storage */}
             <div className="form-group">
               <label htmlFor="contact">Contact</label>
               <input
@@ -110,7 +142,6 @@ export default function CreateStorage() {
               />
             </div>
 
-            {/* Users ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="usersId">Pengguna</label>
               <select
@@ -129,7 +160,6 @@ export default function CreateStorage() {
               </select>
             </div>
 
-            {/* Error Message */}
             {error && <div className="text-danger">{error}</div>}
 
             <div className="d-flex justify-content-between mt-4">
