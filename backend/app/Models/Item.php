@@ -29,7 +29,6 @@ class Item extends Model
         return $this->belongsTo(Categorie::class, 'categories_id');
     }
 
-
     public function storage()
     {
         return $this->belongsTo(Storage::class, 'storages_id');

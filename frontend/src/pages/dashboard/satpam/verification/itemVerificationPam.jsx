@@ -88,7 +88,7 @@ export default function VerificationListPam() {
                           {ver.status}
                         </span>
                       </td>
-                      <td>{ver.items_id}</td>
+                      <td>{ver.items_id}</td>    
                       <td>
                         <Link
                           to={`/dashboardpam/updatever/${ver.id}`}

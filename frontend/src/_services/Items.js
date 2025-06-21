@@ -36,12 +36,12 @@ export const createItem = async (data) => {
 
 export const updateItem = async (id, itemData) => {
   try {
-    const response = await API.put(`/items/${id}`, itemData, {
+    const { data } = await API.post(`/items/${id}`, itemData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
-    return response.data;
+    return data.data;
   } catch (error) {
     console.error(`Error updating item with ID ${id}:`, error);
     throw error;

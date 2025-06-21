@@ -40,7 +40,6 @@ import SatpamDashboardLayout from "./layout/dashboard/satpam";
 import MissingItemPam from "./pages/dashboard/satpam/item/missingItemPam";
 import VerificationListPam from "./pages/dashboard/satpam/verification/itemVerificationPam";
 import StorageListPam from "./pages/dashboard/satpam/storage/storagePam";
-import CreateItemPam from "./pages/dashboard/satpam/item/createPam";
 import UpdateItemPam from "./pages/dashboard/satpam/item/updatePam";
 import CreateStoragePam from "./pages/dashboard/satpam/storage/createPam";
 import UpdateStoragePam from "./pages/dashboard/satpam/storage/updatePam";
@@ -109,7 +108,6 @@ function App() {
               <Route path="updatecat/:id" element={<UpdateCategorie />} />
 
               {/* item routes */}
-              <Route path="createitem" element={<CreateItem />} />
               <Route path="updateitem/:id" element={<UpdateItem />} />
 
               {/* storage route */}
@@ -140,7 +138,6 @@ function App() {
               <Route path="storage" element={<StorageListPam />} />
 
               {/* item routes */}
-              <Route path="createitem" element={<CreateItemPam />} />
               <Route path="updateitem/:id" element={<UpdateItemPam />} />
 
               {/* storage route */}

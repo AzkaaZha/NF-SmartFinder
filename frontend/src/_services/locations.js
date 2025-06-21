@@ -15,7 +15,6 @@ export const createLocation = async (locationData) => {
     const { data } = await API.post('/locations', locationData,
       {
         headers: {
-          // 'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }
@@ -45,7 +44,6 @@ export const updateLocation = async (id, locationData) => {
   try {
     const { data } = await API.put(`/locations/${id}`, locationData, {
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     });
@@ -60,7 +58,6 @@ export const deleteLocation = async (id) => {
   try {
     const { data } = await API.delete(`/locations/${id}`, {
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     });

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsers } from "../../../../_services/user";
+import { getUser } from "../../../../_services/user";
 import { createStorage } from "../../../../_services/storages";
 
 export default function CreateStoragePam() {
@@ -14,7 +14,7 @@ export default function CreateStoragePam() {
 
   const fetchUsers = async () => {
     try {
-      const data = await getUsers();
+      const data = await getUser();
       setUsers(data);
     } catch (err) {
       setError("Terjadi kesalahan saat mengambil data pengguna.");

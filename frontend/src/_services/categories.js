@@ -2,7 +2,7 @@ import { API } from "../_api";
 
 export const getCategories = async () => {
   try {
-    const { data } = await API.get("/categories");
+    const { data } = await API.get("/categories", );
     return data.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -14,7 +14,6 @@ export const createCategory = async (categoryData) => {
   try {
     const { data } = await API.post("/categories", categoryData, {
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
@@ -39,7 +38,6 @@ export const updateCategory = async (id, categoryData) => {
   try {
     const { data } = await API.put(`/categories/${id}`, categoryData, {
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
@@ -54,7 +52,6 @@ export const deleteCategory = async (id) => {
   try {
     const { data } = await API.delete(`/categories/${id}`, {
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });

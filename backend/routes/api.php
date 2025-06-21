@@ -68,50 +68,50 @@ Route::middleware('auth:api')->group(function () {
             ]
         ]);
     });
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['auth:api', 'role:admin'])->group(function () {
+        // Users
+        Route::apiResource('users', UserController::class)->except(['show']);
+    
+        // Locations
+        Route::apiResource('locations', LocationController::class)->only(['store', 'update', 'destroy']);
+    
+        // Storages
+        Route::apiResource('storages', StorageController::class)->only(['store', 'update', 'destroy']);
+    
+        // Categories
+        Route::apiResource('categories', CategorieController::class)->only(['store', 'update', 'destroy']);
+    
+        // Items (update & delete)
+        Route::put('/items/{id}', [ItemController::class, 'update']);
+        Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+    });
+    
+    /*
+    |--------------------------------------------------------------------------
+    | SATPAM ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['auth:api', 'role:satpam'])->group(function () {
+        // Verifications
+        Route::get('/verifications', [VerificationController::class, 'index']);
+        Route::get('/verifications/{id}', [VerificationController::class, 'show']);
+        Route::put('/verifications/{id}', [VerificationController::class, 'update']);
+        Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
+    
+        // Items
+        Route::get('/items/{id}', [ItemController::class, 'show']);
+        Route::put('/items/{id}', [ItemController::class, 'update']);
+        Route::delete('/items/{id}', [ItemController::class, 'destroy']);
+    
+        // Storages
+        Route::get('/storages/{id}', [StorageController::class, 'show']);
+        Route::put('/storages/{id}', [StorageController::class, 'update']);
+        Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
+    });
 });
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:api', 'role:admin'])->group(function () {
-    // Users
-    Route::apiResource('users', UserController::class)->except(['show']);
-
-    // Locations
-    Route::apiResource('locations', LocationController::class)->only(['store', 'update', 'destroy']);
-
-    // Storages
-    Route::apiResource('storages', StorageController::class)->only(['store', 'update', 'destroy']);
-
-    // Categories
-    Route::apiResource('categories', CategorieController::class)->only(['store', 'update', 'destroy']);
-
-    // Items (update & delete)
-    Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']);
-});
-
-/*
-|--------------------------------------------------------------------------
-| SATPAM ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:api', 'role:satpam'])->group(function () {
-    // Verifications
-    Route::get('/verifications', [VerificationController::class, 'index']);
-    Route::get('/verifications/{id}', [VerificationController::class, 'show']);
-    Route::put('/verifications/{id}', [VerificationController::class, 'update']);
-    Route::delete('/verifications/{id}', [VerificationController::class, 'destroy']);
-
-    // Items
-    Route::get('/items/{id}', [ItemController::class, 'show']);
-    Route::put('/items/{id}', [ItemController::class, 'update']);
-    Route::delete('/items/{id}', [ItemController::class, 'destroy']);
-
-    // Storages
-    Route::get('/storages/{id}', [StorageController::class, 'show']);
-    Route::put('/storages/{id}', [StorageController::class, 'update']);
-    Route::delete('/storages/{id}', [StorageController::class, 'destroy']);
-});

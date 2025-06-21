@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getItemById, updateItem } from "../../../../_services/Items";
+import { getCategories } from "../../../../_services/categories";
+import { getLocations } from "../../../../_services/locations";
+import { getUser } from "../../../../_services/user";
+import { getStorages } from "../../../../_services/storages";
 
 export default function UpdateItemPam() {
   const { id } = useParams(); 
-  const [item, setItem] = useState({});
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -15,98 +19,55 @@ export default function UpdateItemPam() {
   const [categoriesId, setCategoriesId] = useState("");
   const [usersId, setUsersId] = useState("");
   const [storagesId, setStoragesId] = useState("");
-  const [image, setImage] = useState(null); 
-  const [currentImage, setCurrentImage] = useState("");  
-  const [status, setStatus] = useState(""); 
+  const [image, setImage] = useState(null);
+  const [currentImage, setCurrentImage] = useState("");
+  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchRelatedData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const [locationsRes, categoriesRes, usersRes, storagesRes] = await Promise.all([
-        fetch("http://localhost:8000/api/locations", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/categories", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/storages", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-
-      if (!locationsRes.ok || !categoriesRes.ok || !usersRes.ok || !storagesRes.ok) {
-        throw new Error("Gagal mengambil data terkait.");
-      }
-
-      const [locationsData, categoriesData, usersData, storagesData] = await Promise.all([
-        locationsRes.json(),
-        categoriesRes.json(),
-        usersRes.json(),
-        storagesRes.json(),
-      ]);
-
-      setLocations(locationsData.data);
-      setCategories(categoriesData.data);
-      setUsers(usersData.data);
-      setStorages(storagesData.data);
-    } catch (err) {
-      setError("Terjadi kesalahan server saat mengambil data terkait: " + err.message);
-    }
-  };
-
-  const fetchItemData = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        setError(data.message || "Gagal mengambil data item.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      const item = data.data;
-      setItem(item);
-      setName(item.name);
-      setDate(item.date);
-      setDescription(item.description);
-      setLocationsId(item.locations_id);
-      setCategoriesId(item.categories_id);
-      setUsersId(item.users_id);
-      setStoragesId(item.storages_id);
-      setCurrentImage(item.image);  
-      setStatus(item.status); 
-      setLoading(false);
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchItemData();
-    fetchRelatedData();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const [itemData, locationsData, categoriesData, usersData, storagesData] = await Promise.all([
+          getItemById(id),
+          getLocations(),
+          getCategories(),
+          getUser(),
+          getStorages(),
+        ]);
+
+        setName(itemData.name);
+        setDate(itemData.date);
+        setDescription(itemData.description);
+        setLocationsId(itemData.locations_id);
+        setCategoriesId(itemData.categories_id);
+        setUsersId(itemData.users_id);
+        setStoragesId(itemData.storages_id);
+        setStatus(itemData.status);
+        setCurrentImage(itemData.image);
+
+        setLocations(locationsData);
+        setCategories(categoriesData);
+        setUsers(usersData);
+        setStorages(storagesData);
+      } catch (err) {
+        console.error(err);
+        setError("Terjadi kesalahan saat mengambil data: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !date || !description || !locationsId || !categoriesId || !usersId || !storagesId) {
+    if (!name || !date || !description || !locationsId || !categoriesId || !usersId || !storagesId || !status) {
       setError("Semua kolom wajib diisi!");
       return;
     }
@@ -121,37 +82,20 @@ export default function UpdateItemPam() {
       formData.append("categories_id", categoriesId);
       formData.append("users_id", usersId);
       formData.append("storages_id", storagesId);
-      formData.append("status", status); 
+      formData.append("status", status);
+      formData.append("_method", "PUT");
 
       if (image) {
         formData.append("image", image);
-      } else if (currentImage) {
-        formData.append("image", currentImage); 
       }
 
-      formData.append("_method", "PUT"); 
-
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal mengupdate item.");
-        setLoading(false);
-        return;
-      }
-
+      await updateItem(id, formData);
       alert("Item berhasil diupdate!");
       navigate("/dashboardpam/items");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error(err);
+      setError("Gagal mengupdate item: " + err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -346,3 +290,7 @@ export default function UpdateItemPam() {
     </div>
   );
 }
+
+
+          
+            

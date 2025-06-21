@@ -41,9 +41,6 @@ export default function MissingItemPam() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Item
-        <Link to="/dashboardpam/createitem" className="btn btn-primary btn-sm">
-          <i className="fas fa-plus mr-1"></i> Tambah Data
-        </Link>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">

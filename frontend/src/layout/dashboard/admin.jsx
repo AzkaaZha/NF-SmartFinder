@@ -4,6 +4,12 @@ export default function AdminDashboardLayout() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userInfo");
+    window.location.reload();
+  };
+
   return (
     <>
       {/* Page Wrapper */}
@@ -22,7 +28,7 @@ export default function AdminDashboardLayout() {
               <img
                 src="/assets/img/logo.png"
                 alt="logo"
-                style={{ height: 80, marginRight: 8 }}
+                style={{ height: 70, marginRight: 8 }}
               />
             </Link>
           </li>
@@ -101,6 +107,13 @@ export default function AdminDashboardLayout() {
               <i className="fas fa-check-circle"></i>
               <span className="ml-2">Storage</span>
             </Link>
+
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" onClick={handleLogout} to="/">
+              <i className="fas fa-sign-out-alt"></i>
+              <span className="ml-2">Logout</span>
+            </Link>
           </li>
         </ul>
         {/* End of Sidebar */}
@@ -141,7 +154,7 @@ export default function AdminDashboardLayout() {
               <ul className="navbar-nav ml-auto">
                 {/* Nav Item - Search Dropdown (Visible Only XS) */}
                 <li className="nav-item dropdown no-arrow d-sm-none">
-                  <a
+                  <Link
                     className="nav-link dropdown-toggle"
                     href="#"
                     id="searchDropdown"
@@ -151,7 +164,7 @@ export default function AdminDashboardLayout() {
                     aria-expanded="false"
                   >
                     <i className="fas fa-search fa-fw"></i>
-                  </a>
+                  </Link>
                 </li>
 
                 <div className="topbar-divider d-none d-sm-block"></div>
@@ -180,7 +193,7 @@ export default function AdminDashboardLayout() {
                     className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="userDropdown"
                   >
-                    <a
+                    <Link
                       className="dropdown-item"
                       href="#"
                       data-toggle="modal"
@@ -188,7 +201,7 @@ export default function AdminDashboardLayout() {
                     >
                       <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                       Logout
-                    </a>
+                    </Link>
                   </div>
                 </li>
               </ul>
