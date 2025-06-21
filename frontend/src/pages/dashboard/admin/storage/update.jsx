@@ -4,25 +4,15 @@ import { getStorageById, updateStorage } from "../../../../_services/storages";
 import { getUser } from "../../../../_services/user";
 
 export default function UpdateStorage() {
-<<<<<<< HEAD
   const { id } = useParams();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [users, setUsers] = useState([]);
   const [usersId, setUsersId] = useState("");
-=======
-  const { id } = useParams(); 
-  const [storage, setStorage] = useState({});
-  const [name, setName] = useState("");
-  const [contact, setContact] = useState(""); 
-  const [users, setUsers] = useState([]); 
-  const [usersId, setUsersId] = useState(""); 
->>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -44,63 +34,6 @@ export default function UpdateStorage() {
       }
     };
     fetchData();
-=======
-  const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Gagal mengambil data pengguna.");
-      }
-
-      const data = await res.json();
-      setUsers(data.data);
-    } catch (err) {
-      setError("Terjadi kesalahan server saat mengambil data pengguna: " + err.message);
-    }
-  };
-
-  const fetchStorageData = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        setError(data.message || "Gagal mengambil data storage.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      const storageData = data.data;
-      setStorage(storageData);
-      setName(storageData.name);
-      setContact(storageData.contact);
-      setUsersId(storageData.users_id);
-      setLoading(false);
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStorageData();
-    fetchUsers(); 
->>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
   }, [id]);
 
   const handleSubmit = async (e) => {
@@ -114,43 +47,13 @@ export default function UpdateStorage() {
     setLoading(true);
     setError("");
     try {
-<<<<<<< HEAD
       await updateStorage(id, { name, contact, users_id: usersId });
       alert("Storage berhasil diperbarui!");
-      navigate("/dashboard/storages");
+      navigate("/dashboard/storage");
     } catch (err) {
       console.error("Error updating storage:", err);
       setError(err.response?.data?.message || "Gagal memperbarui storage.");
     } finally {
-=======
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          contact: contact,
-          users_id: usersId, 
-        }),
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal memperbarui storage.");
-        setLoading(false);
-        return;
-      }
-
-      alert("Storage berhasil diperbarui!");
-      navigate("/dashboard/storages");
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); 
->>>>>>> 7a2c5da7364ca6d89f720e2097f52aff8ab61cc6
       setLoading(false);
     }
   };
@@ -211,7 +114,7 @@ export default function UpdateStorage() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate("/dashboard/storages")}
+                onClick={() => navigate("/dashboard/storage")}
                 disabled={loading}
               >
                 Batal
