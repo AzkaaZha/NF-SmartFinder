@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createCategory } from "../../../../_services/categories";
+
 
 export default function CreateCategorie() {
   const [name, setName] = useState("");
@@ -13,31 +15,16 @@ export default function CreateCategorie() {
       setError("Nama kategori wajib diisi.");
       return;
     }
+
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/categories", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal menambah kategori.");
-        setLoading(false);
-        return;
-      }
+      await createCategory({ name });
       alert(`Kategori "${name}" berhasil ditambahkan!`);
       navigate("/dashboard/categorie"); 
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Error:", err);
+      setError(err?.response?.data?.message || "Gagal menambah kategori.");
+    } finally {
       setLoading(false);
     }
   };

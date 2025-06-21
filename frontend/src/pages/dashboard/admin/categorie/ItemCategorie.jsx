@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteCategory, getCategories } from "../../../../_services/categories";
 
 export default function ItemCategorie() {
   const [categories, setCategories] = useState([]);
@@ -11,29 +12,12 @@ export default function ItemCategorie() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/categories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data kategori.");
-        setCategories([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setCategories(Array.isArray(data.data) ? data.data : []);
-      setLoading(false);
+      const data = await getCategories();
+      setCategories(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      setError("Gagal mengambil data kategori.");
       setCategories([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -46,27 +30,11 @@ export default function ItemCategorie() {
     if (!window.confirm("Yakin ingin menghapus kategori ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/categories/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus kategori.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteCategory(id);
       setCategories((prev) => prev.filter((cat) => cat.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      alert("Gagal menghapus kategori.");
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -96,29 +64,33 @@ export default function ItemCategorie() {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((cat, idx) => (
-                    <tr key={cat.id}>
-                      <td>{idx + 1}</td>
-                      <td>{cat.name}</td>
-                      <td>
-                        <Link to={`/dashboard/updatecat/${cat.id}`} className="btn btn-warning btn-sm mr-2">
-                          <i className="fas fa-edit"></i>
-                        </Link>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(cat.id)}
-                          disabled={deleteLoading === cat.id}
-                        >
-                          {deleteLoading === cat.id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          ) : (
-                            <i className="fas fa-trash"></i>
-                          )}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {categories.length === 0 && (
+                  {categories.length > 0 ? (
+                    categories.map((cat, idx) => (
+                      <tr key={cat.id}>
+                        <td>{idx + 1}</td>
+                        <td>{cat.name}</td>
+                        <td>
+                          <Link
+                            to={`/dashboard/updatecat/${cat.id}`}
+                            className="btn btn-warning btn-sm mr-2"
+                          >
+                            <i className="fas fa-edit" />
+                          </Link>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDelete(cat.id)}
+                            disabled={deleteLoading === cat.id}
+                          >
+                            {deleteLoading === cat.id ? (
+                              <span className="spinner-border spinner-border-sm" />
+                            ) : (
+                              <i className="fas fa-trash" />
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
                       <td colSpan={3} className="text-center">
                         Tidak ada data kategori.

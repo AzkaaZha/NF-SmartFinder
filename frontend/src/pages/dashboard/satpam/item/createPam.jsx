@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCategories } from "../../../../_services/categories";
+import { getLocations } from "../../../../_services/locations";
+import { getUsers } from "../../../../_services/user";
+import { getStorages } from "../../../../_services/storages";
+import { createItem } from "../../../../_services/Items";
 
 export default function CreateItemPam() {
   const [name, setName] = useState("");
@@ -8,7 +13,7 @@ export default function CreateItemPam() {
   const [locations, setLocations] = useState([]);
   const [categories, setCategories] = useState([]);
   const [users, setUsers] = useState([]);
-  const [storages, setStorages] = useState([]);
+  const [storages, setStorages] = useState([]); 
   const [locationsId, setLocationsId] = useState("");
   const [categoriesId, setCategoriesId] = useState("");
   const [usersId, setUsersId] = useState("");
@@ -18,57 +23,33 @@ export default function CreateItemPam() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchRelatedData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const [locationsRes, categoriesRes, usersRes, storagesRes] = await Promise.all([
-        fetch("http://localhost:8000/api/locations", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/categories", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:8000/api/storages", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-
-      if (!locationsRes.ok || !categoriesRes.ok || !usersRes.ok || !storagesRes.ok) {
-        throw new Error("Gagal mengambil data terkait.");
-      }
-
-      const [locationsData, categoriesData, usersData, storagesData] = await Promise.all([
-        locationsRes.json(),
-        categoriesRes.json(),
-        usersRes.json(),
-        storagesRes.json(),
-      ]);
-
-      setLocations(locationsData.data);
-      setCategories(categoriesData.data);
-      setUsers(usersData.data);
-      setStorages(storagesData.data);
-    } catch (err) {
-      setError("Terjadi kesalahan server saat mengambil data terkait: " + err.message);
-    }
-  };
-
   useEffect(() => {
-    fetchRelatedData(); 
+    const fetchData = async () => {
+      try {
+        const [locData, catData, userData, stoData] = await Promise.all([
+          getLocations(),
+          getCategories(),
+          getUsers(),
+          getStorages(),
+        ]);
+        setLocations(locData);
+        setCategories(catData);
+        setUsers(userData);
+        setStorages(stoData);
+      } catch (err) {
+        setError("Gagal memuat data terkait: " + err.message);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!name || !date || !description || !locationsId || !categoriesId || !usersId || !storagesId) {
       setError("Semua kolom wajib diisi!");
       return;
     }
-
     setLoading(true);
     try {
       const formData = new FormData();
@@ -81,26 +62,12 @@ export default function CreateItemPam() {
       formData.append("storages_id", storagesId);
       if (image) formData.append("image", image);
 
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/items", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        setError(data.message || "Gagal menambahkan item.");
-        setLoading(false);
-        return;
-      }
-
+      await createItem(formData);
       alert("Item berhasil ditambahkan!");
-      navigate("/dashboardpam/items"); 
+      navigate("/dashboardpam/item");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      setError("Terjadi kesalahan saat menyimpan: " + err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -109,154 +76,77 @@ export default function CreateItemPam() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Tambah Item Baru
-        <button
-          onClick={() => navigate("/dashboardpam/items")}
-          className="btn btn-secondary btn-sm"
-        >
+        <button onClick={() => navigate("/dashboardpam/item")} className="btn btn-secondary btn-sm">
           Kembali
         </button>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            {/* Nama Item */}
             <div className="form-group">
               <label htmlFor="name">Nama Item</label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Masukkan nama item"
-                disabled={loading}
-              />
+              <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
             </div>
 
-            {/* Tanggal */}
             <div className="form-group">
               <label htmlFor="date">Tanggal</label>
-              <input
-                type="date"
-                className="form-control"
-                id="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                disabled={loading}
-              />
+              <input type="date" className="form-control" id="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={loading} />
             </div>
 
-            {/* Deskripsi */}
             <div className="form-group">
               <label htmlFor="description">Deskripsi</label>
-              <textarea
-                className="form-control"
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Masukkan deskripsi"
-                disabled={loading}
-              />
+              <textarea className="form-control" id="description" value={description} onChange={(e) => setDescription(e.target.value)} disabled={loading} />
             </div>
 
-            {/* Lokasi ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="locationsId">Lokasi</label>
-              <select
-                className="form-control"
-                id="locationsId"
-                value={locationsId}
-                onChange={(e) => setLocationsId(e.target.value)}
-                disabled={loading}
-              >
+              <select className="form-control" id="locationsId" value={locationsId} onChange={(e) => setLocationsId(e.target.value)} disabled={loading}>
                 <option value="">Pilih Lokasi</option>
                 {locations.map((loc) => (
-                  <option key={loc.id} value={loc.id}>
-                    {loc.name}
-                  </option>
+                  <option key={loc.id} value={loc.id}>{loc.name}</option>
                 ))}
               </select>
             </div>
 
-            {/* Kategori ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="categoriesId">Kategori</label>
-              <select
-                className="form-control"
-                id="categoriesId"
-                value={categoriesId}
-                onChange={(e) => setCategoriesId(e.target.value)}
-                disabled={loading}
-              >
+              <select className="form-control" id="categoriesId" value={categoriesId} onChange={(e) => setCategoriesId(e.target.value)} disabled={loading}>
                 <option value="">Pilih Kategori</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
             </div>
 
-            {/* Pengguna ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="usersId">Pengguna</label>
-              <select
-                className="form-control"
-                id="usersId"
-                value={usersId}
-                onChange={(e) => setUsersId(e.target.value)}
-                disabled={loading}
-              >
+              <select className="form-control" id="usersId" value={usersId} onChange={(e) => setUsersId(e.target.value)} disabled={loading}>
                 <option value="">Pilih Pengguna</option>
                 {users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.name}
-                  </option>
+                  <option key={user.id} value={user.id}>{user.name}</option>
                 ))}
               </select>
             </div>
 
-            {/* Storage ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="storagesId">Storage</label>
-              <select
-                className="form-control"
-                id="storagesId"
-                value={storagesId}
-                onChange={(e) => setStoragesId(e.target.value)}
-                disabled={loading}
-              >
+              <select className="form-control" id="storagesId" value={storagesId} onChange={(e) => setStoragesId(e.target.value)} disabled={loading}>
                 <option value="">Pilih Storage</option>
-                {storages.map((storage) => (
-                  <option key={storage.id} value={storage.id}>
-                    {storage.name}
-                  </option>
+                {storages.map((sto) => (
+                  <option key={sto.id} value={sto.id}>{sto.name}</option>
                 ))}
               </select>
             </div>
 
-            {/* Gambar (Opsional) */}
             <div className="form-group">
               <label htmlFor="image">Gambar (Opsional)</label>
-              <input
-                type="file"
-                className="form-control"
-                id="image"
-                onChange={(e) => setImage(e.target.files[0])}
-                disabled={loading}
-              />
+              <input type="file" className="form-control" id="image" onChange={(e) => setImage(e.target.files[0])} disabled={loading} />
             </div>
 
-            {/* Error Message */}
             {error && <div className="text-danger">{error}</div>}
 
             <div className="d-flex justify-content-between mt-4">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => navigate("/dashboardpam/item")}
-                disabled={loading}
-              >
+              <button type="button" className="btn btn-secondary" onClick={() => navigate("/dashboardpam/item")} disabled={loading}>
                 Batal
               </button>
               <button type="submit" className="btn btn-primary" disabled={loading}>
