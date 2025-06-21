@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createLocation } from "../../../../_services/locations";
+
 
 export default function CreateLocation() {
   const [name, setName] = useState("");
@@ -14,30 +16,15 @@ export default function CreateLocation() {
       return;
     }
     setLoading(true);
+    setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/locations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal menambah lokasi.");
-        setLoading(false);
-        return;
-      }
+      await createLocation({ name });
       alert(`Lokasi "${name}" berhasil ditambahkan!`);
       navigate(-1);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Error creating location:", err);
+      setError(err.response?.data?.message || "Gagal menambah lokasi.");
+    } finally {
       setLoading(false);
     }
   };

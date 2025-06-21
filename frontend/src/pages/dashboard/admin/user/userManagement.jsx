@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteUser, getUser } from "../../../../_services/user";
+ // sesuaikan path
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -11,29 +13,12 @@ export default function UserManagement() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data pengguna.");
-        setUsers([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setUsers(Array.isArray(data.data) ? data.data : []);
-      setLoading(false);
+      const data = await getUser();
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      setError("Gagal mengambil data pengguna.");
       setUsers([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -46,27 +31,11 @@ export default function UserManagement() {
     if (!window.confirm("Yakin ingin menghapus pengguna ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/users/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus pengguna.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteUser(id);
       setUsers((prev) => prev.filter((user) => user.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      alert("Gagal menghapus pengguna.");
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -98,28 +67,29 @@ export default function UserManagement() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user, idx) => (
-                    <tr key={user.id}>
-                      <td>{idx + 1}</td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.role}</td>
-                      <td>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(user.id)}
-                          disabled={deleteLoading === user.id}
-                        >
-                          {deleteLoading === user.id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          ) : (
-                            <i className="fas fa-trash"></i>
-                          )}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {users.length === 0 && (
+                  {users.length > 0 ? (
+                    users.map((user, idx) => (
+                      <tr key={user.id}>
+                        <td>{idx + 1}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.role}</td>
+                        <td>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDelete(user.id)}
+                            disabled={deleteLoading === user.id}
+                          >
+                            {deleteLoading === user.id ? (
+                              <span className="spinner-border spinner-border-sm" />
+                            ) : (
+                              <i className="fas fa-trash" />
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
                       <td colSpan={5} className="text-center">
                         Tidak ada data pengguna.

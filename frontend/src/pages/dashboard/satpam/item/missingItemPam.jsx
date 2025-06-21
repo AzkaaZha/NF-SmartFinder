@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getItems, deleteItem } from "../../../../_services/Items";
 
 export default function MissingItemPam() {
   const [items, setItems] = useState([]);
@@ -9,31 +10,12 @@ export default function MissingItemPam() {
 
   const fetchItems = async () => {
     setLoading(true);
-    setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/items", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data item.");
-        setItems([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setItems(Array.isArray(data.data) ? data.data : []);
-      setLoading(false);
+      const data = await getItems();
+      setItems(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setItems([]);
+      setError("Terjadi kesalahan saat mengambil data: " + err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -46,27 +28,11 @@ export default function MissingItemPam() {
     if (!window.confirm("Yakin ingin menghapus item ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/items/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus item.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      alert("Gagal menghapus item: " + err.message);
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -75,9 +41,6 @@ export default function MissingItemPam() {
     <div className="container-fluid">
       <h4 className="mb-4 d-flex justify-content-between align-items-center">
         Daftar Item
-        <Link to="/dashboardpam/createitem" className="btn btn-primary btn-sm">
-          <i className="fas fa-plus mr-1"></i> Tambah Data
-        </Link>
       </h4>
       <div className="card shadow mb-4">
         <div className="card-body">
@@ -95,48 +58,55 @@ export default function MissingItemPam() {
                     <th>Tanggal</th>
                     <th>Deskripsi</th>
                     <th>Gambar</th>
-                    <th>status</th>
-                    <th>Lokasi ID</th>
-                    <th>Kategori ID</th>
-                    <th>Pengguna ID</th>
-                    <th>Storage ID</th>
+                    <th>Status</th>
+                    <th>Lokasi</th>
+                    <th>Kategori</th>
+                    <th>Pelapor</th>
+                    <th>Penyimpanan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item, idx) => (
-                    <tr key={item.id}>
-                      <td>{idx + 1}</td>
-                      <td>{item.name}</td>
-                      <td>{item.date}</td>
-                      <td>{item.description}</td>
-                      <td>{item.image}</td>
-                      <td>{item.status}</td>
-                      <td>{item.locations_id}</td>
-                      <td>{item.categories_id}</td>
-                      <td>{item.users_id}</td>
-                      <td>{item.storages_id}</td>
-                      <td>
-                        <Link to={`/dashboardpam/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
-                          <i className="fas fa-edit"></i>
-                        </Link>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(item.id)}
-                          disabled={deleteLoading === item.id}
-                        >
-                          {deleteLoading === item.id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
+                  {items.length > 0 ? (
+                    items.map((item, idx) => (
+                      <tr key={item.id}>
+                        <td>{idx + 1}</td>
+                        <td>{item.name}</td>
+                        <td>{item.date}</td>
+                        <td>{item.description}</td>
+                        <td>
+                          {item.image ? (
+                            <img src={`http://localhost:8000/storage/${item.image}`} alt={item.name} width="50" />
                           ) : (
-                            <i className="fas fa-trash"></i>
+                            "Tidak ada"
                           )}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {items.length === 0 && (
+                        </td>
+                        <td>{item.status}</td>
+                        <td>{item.location?.name || item.locations_id}</td>
+                        <td>{item.category?.name || item.categories_id}</td>
+                        <td>{item.user?.name || item.users_id}</td>
+                        <td>{item.storage?.name || item.storages_id}</td>
+                        <td>
+                          <Link to={`/dashboardpam/updateitem/${item.id}`} className="btn btn-warning btn-sm mr-2">
+                            <i className="fas fa-edit"></i>
+                          </Link>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDelete(item.id)}
+                            disabled={deleteLoading === item.id}
+                          >
+                            {deleteLoading === item.id ? (
+                              <span className="spinner-border spinner-border-sm"></span>
+                            ) : (
+                              <i className="fas fa-trash"></i>
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td colSpan={9} className="text-center">
+                      <td colSpan="11" className="text-center">
                         Tidak ada data item.
                       </td>
                     </tr>

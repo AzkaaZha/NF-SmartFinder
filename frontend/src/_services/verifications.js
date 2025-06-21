@@ -1,6 +1,5 @@
 import { API } from "../_api";
 
-// Fungsi utilitas untuk mendapatkan gaya badge berdasarkan status
 export const getStatusBadgeStyle = (status) => {
   const baseStyle = {
     padding: "4px 8px",
@@ -20,10 +19,13 @@ export const getStatusBadgeStyle = (status) => {
   }
 };
 
-// Service: Ambil semua data verifikasi
 export const getVerification = async () => {
   try {
-    const { data } = await API.get("/verifications");
+    const { data } = await API.get("/verifications", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
     console.error("Error fetching verifications:", error);
@@ -31,10 +33,14 @@ export const getVerification = async () => {
   }
 };
 
-// Service: Ambil satu data verifikasi berdasarkan ID
 export const getVerificationById = async (id) => {
   try {
-    const { data } = await API.get(`/verifications/${id}`);
+    const { data } = await API.get(`/verifications/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+    );
     return data.data;
   } catch (error) {
     console.error(`Error fetching verification with ID ${id}:`, error);
@@ -42,10 +48,14 @@ export const getVerificationById = async (id) => {
   }
 };
 
-// Service: Tambah data verifikasi baru
 export const createVerification = async (verificationData) => {
+  
   try {
-    const { data } = await API.post("/verifications", verificationData);
+    const { data } = await API.post("/verifications", verificationData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
     console.error("Error creating verification:", error);
@@ -53,25 +63,30 @@ export const createVerification = async (verificationData) => {
   }
 };
 
-// Service: Update data verifikasi berdasarkan ID
 export const updateVerification = async (id, verificationData) => {
   try {
-    const { data } = await API.put(`/verifications/${id}`, verificationData);
+    const { data } = await API.post(`/verifications/${id}`, verificationData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
-    console.error(`Error updating verification with ID ${id}:`, error);
+    console.error(`Error updating verification with ID ${id}:`, error?.response || error);
     throw error;
   }
 };
 
-// Service: Hapus data verifikasi berdasarkan ID
 export const deleteVerification = async (id) => {
   try {
-    const { data } = await API.delete(`/verifications/${id}`);
+    const { data } = await API.delete(`/verifications/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
     console.error(`Error deleting verification with ID ${id}:`, error);
     throw error;
   }
 };
-

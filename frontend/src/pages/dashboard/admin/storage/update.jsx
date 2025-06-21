@@ -1,115 +1,59 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getStorageById, updateStorage } from "../../../../_services/storages";
+import { getUser } from "../../../../_services/user";
 
 export default function UpdateStorage() {
-  const { id } = useParams(); // Ambil ID dari URL
-  const [storage, setStorage] = useState({});
+  const { id } = useParams();
   const [name, setName] = useState("");
-  const [contact, setContact] = useState(""); // Tambahkan state untuk contact
-  const [users, setUsers] = useState([]); // Tambahkan state untuk users
-  const [usersId, setUsersId] = useState(""); // Tambahkan state untuk users_id
+  const [contact, setContact] = useState("");
+  const [users, setUsers] = useState([]);
+  const [usersId, setUsersId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data users
-  const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Gagal mengambil data pengguna.");
-      }
-
-      const data = await res.json();
-      setUsers(data.data);
-    } catch (err) {
-      setError("Terjadi kesalahan server saat mengambil data pengguna: " + err.message);
-    }
-  };
-
-  // Ambil data storage berdasarkan ID untuk mengupdate
-  const fetchStorageData = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        setError(data.message || "Gagal mengambil data storage.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      const storageData = data.data;
-      setStorage(storageData);
-      setName(storageData.name);
-      setContact(storageData.contact);
-      setUsersId(storageData.users_id); // Set ID pengguna yang sudah ada
-      setLoading(false);
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchStorageData();
-    fetchUsers(); // Ambil data pengguna
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const [storageData, usersData] = await Promise.all([
+          getStorageById(id),
+          getUser(),
+        ]);
+        setName(storageData?.name || "");
+        setContact(storageData?.contact || "");
+        setUsersId(storageData?.users_id || "");
+        setUsers(usersData);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err.response?.data?.message || "Gagal mengambil data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
     if (!name || !contact || !usersId) {
-      setError("Nama, Contact dan Pengguna storage wajib diisi!");
+      setError("Nama, Contact, dan Pengguna storage wajib diisi!");
       return;
     }
 
     setLoading(true);
+    setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          contact: contact,
-          users_id: usersId, // Mengirimkan users_id
-        }),
-      });
-
-      // Cek jika status code tidak OK
-      if (!res.ok) {
-        let data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal memperbarui storage.");
-        setLoading(false);
-        return;
-      }
-
+      await updateStorage(id, { name, contact, users_id: usersId });
       alert("Storage berhasil diperbarui!");
-      navigate("/dashboard/storages");
+      navigate("/dashboard/storage");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      console.error("Terjadi kesalahan:", err); // Menampilkan error di console untuk debugging
+      console.error("Error updating storage:", err);
+      setError(err.response?.data?.message || "Gagal memperbarui storage.");
+    } finally {
       setLoading(false);
     }
   };
@@ -120,7 +64,6 @@ export default function UpdateStorage() {
       <div className="card shadow mb-4">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            {/* Nama Storage */}
             <div className="form-group">
               <label htmlFor="name">Nama Storage</label>
               <input
@@ -134,7 +77,6 @@ export default function UpdateStorage() {
               />
             </div>
 
-            {/* Contact Storage */}
             <div className="form-group">
               <label htmlFor="contact">Contact</label>
               <input
@@ -148,7 +90,6 @@ export default function UpdateStorage() {
               />
             </div>
 
-            {/* Users ID (Dropdown) */}
             <div className="form-group">
               <label htmlFor="usersId">Pengguna</label>
               <select
@@ -167,7 +108,6 @@ export default function UpdateStorage() {
               </select>
             </div>
 
-            {/* Error Message */}
             {error && <div className="text-danger">{error}</div>}
 
             <div className="d-flex justify-content-between mt-4">

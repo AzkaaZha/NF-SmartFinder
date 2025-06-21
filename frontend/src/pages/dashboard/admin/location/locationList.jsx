@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteLocation, getLocations } from "../../../../_services/locations";
+
 
 export default function LocationList() {
   const [locations, setLocations] = useState([]);
@@ -11,28 +13,12 @@ export default function LocationList() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/locations", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data lokasi.");
-        setLocations([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setLocations(Array.isArray(data.data) ? data.data : []);
+      const data = await getLocations();
+      setLocations(Array.isArray(data) ? data : []);
       setLoading(false);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Error fetching locations:", err);
+      setError(err.response?.data?.message || "Gagal mengambil data lokasi.");
       setLocations([]);
       setLoading(false);
     }
@@ -46,27 +32,12 @@ export default function LocationList() {
     if (!window.confirm("Yakin ingin menghapus lokasi ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/locations/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus lokasi.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteLocation(id);
       setLocations((prev) => prev.filter((loc) => loc.id !== id));
       setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      console.error(`Error deleting location with ID ${id}:`, err);
+      alert(err.response?.data?.message || "Gagal menghapus lokasi.");
       setDeleteLoading(null);
     }
   };

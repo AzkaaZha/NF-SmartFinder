@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { createItem } from "../../../_services/Items"; // Sesuaikan path jika perlu
-import axios from "axios";
 import {
   FormWrapper,
   Form,
@@ -9,6 +7,10 @@ import {
   SubmitButton,
   Message,
 } from "./LostItemForm.styled";
+import { getLocations } from "../../../_services/locations";
+import { getCategories } from "../../../_services/categories";
+import { getStorages } from "../../../_services/storages";
+import { createItem } from "../../../_services/Items";
 
 export default function LostItemForm() {
   const [formData, setFormData] = useState({
@@ -19,7 +21,7 @@ export default function LostItemForm() {
     locations_id: "",
     categories_id: "",
     storages_id: "",
-    users_id: "",
+    users_id: "", 
   });
 
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ export default function LostItemForm() {
   const [categories, setCategories] = useState([]);
   const [storages, setStorages] = useState([]);
 
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUser = JSON.parse(localStorage.getItem("userInfo"));
   const userId = currentUser ? currentUser.id : null;
 
   useEffect(() => {
@@ -41,14 +43,14 @@ export default function LostItemForm() {
 
     const fetchData = async () => {
       try {
-        const [locRes, catRes, storRes] = await Promise.all([
-          axios.get("https://nfsmartfinder.karyakreasi.id/api/locations"),
-          axios.get("https://nfsmartfinder.karyakreasi.id/api/categories"),
-          axios.get("https://nfsmartfinder.karyakreasi.id/api/storages"),
+        const [LocatioData, CategoryData, StorageData] = await Promise.all([
+          getLocations(),
+          getCategories(),
+          getStorages(),
         ]);
-        setLocations(locRes.data.data);
-        setCategories(catRes.data.data);
-        setStorages(storRes.data.data);
+        setLocations(LocatioData);
+        setCategories(CategoryData);
+        setStorages(StorageData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setMessage("Gagal memuat data dropdown.");
@@ -57,6 +59,7 @@ export default function LostItemForm() {
 
     fetchData();
   }, [userId]);
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -85,15 +88,15 @@ export default function LostItemForm() {
     setLoading(true);
     setMessage("");
 
-    const data = new FormData();
+    const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
-        data.append(key, formData[key]);
+        form.append(key, formData[key]);
       }
     });
 
     try {
-      await createItem(data);
+      await createItem(form);
       setMessage("Laporan berhasil dikirim.");
       setFormData({
         name: "",
@@ -106,12 +109,18 @@ export default function LostItemForm() {
         users_id: userId,
       });
     } catch (err) {
-      console.error("Error response:", err);
-      setMessage("Gagal mengirim laporan. Pastikan semua data sudah benar.");
+      console.error("Error creating item:", err);
+      if (err.response && err.response.data && err.response.data.errors) {
+        setMessage("Gagal mengirim laporan. Pastikan semua data sudah benar.");
+      } else {
+        setMessage("Terjadi kesalahan saat mengirim laporan.");
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  console.log("formData:", formData);
 
   return (
     <div>

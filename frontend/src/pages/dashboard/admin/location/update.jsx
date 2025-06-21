@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getLocationById, updateLocation } from "../../../../_services/locations";
+
 
 export default function UpdateLocation() {
   const { id } = useParams();
@@ -11,28 +13,14 @@ export default function UpdateLocation() {
   useEffect(() => {
     const fetchLocation = async () => {
       setLoading(true);
+      setError("");
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/locations/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        });
-        if (!res.ok) {
-          let data = {};
-          try {
-            data = await res.json();
-          } catch (e) {}
-          setError(data.message || "Gagal mengambil data lokasi.");
-          setLoading(false);
-          return;
-        }
-        const data = await res.json();
-        setName(data.data?.name || "");
-        setLoading(false);
+        const data = await getLocationById(id);
+        setName(data?.name || "");
       } catch (err) {
-        setError("Terjadi kesalahan server: " + err.message);
+        console.error(`Error fetching location with ID ${id}:`, err);
+        setError(err.response?.data?.message || "Gagal mengambil data lokasi.");
+      } finally {
         setLoading(false);
       }
     };
@@ -46,30 +34,15 @@ export default function UpdateLocation() {
       return;
     }
     setLoading(true);
+    setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/locations/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengubah lokasi.");
-        setLoading(false);
-        return;
-      }
+      await updateLocation(id, { name });
       alert("Lokasi berhasil diubah!");
       navigate(-1);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error(`Error updating location with ID ${id}:`, err);
+      setError(err.response?.data?.message || "Gagal mengubah lokasi.");
+    } finally {
       setLoading(false);
     }
   };

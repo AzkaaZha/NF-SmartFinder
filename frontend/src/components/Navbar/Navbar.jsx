@@ -13,8 +13,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  LogoutButton,
 } from "./Navbar.styled";
+import { getDashboardLink } from "../../_services/auth";
 
 function Navbar() {
   const location = useLocation();
@@ -22,6 +22,8 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [userName, setUserName] = useState(null);
+  const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   const handleScroll = () => {
     if (window.scrollY > 50) {
@@ -39,7 +41,7 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
+    const userData = localStorage.getItem("userInfo");
     if (userData) {
       const user = JSON.parse(userData);
       setUserName(user.name);
@@ -47,9 +49,9 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload(); 
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userInfo");
+    window.location.reload();
   };
 
   return (
@@ -59,11 +61,11 @@ function Navbar() {
           <LogoImg src="/assets/img/logo.png" alt="logo" />
         </LogoLink>
         <button
-        className="mobile-nav-toggle"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="mobile-nav-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-        <i className="bi bi-list"></i>
-      </button>
+          <i className="bi bi-list"></i>
+        </button>
 
         <NavMenu>
           <NavList $isOpen={isMobileMenuOpen}>
@@ -78,10 +80,16 @@ function Navbar() {
               </NavLink>
             </NavItem>
             <Dropdown>
-              <DropdownToggle href="#" onClick={(e) => e.preventDefault()}>
+              <DropdownToggle
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsFeatureOpen(!isFeatureOpen);
+                }}
+              >
                 Features <i className="bi bi-chevron-down toggle-dropdown" />
               </DropdownToggle>
-              <DropdownMenu>
+              <DropdownMenu $isOpen={isFeatureOpen}>
                 <DropdownItem>
                   <NavLink to="/form">Lapor Barang Temuan</NavLink>
                 </DropdownItem>
@@ -92,7 +100,6 @@ function Navbar() {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-
             <NavItem>
               <NavLink $active={isActive("/contact")} to="/contact">
                 Contact
@@ -101,20 +108,28 @@ function Navbar() {
 
             {!userName ? (
               <NavItem>
-                <NavLink to="/login">
-                  Login/Daftar
-                </NavLink>
+                <NavLink to="/login">Login/Daftar</NavLink>
               </NavItem>
             ) : (
               <Dropdown style={{ position: "relative" }}>
-                <DropdownToggle href="#" onClick={(e) => e.preventDefault()} $user>
+                <DropdownToggle
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsUserDropdownOpen(!isUserDropdownOpen);
+                  }}
+                  $user
+                >
                   <i className="bi bi-person-circle" />
                   {userName}
                   <i className="bi bi-chevron-down" />
                 </DropdownToggle>
-                <DropdownMenu $user>
+                <DropdownMenu $user $isOpen={isUserDropdownOpen}>
                   <DropdownItem>
-                    <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+                    <NavLink to={getDashboardLink()}>Dashboard</NavLink>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavLink onClick={handleLogout}>Logout</NavLink>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

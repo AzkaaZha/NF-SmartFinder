@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text('message');
             $table->string('proof_image')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected']);
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->foreignId('items_id')->constrained('items')->onDelete('cascade');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

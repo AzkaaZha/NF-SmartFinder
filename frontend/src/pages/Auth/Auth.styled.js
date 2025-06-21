@@ -1,5 +1,37 @@
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+export const Page = styled.div`
+  background: #f6f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  margin: 0;
+`;
+
+export const OverlayPanel = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+
+  &.overlay-left {
+    transform: translateX(-20%);
+  }
+
+  &.overlay-right {
+    right: 0;
+    transform: translateX(0);
+  }
+`;
 
 export const OverlayContainer = styled.div`
   position: absolute;
@@ -26,8 +58,7 @@ export const Overlay = styled.div`
 export const Container = styled.div`
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-              0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
   width: 768px;
@@ -59,16 +90,6 @@ export const Container = styled.div`
   &.right-panel-active .overlay-right {
     transform: translateX(20%);
   }
-`;
-
-export const Page = styled.div`
-  background: #f6f5f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Montserrat', sans-serif;
-  height: 100vh;
-  margin: 0;
 `;
 
 export const FormContainer = styled.div`
@@ -109,26 +130,10 @@ export const Input = styled.input`
   width: 100%;
 `;
 
-export const OverlayPanel = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 40px;
-  text-align: center;
-  top: 0;
-  height: 100%;
-  width: 50%;
-
-  &.overlay-left {
-    transform: translateX(-20%);
-  }
-
-  &.overlay-right {
-    right: 0;
-    transform: translateX(0);
-  }
+export const LogoImage = styled.img`
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
 `;
 
 export const Title = styled.h3`
@@ -149,3 +154,4 @@ export const Anchor = styled(Link)`
   text-decoration: none;
   margin: 15px 0;
 `;
+

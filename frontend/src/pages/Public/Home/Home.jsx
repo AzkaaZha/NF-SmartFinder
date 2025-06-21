@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { Modal, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AboutSection,
   FeaturesSection,
@@ -11,57 +10,64 @@ import {
   CardWrapper,
 } from "./Home.styled";
 import Container from "../../../components/ui/Container";
-import Button  from "../../../components/ui/Button/Button";
+import Button from "../../../components/ui/Button/Button";
 import Hero from "../../../components/Hero/Hero";
-
-const statusBadgeStyle = (status) => {
-  switch (status) {
-    case "pending":
-      return { backgroundColor: "#facc15", color: "#000", padding: "4px 8px", borderRadius: "4px",
-        fontWeight: "600", };
-    case "approved":
-      return { backgroundColor: "#22c55e", color: "#fff", padding: "4px 8px", borderRadius: "4px",
-        fontWeight: "600", };
-    case "rejected":
-      return { backgroundColor: "#ef4444", color: "#fff", padding: "4px 8px", borderRadius: "4px",
-        fontWeight: "600", };
-    default:
-      return {};
-  }
-};
+import { getItems } from "../../../_services/Items";
+import { getCategories } from "../../../_services/categories";
+import { getLocations } from "../../../_services/locations";
+import ItemDetail from "../LostItems/ItemDetail";
 
 function Home() {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);  
+  const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/items")
-      .then((response) => {
-        setItems(Array.isArray(response.data.data) ? response.data.data : []);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const [itemsData, categoriesData, locationsData] = await Promise.all([
+          getItems(),
+          getCategories(),
+          getLocations(),
+        ]);
+
+        const itemsWithLocation = itemsData.map((item) => {
+          const category = categoriesData.find(
+            (cat) => cat.id === item.categories_id
+          );
+          const location = locationsData.find(
+            (loc) => loc.id === item.locations_id
+          );
+          return {
+            ...item,
+            categoryName: category ? category.name : "Tidak diketahui",
+            locationName: location ? location.name : "Tidak diketahui",
+          };
+        });
+        setItems(itemsWithLocation);
+        setCategories(categoriesData);
+        setLocations(locationsData);
+        setLoading(false);
+      } catch (error) {
         console.error("Gagal mengambil data:", error);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
+
+  const handleShowModal = (item) => {
+    setSelectedItem(item);
+    setShowModal(true);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedItem(null);  
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    if (isNaN(date)) return "-";
-    return date.toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    setSelectedItem(null);
   };
 
   return (
@@ -77,8 +83,11 @@ function Home() {
                 <span className="about-meta">ABOUT</span>
                 <h2 className="about-title">Tentang NF SmartFinder</h2>
                 <p className="about-description">
-                  NF SmartFinder adalah platform pelaporan barang hilang dan temuan yang dibuat khusus untuk civitas akademika STT Terpadu Nurul Fikri.
-                  Aplikasi ini membantu mahasiswa, dosen, dan staf untuk melaporkan atau mencari barang yang hilang atau ditemukan di lingkungan kampus.
+                  NF SmartFinder adalah platform pelaporan barang hilang dan
+                  temuan yang dibuat khusus untuk civitas akademika STT Terpadu
+                  Nurul Fikri. Aplikasi ini membantu mahasiswa, dosen, dan staf
+                  untuk melaporkan atau mencari barang yang hilang atau
+                  ditemukan di lingkungan kampus.
                 </p>
               </div>
               <div className="col-xl-6">
@@ -102,7 +111,9 @@ function Home() {
             <SectionTitle>
               <h2>Fitur Unggulan</h2>
               <p>
-                Beragam fitur yang mempermudah civitas akademika dalam melaporkan dan menemukan barang yang hilang di lingkungan kampus.
+                Beragam fitur yang mempermudah civitas akademika dalam
+                melaporkan dan menemukan barang yang hilang di lingkungan
+                kampus.
               </p>
             </SectionTitle>
 
@@ -140,18 +151,41 @@ function Home() {
                   <div className="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                     <h3>Lapor Barang Temuan</h3>
                     <p className="fst-italic">
-                      Pengguna dapat melaporkan barang yang ditemukan di lingkungan kampus agar pemiliknya dapat dengan mudah menemukannya kembali.
+                      Pengguna dapat melaporkan barang yang ditemukan di
+                      lingkungan kampus agar pemiliknya dapat dengan mudah
+                      menemukannya kembali.
                     </p>
                     <ul>
-                      <li><i className="bi bi-check2-all"></i> <span>Upload foto dan deskripsi barang yang ditemukan.</span></li>
-                      <li><i className="bi bi-check2-all"></i> <span>Barang diserahkan ke pos satpam untuk diamankan.</span></li>
-                      <li><i className="bi bi-check2-all"></i> <span>Admin akan memverifikasi dan menampilkan barang di daftar temuan.</span></li>
-                      <li><i className="bi bi-check2-all"></i> <span>Memudahkan pemilik barang untuk mengajukan klaim.</span></li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Upload foto dan deskripsi barang yang ditemukan.
+                        </span>
+                      </li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Barang diserahkan ke pos satpam untuk diamankan.
+                        </span>
+                      </li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Admin akan memverifikasi dan menampilkan barang di
+                          daftar temuan.
+                        </span>
+                      </li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Memudahkan pemilik barang untuk mengajukan klaim.
+                        </span>
+                      </li>
                     </ul>
                     <ButtonWrapper>
-                      <Button as={Link} to="/lostitems" variant="outline">
-                        Buat Laporan
-                      </Button>
+                      <Button variant="outline"
+                        onClick={() => navigate("/form")}
+                      >Buat Laporan</Button>
                     </ButtonWrapper>
                   </div>
                   <div className="col-lg-6 order-1 order-lg-2 text-center">
@@ -170,12 +204,32 @@ function Home() {
                   <div className="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                     <h3>Cari Barang Hilang</h3>
                     <ul>
-                      <li><i className="bi bi-check2-all"></i> <span>Pencarian barang hilang yang sudah dilaporkan pengguna lain.</span></li>
-                      <li><i className="bi bi-check2-all"></i> <span>Filter berdasarkan nama barang, kategori, atau lokasi hilang.</span></li>
-                      <li><i className="bi bi-check2-all"></i> <span>Temukan kecocokan dengan barang yang ditemukan oleh pengguna lain.</span></li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Pencarian barang hilang yang sudah dilaporkan pengguna
+                          lain.
+                        </span>
+                      </li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Filter berdasarkan nama barang, kategori, atau lokasi
+                          hilang.
+                        </span>
+                      </li>
+                      <li>
+                        <i className="bi bi-check2-all"></i>{" "}
+                        <span>
+                          Temukan kecocokan dengan barang yang ditemukan oleh
+                          pengguna lain.
+                        </span>
+                      </li>
                     </ul>
                     <p className="fst-italic">
-                      Fitur pencarian membantu pengguna menemukan kembali barang miliknya yang telah dilaporkan hilang dengan mudah dan cepat.
+                      Fitur pencarian membantu pengguna menemukan kembali barang
+                      miliknya yang telah dilaporkan hilang dengan mudah dan
+                      cepat.
                     </p>
                     <ButtonWrapper>
                       <Button as={Link} to="/lostitems" variant="outline">
@@ -196,7 +250,7 @@ function Home() {
           </Container>
         </FeaturesSection>
 
-       {/* Lost Items Section */}
+        {/* Lost Items Section */}
         <LostItemsSection>
           <Container>
             <SectionTitle>
@@ -241,7 +295,10 @@ function Home() {
                       {/* Konten */}
                       <div className="card-body d-flex flex-column justify-content-between">
                         <div>
-                          <h5 className="card-title mb-2 fw-semibold" style={{ color: "#27227d" }}>
+                          <h5
+                            className="card-title mb-2 fw-semibold"
+                            style={{ color: "#27227d" }}
+                          >
                             {item.name}
                           </h5>
                           <p className="mb-1">
@@ -258,26 +315,27 @@ function Home() {
                             </span>
                           </p>
                           <p className="mb-1">
-                            <strong>Lokasi:</strong> {item.locationName || "Tidak diketahui"}
+                            <strong>Lokasi:</strong>{" "}
+                            {item.locationName || "Tidak diketahui"}
                           </p>
                           <p className="mb-0">
                             <strong>Tanggal:</strong>{" "}
                             {item.date
-                              ? new Date(item.date).toLocaleDateString("id-ID", {
-                                  day: "numeric",
-                                  month: "long",
-                                  year: "numeric",
-                                })
+                              ? new Date(item.date).toLocaleDateString(
+                                  "id-ID",
+                                  {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                  }
+                                )
                               : "-"}
                           </p>
                         </div>
                         <div className="text-end mt-3">
                           <Button
                             variant="primary"
-                            onClick={() => {
-                              setSelectedItem(item);
-                              setShowModal(true);
-                            }}
+                            onClick={() => handleShowModal(item)}
                             style={{
                               color: "#27227d",
                               backgroundColor: "#f59e0b",
@@ -294,6 +352,15 @@ function Home() {
               )}
             </div>
 
+            {/* Modal Detail */}
+            {selectedItem && (
+              <ItemDetail
+                showModal={showModal}
+                handleCloseModal={handleCloseModal}
+                item={selectedItem}
+              />
+            )}
+
             <div className="text-center mt-4">
               <Button as={Link} to="/lostitems" variant="outline">
                 Lihat Semua...
@@ -301,49 +368,6 @@ function Home() {
             </div>
           </Container>
         </LostItemsSection>
-
-        {/* Modal Detail */}
-        {selectedItem && (
-          <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>{selectedItem.name}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <img
-                src={selectedItem.img_url || "/assets/img/placeholder.jpg"}
-                alt={selectedItem.name}
-                className="img-fluid mb-3"
-                style={{ objectFit: "cover", maxHeight: "300px", width: "100%" }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/assets/img/placeholder.jpg";
-                }}
-              />
-              <p>
-                <strong>Status: </strong>
-                <span style={statusBadgeStyle(selectedItem.status)}>
-                  {selectedItem.status.charAt(0).toUpperCase() + selectedItem.status.slice(1)}
-                </span>
-              </p>
-              <p><strong>Kategori:</strong> {selectedItem.categoryName}</p>
-              <p><strong>Deskripsi:</strong> {selectedItem.description}</p>
-              <p><strong>Lokasi Ditemukan:</strong> {selectedItem.locationName}</p>
-              <p><strong>Tanggal Ditemukan:</strong> {formatDate(selectedItem.date)}</p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Link
-                to={`/klaim/${selectedItem.id}`}
-                className="btn"
-                style={{ backgroundColor: "#f59e0b", color: "#27227d" }}
-              >
-                Klaim Barang
-              </Link>
-              <Button variant="secondary" onClick={handleCloseModal}>
-                Tutup
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        )}
       </main>
     </div>
   );

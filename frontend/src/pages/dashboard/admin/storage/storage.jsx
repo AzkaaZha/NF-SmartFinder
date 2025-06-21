@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { deleteStorage, getStorages } from "../../../../_services/storages";
+
 
 export default function StorageList() {
   const [storages, setStorages] = useState([]);
@@ -11,29 +13,13 @@ export default function StorageList() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/storages", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengambil data storage.");
-        setStorages([]);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      setStorages(Array.isArray(data.data) ? data.data : []);
-      setLoading(false);
+      const data = await getStorages();
+      setStorages(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Error fetching storages:", err);
+      setError(err.response?.data?.message || "Gagal mengambil data storage.");
       setStorages([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -46,27 +32,12 @@ export default function StorageList() {
     if (!window.confirm("Yakin ingin menghapus storage ini?")) return;
     setDeleteLoading(id);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/storages/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        alert(data.message || "Gagal menghapus storage.");
-        setDeleteLoading(null);
-        return;
-      }
+      await deleteStorage(id);
       setStorages((prev) => prev.filter((storage) => storage.id !== id));
-      setDeleteLoading(null);
     } catch (err) {
-      alert("Terjadi kesalahan server: " + err.message);
+      console.error(`Error deleting storage with ID ${id}:`, err);
+      alert(err.response?.data?.message || "Gagal menghapus storage.");
+    } finally {
       setDeleteLoading(null);
     }
   };
@@ -127,7 +98,7 @@ export default function StorageList() {
                   ))}
                   {storages.length === 0 && (
                     <tr>
-                      <td colSpan={3} className="text-center">
+                      <td colSpan={5} className="text-center">
                         Tidak ada data storage.
                       </td>
                     </tr>

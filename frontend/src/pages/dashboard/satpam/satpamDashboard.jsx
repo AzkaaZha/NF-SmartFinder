@@ -17,11 +17,10 @@ export default function SatpamDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Ambil data summary dari API
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
       const res = await fetch("http://localhost:8000/api/dashboard-summary", {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,131 +1,97 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getVerificationById, updateVerification } from "../../../../_services/verifications";
+import { getItems } from "../../../../_services/Items";
 
 export default function UpdateVerificationPam() {
-  const { id } = useParams(); // Ambil ID dari URL
-  const [verification, setVerification] = useState({});
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("pending"); // Default status: pending
-  const [proofImage, setProofImage] = useState(null); // Untuk gambar baru (optional)
-  const [currentProofImage, setCurrentProofImage] = useState(""); // Gambar lama
-  const [itemsId, setItemsId] = useState(""); // ID Item yang dipilih
-  const [items, setItems] = useState([]); // Daftar item untuk dropdown
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Ambil data verifikasi berdasarkan ID
-  const fetchVerificationData = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/verifications/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+  const [formData, setFormData] = useState({
+    message: "",
+    status: "pending",
+    proof_image: null,
+    items_id: "",
+    users_id: "",
+  });
 
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.message || "Gagal mengambil data verifikasi.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      const verification = data.data;
-      setVerification(verification);
-      setMessage(verification.message);
-      setStatus(verification.status);
-      setItemsId(verification.items_id); // Set items_id
-      setCurrentProofImage(verification.proof_image);  // Menyimpan gambar lama
-      setLoading(false);
-    } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
-      setLoading(false);
-    }
-  };
-
-  // Ambil data items (untuk dropdown)
-  const fetchItems = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/items", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.message || "Gagal mengambil data items.");
-        return;
-      }
-
-      const data = await res.json();
-      setItems(data.data);
-    } catch (err) {
-      setError("Terjadi kesalahan saat mengambil data items: " + err.message);
-    }
-  };
+  const [currentProofImage, setCurrentProofImage] = useState("");
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchVerificationData();
-    fetchItems(); // Ambil data items untuk dropdown
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const verification = await getVerificationById(id);
+        const itemsList = await getItems();
+
+        setFormData({
+          message: verification.message,
+          status: verification.status,
+          proof_image: null,
+          items_id: verification.items_id,
+        });
+
+        setCurrentProofImage(verification.proof_image);
+        setItems(itemsList);
+      } catch (err) {
+        setError("Gagal memuat data. Pastikan Anda memiliki akses yang valid.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    // Validasi input
-    if (!message || !status || !itemsId) {
-      setError("Pesan, status, dan Item ID wajib diisi!");
+    if (!formData.message || !formData.status || !formData.items_id) {
+      setError("Pesan, status, dan Item wajib diisi!");
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
+    const form = new FormData();
+    form.append("message", formData.message);
+    form.append("status", formData.status);
+    form.append("items_id", formData.items_id);
+
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      form.append("users_id", userId);
+    }
+
+    if (formData.proof_image) {
+      form.append("proof_image", formData.proof_image);
+    }
+    form.append("_method", "PUT");
+
     try {
-      const formData = new FormData();
-      formData.append("message", message);
-      formData.append("status", status);
-      formData.append("items_id", itemsId); // Kirim items_id yang valid
-
-      // Jika ada gambar baru, kirim gambar tersebut
-      if (proofImage) {
-        formData.append("proof_image", proofImage); // Mengirim gambar baru
-      } else if (currentProofImage) {
-        // Jangan kirim proof_image jika tidak ada gambar baru
-        formData.append("proof_image", currentProofImage); // Kirim gambar lama hanya jika dibutuhkan
-      }
-
-      formData.append("_method", "PUT"); // Tambahkan ini untuk menggunakan metode PUT pada formData
-
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/verifications/${id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        let data = await res.json();
-        console.error("Error detail:", data);
-        setError(data.message || "Gagal mengupdate verifikasi.");
-        setLoading(false);
-        return;
-      }
-
-      alert("Verifikasi berhasil diupdate!");
+      await updateVerification(id, form);
+      alert("Verifikasi berhasil diperbarui.");
       navigate("/dashboardpam/verifications");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("DETAIL ERROR:", err?.response?.data || err);
+      setError("Gagal mengupdate verifikasi. Cek koneksi atau token Anda.");
+    } finally {
       setLoading(false);
     }
-};
+  };
+
 
   return (
     <div className="container-fluid">
@@ -133,28 +99,25 @@ export default function UpdateVerificationPam() {
       <div className="card shadow mb-4">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            {/* Pesan Verifikasi */}
             <div className="form-group">
-              <label htmlFor="message">Pesan Verifikasi</label>
+              <label>Pesan</label>
               <input
                 type="text"
                 className="form-control"
-                id="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Masukkan pesan verifikasi"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 disabled={loading}
               />
             </div>
 
-            {/* Status Verifikasi */}
             <div className="form-group">
-              <label htmlFor="status">Status</label>
+              <label>Status</label>
               <select
+                name="status"
                 className="form-control"
-                id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                value={formData.status}
+                onChange={handleChange}
                 disabled={loading}
               >
                 <option value="pending">Pending</option>
@@ -163,34 +126,32 @@ export default function UpdateVerificationPam() {
               </select>
             </div>
 
-            {/* Gambar Bukti (Opsional) */}
             <div className="form-group">
-              <label htmlFor="proof_image">Gambar Bukti</label>
+              <label>Gambar Bukti</label>
               <input
                 type="file"
+                name="proof_image"
                 className="form-control"
-                id="proof_image"
-                onChange={(e) => setProofImage(e.target.files[0])}
+                onChange={handleChange}
                 disabled={loading}
               />
-              {currentProofImage && !proofImage && (
+              {currentProofImage && !formData.proof_image && (
                 <img
                   src={`http://localhost:8000/storage/verifications/${currentProofImage}`}
-                  alt="current"
-                  className="mt-3"
+                  alt="Current Proof"
                   style={{ maxWidth: "200px" }}
+                  className="mt-2"
                 />
               )}
             </div>
 
-            {/* Item ID (Dropdown) */}
             <div className="form-group">
-              <label htmlFor="items_id">Item</label>
+              <label>Item</label>
               <select
+                name="items_id"
                 className="form-control"
-                id="items_id"
-                value={itemsId}
-                onChange={(e) => setItemsId(e.target.value)}
+                value={formData.items_id}
+                onChange={handleChange}
                 disabled={loading}
               >
                 <option value="">Pilih Item</option>
@@ -202,19 +163,22 @@ export default function UpdateVerificationPam() {
               </select>
             </div>
 
-            {/* Error Message */}
-            {error && <div className="text-danger">{error}</div>}
+            {error && <div className="text-danger mt-2">{error}</div>}
 
             <div className="d-flex justify-content-between mt-4">
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate("/dashboardpam/verification")}
+                onClick={() => navigate("/dashboardpam/verifications")}
                 disabled={loading}
               >
                 Batal
               </button>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
                 {loading ? "Menyimpan..." : "Simpan"}
               </button>
             </div>

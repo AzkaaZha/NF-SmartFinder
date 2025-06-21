@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../ui/Button/Button";
 import { HeroSection, HeroContainer, HeroContent, HeroImage} from "./Hero.styled";
 
-function Hero() {
+export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <HeroSection>
       <HeroContainer>
@@ -16,7 +19,9 @@ function Hero() {
             mencari barang yang hilang!
           </p>
 
-          <Button variant="primary" to="/form">Buat Laporan</Button>
+          <Button variant="primary"
+            onClick={() => navigate("/form")}
+          >Buat Laporan</Button>
         </HeroContent>
 
         <HeroImage>
@@ -26,5 +31,3 @@ function Hero() {
     </HeroSection>
   );
 }
-
-export default Hero;

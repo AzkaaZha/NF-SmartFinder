@@ -17,7 +17,8 @@ class VerificationSeeder extends Seeder
             'message' => 'ini adalah hp saya',
             'proof_image' => 'bukti1.jpg',
             'status' => 'pending',
-            'items_id' => 1, 
+            'items_id' => 1,
+            'users_id' => 3,
         ]);
     }
 }

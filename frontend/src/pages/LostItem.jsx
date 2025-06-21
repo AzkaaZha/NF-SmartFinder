@@ -45,7 +45,6 @@ function LostItems() {
         setCategories(categoriesData);
         setLocations(locationsData);
 
-        // Mapping items agar punya nama kategori dan lokasi
         const itemsMapped = itemsRes.data.data.map((item) => {
           const category = categoriesData.find((c) => c.id === item.categories_id);
           const location = locationsData.find((l) => l.id === item.locations_id);
@@ -68,7 +67,6 @@ function LostItems() {
     fetchAll();
   }, []);
 
-  // Filter berdasarkan pencarian dan kategori
   useEffect(() => {
     const filtered = items.filter(
       (item) =>
