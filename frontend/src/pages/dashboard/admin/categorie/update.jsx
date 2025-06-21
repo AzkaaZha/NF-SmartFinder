@@ -1,39 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getCategoryById, updateCategory } from "../../../../_services/categories";
 
 export default function UpdateCategorie() {
-  const { id } = useParams(); // Mengambil ID kategori dari URL
+  const { id } = useParams();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch data kategori berdasarkan ID saat halaman pertama kali dimuat
   useEffect(() => {
     const fetchCategorie = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/categories/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        });
-        if (!res.ok) {
-          let data = {};
-          try {
-            data = await res.json();
-          } catch (e) {}
-          setError(data.message || "Gagal mengambil data kategori.");
-          setLoading(false);
-          return;
-        }
-        const data = await res.json();
-        setName(data.data?.name || "");
-        setLoading(false);
+        const data = await getCategoryById(id);
+        setName(data?.name || "");
       } catch (err) {
-        setError("Terjadi kesalahan server: " + err.message);
+        console.error("Fetch error:", err);
+        setError("Gagal mengambil data kategori.");
+      } finally {
         setLoading(false);
       }
     };
@@ -46,31 +31,16 @@ export default function UpdateCategorie() {
       setError("Nama kategori wajib diisi.");
       return;
     }
+
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/categories/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {}
-        setError(data.message || "Gagal mengubah kategori.");
-        setLoading(false);
-        return;
-      }
+      await updateCategory(id, { name });
       alert("Kategori berhasil diubah!");
-      navigate("/dashboard/categorie"); // Kembali ke daftar kategori
+      navigate("/dashboard/categories");
     } catch (err) {
-      setError("Terjadi kesalahan server: " + err.message);
+      console.error("Update error:", err);
+      setError(err?.response?.data?.message || "Gagal mengubah kategori.");
+    } finally {
       setLoading(false);
     }
   };
